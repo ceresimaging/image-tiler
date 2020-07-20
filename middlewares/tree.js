@@ -9,8 +9,8 @@ const buildTreeQuery = (field) => {
       t.id::text tree_id,
       df.id::text AS field_id,
       t.geometry AS geom,
-      t.plant_date,
-      t.remove_date,
+      t.plant_date::text,
+      t.remove_date::text,
       v.id::text varietal_id,
       v.name varietal
     FROM trees t
@@ -28,8 +28,8 @@ const buildMissingQuery = (field) => {
       t.id::text tree_id,
       df.id::text AS field_id,
       t.geometry AS geom,
-      t.plant_date,
-      t.remove_date,
+      t.plant_date::text,
+      t.remove_date::text,
       v.id::text varietal_id,
       v.name varietal
     FROM trees t
