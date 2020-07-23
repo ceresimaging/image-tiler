@@ -9,18 +9,6 @@ class ValidationError extends Error {
   }
 }
 
-class BufferError extends ValidationError {
-  constructor (buffer) {
-    super(`Buffer: ${buffer}`, 'Float or Float[4] (0-1)');
-  }
-}
-
-class MinBufferError extends ValidationError {
-  constructor (minBuffer) {
-    super(`Minimum Buffer: ${minBuffer}`, 'Int or Int[4]');
-  }
-}
-
 // Validate tile parameters
 export const validateTile = (req, res, next) => {
   if (validator.isInt(req.params.x) &&
@@ -99,27 +87,18 @@ export const validateSize = (req, res, next) => {
 
 // Validate Buffer and MinBuffer query
 export const validateBuffer = (req, res, next) => {
-  if (Array.isArray(req.query.buffer)) {
-    if (req.query.buffer.length !== 4) throw new BufferError(req.query.buffer);
-    req.query.buffer = req.query.buffer.map(parseFloat);
-    if (req.query.buffer.some(isNaN)) throw new BufferError(req.query.buffer);
-  } else if (!req.query.buffer || validator.isFloat(req.query.buffer, { min: 0, max: 1 })) {
-    req.query.buffer = Array(4).fill(parseFloat(req.query.buffer || 0));
+  if (!req.query.buffer || validator.isFloat(req.query.buffer, { min: 0, max: 1 })) {
+    req.query.buffer = parseFloat(req.query.buffer || 0);
   } else {
-    throw new BufferError(req.query.buffer);
+    throw new ValidationError(`Buffer: ${req.query.buffer}`, 'Float (0-1)');
   }
-  
-  if (Array.isArray(req.query.minBuffer)) {
-    if (req.query.minBuffer.length !== 4) throw new MinBufferError(req.query.minBuffer);
-    req.query.minBuffer = req.query.minBuffer.map(v => parseInt(v));
-    if (req.query.minBuffer.some(isNaN)) throw new MinBufferError(req.query.minBuffer);
-  } else if (!req.query.minBuffer || validator.isInt(req.query.minBuffer)) {
-    req.query.minBuffer = Array(4).fill(parseInt(req.query.minBuffer || 0));
-  } else {
-    throw new MinBufferError(req.query.minBuffer);
+
+  if (!req.query.minBuffer || validator.isInt(req.query.minBuffer)) {
+    req.query.minBuffer = parseFloat(req.query.minBuffer || 0);
+    return next();
   }
-  
-  next();
+
+  throw new ValidationError(`Minimum Buffer: ${req.query.minBuffer}`, 'Int');
 };
 
 // Validate cache limit age
