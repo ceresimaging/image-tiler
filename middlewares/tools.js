@@ -63,8 +63,8 @@ export const setDefaultRatio = (ratio) => {
 // Set buffer
 export const setDefaultBuffer = (buffer, minBuffer) => {
   return (req, res, next) => {
-    req.query.buffer = req.query.buffer || `${buffer}`;
-    req.query.minBuffer = req.query.minBuffer || `${minBuffer}`;
+    req.query.buffer = req.query.buffer || Array.isArray(buffer) ? buffer : `${buffer}`;
+    req.query.minBuffer = req.query.minBuffer || Array.isArray(minBuffer) ? minBuffer : `${minBuffer}`;
     next();
   };
 };
