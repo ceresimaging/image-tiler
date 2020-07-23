@@ -60,7 +60,7 @@ router
   .get('/issues/:imagery/:flight.png',
     setDefaultSize(256),
     setDefaultRatio(0.5),
-    setDefaultBuffer([0, 0.15, 0, 0.5], [50, 50, 50, 100]),
+    setDefaultBuffer([0, 0.15, 0, 0.5], [50, 50, 50, 90]),
     setDefaultUser(process.env.SUPPORT_USER),
     validateImagery,
     validateFlight,

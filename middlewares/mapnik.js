@@ -64,6 +64,9 @@ export const setExtent = (req, res, next) => {
   // Zoom to current layers
   map.zoomAll();
 
+  // Calculate buffer 
+  // Left/Right use map width, Top/Bottom use height
+  // If buffer is not enough, minBuffer is applied
   let bufferSize = buffer.map((b, i) => {
     let bufferSize = ([0, 2].includes(i) ? map.width : map.height) * b * map.scale();
     if (bufferSize < minBuffer[i]) {
