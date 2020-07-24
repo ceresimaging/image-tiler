@@ -51,27 +51,7 @@ export const flush = (req, res, next) => {
   next();
 };
 
-// Remove directory from the cache (for Shapefiles)
-const removeDir = (req, res, next) => {
-  const { bucket, region } = req.query;
-  const { dir, filename } = res.locals;
-
-  const path = `${process.env.CACHE_PATH}/${dir}/${region}/${bucket}/${filename}`;
-
-  if (fs.existsSync(path)) {
-    fs.readdirSync(path).forEach(file => {
-      fs.unlinkSync(`${path}/${file}`);
-    });
-
-    fs.rmdirSync(path);
-
-    res.locals.files = [path];
-  }
-
-  next();
-};
-
-// Remove single file from the cache (for GeoTiffs)
+// Remove single file from the cache
 const removeFile = (req, res, next) => {
   const { bucket, region } = req.query;
   const { dir, filename } = res.locals;
@@ -128,9 +108,9 @@ export const removeTiff = (req, res, next) => {
 
 // Remove Shapefile
 export const removeShape = (req, res, next) => {
-  res.locals.filename = req.params.custom;
+  res.locals.filename = `${req.params.custom}.zip`;
   res.locals.dir = 'custom';
   req.query.path = `/custom/${req.params.custom}/*`;
 
-  removeDir(req, res, next);
+  removeFile(req, res, next);
 };
