@@ -58,11 +58,13 @@ export const createMap = (req, res, next) => {
 
 // Define map extent based on current layers and buffer
 export const setExtent = (req, res, next) => {
-  const { buffer, minBuffer, ratio } = req.query;
+  const { buffer, minBuffer } = req.query;
   const { map } = res.locals;
 
   // Zoom to current layers
   map.zoomAll();
+
+  if (!buffer) return next();
 
   // Calculate buffer 
   // Left/Right use map width, Top/Bottom use height
