@@ -17,7 +17,7 @@ const s3 = new AWS.S3({
 
 // Download file from S3 to the local cache
 const downloadFile = (req, res, next) => {
-  const { dir, filename } = res.locals;
+  const { dir, filename, key } = res.locals;
   const { bucket, region } = req.query;
 
   const dirPath = `${process.env.CACHE_PATH}/${dir}/${region}/${bucket}`;
@@ -33,9 +33,8 @@ const downloadFile = (req, res, next) => {
     // Get the lock to avoid multiple downloads for the same file
     const lock = await redlock.lock(filename, 10000);
 
-    // If something fails, remove temporal file, unlock the queue and respond with error
+    // If something fails, unlock the queue and respond with error
     const fail = () => {
-      fs.unlinkSync(path);
       lock.unlock().catch(next);
       res.status(404).send('Error downloading source data file, please check params');
     };
@@ -57,10 +56,7 @@ const downloadFile = (req, res, next) => {
       // If cache dir is full, remove files older than 10 days and retry
       if (error.code === 'ENOSPC') {
         req.query.age = 10;
-        return flush(req, res, () => {
-          fs.unlinkSync(path);
-          retry();
-        });
+        return flush(req, res, retry);
       }
 
       retry();
@@ -75,10 +71,10 @@ const downloadFile = (req, res, next) => {
     // Download file from S3 to local cache  
     s3.getObject({
       Bucket: bucket, 
-      Key: filename
-    }, (error, { Body }) => {
+      Key: key
+    }, (error, data) => {
       if (error) return onError(error);
-      fs.writeFileSync(path, Body, onError);
+      fs.writeFileSync(path, data.Body, onError);
       retry();
     });
   };
@@ -91,6 +87,7 @@ const downloadFile = (req, res, next) => {
 // Download GeoTiff
 export const downloadTiff = (req, res, next) => {
   res.locals.filename = `${req.params.imagery}.tif`;
+  res.locals.key = `${req.params.imagery}.tif`;
   res.locals.dir = 'imagery';
   downloadFile(req, res, next);
 };
@@ -98,6 +95,7 @@ export const downloadTiff = (req, res, next) => {
 // Download Shapefile
 export const downloadShape = (req, res, next) => {
   res.locals.filename = `${req.params.custom}.zip`;
+  res.locals.key = req.params.custom;
   res.locals.dir = 'custom';
   downloadFile(req, res, next);
 };
