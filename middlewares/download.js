@@ -1,9 +1,8 @@
 import fs from 'fs';
-import http from 'http';
 
-import unzipper from 'unzipper';
 import Redis from 'ioredis';
 import Redlock from 'redlock';
+import AWS from 'aws-sdk';
 
 import { flush } from './cache';
 
@@ -12,15 +11,17 @@ const redlock = new Redlock([redis], {
   retryCount: -1
 });
 
+const s3 = new AWS.S3({
+  maxRetries: 10
+});
+
 // Download file from S3 to the local cache
 const downloadFile = (req, res, next) => {
-  const { dir, filename, zipped = false } = res.locals;
+  const { dir, filename, key } = res.locals;
   const { bucket, region } = req.query;
 
   const dirPath = `${process.env.CACHE_PATH}/${dir}/${region}/${bucket}`;
   const path = `${dirPath}/${filename}`;
-  const tmpPath = `${path}.tmp`;
-  const url = `http://s3-${region}.amazonaws.com/${bucket}/${filename}`;
 
   const download = async () => {
     // If file already exists, set path and call next middleware
@@ -32,9 +33,8 @@ const downloadFile = (req, res, next) => {
     // Get the lock to avoid multiple downloads for the same file
     const lock = await redlock.lock(filename, 10000);
 
-    // If something fails, remove temporal file, unlock the queue and respond with error
+    // If something fails, unlock the queue and respond with error
     const fail = () => {
-      fs.unlinkSync(tmpPath);
       lock.unlock().catch(next);
       res.status(404).send('Error downloading source data file, please check params');
     };
@@ -46,55 +46,37 @@ const downloadFile = (req, res, next) => {
       download();
     };
 
-    // This is about milliseconds and it does not happen often
-    // but sometimes the file gets downloaded just after the function gets the lock
-    if (fs.existsSync(path)) {
-      return retry();
-    }
-
     // Download error handler
     const onError = (error) => {
       // If file not found, trigger error!
-      if (error.code === 'ENOTFOUND') {
+      if (error.code === 'NoSuchKey') {
         return fail();
       }
 
       // If cache dir is full, remove files older than 10 days and retry
       if (error.code === 'ENOSPC') {
         req.query.age = 10;
-        return flush(req, res, () => {
-          fs.unlinkSync(tmpPath);
-          retry();
-        });
+        return flush(req, res, retry);
       }
 
       retry();
     };
 
-    // Create the file in the local cache, remove the temp file
-    const file = fs.createWriteStream(tmpPath)
-      .on('error', onError)
-      .on('finish', () => {
-        if (zipped) {
-          fs.createReadStream(tmpPath)
-            .pipe(unzipper.Extract({ path: `${tmpPath}.zip` }))
-            .on('close', () => {
-              fs.rename(`${tmpPath}.zip`, path, retry);
-              fs.unlinkSync(tmpPath);
-            });
-        } else {
-          fs.rename(tmpPath, path, retry);
-        }
-      });
+    // This is about milliseconds and it does not happen often
+    // but sometimes the file gets downloaded just after the function gets the lock
+    if (fs.existsSync(path)) {
+      return retry();
+    }
 
-    // Get the stream and pipe to file
-    http.get(url, (response) => {
-      if (response.statusCode !== 200) {
-        fail();
-      } else {
-        response.pipe(file);
-      }
-    }).on('error', onError);
+    // Download file from S3 to local cache  
+    s3.getObject({
+      Bucket: bucket, 
+      Key: key
+    }, (error, data) => {
+      if (error) return onError(error);
+      fs.writeFileSync(path, data.Body, onError);
+      retry();
+    });
   };
 
   // Create directory and trigger download
@@ -105,14 +87,15 @@ const downloadFile = (req, res, next) => {
 // Download GeoTiff
 export const downloadTiff = (req, res, next) => {
   res.locals.filename = `${req.params.imagery}.tif`;
+  res.locals.key = `${req.params.imagery}.tif`;
   res.locals.dir = 'imagery';
   downloadFile(req, res, next);
 };
 
 // Download Shapefile
 export const downloadShape = (req, res, next) => {
-  res.locals.filename = `${req.params.custom}`;
-  res.locals.zipped = true;
+  res.locals.filename = `${req.params.custom}.zip`;
+  res.locals.key = req.params.custom;
   res.locals.dir = 'custom';
   downloadFile(req, res, next);
 };

@@ -26,7 +26,7 @@ export const createImagery = (imagery) => {
 };
 
 export const createCustom = (custom) => {
-  const path = `${process.env.CACHE_PATH}/custom/${process.env.CUSTOM_LAYERS_REGION}/${process.env.CUSTOM_LAYERS_BUCKET}/${custom}`;
+  const path = `${process.env.CACHE_PATH}/custom/${process.env.CUSTOM_LAYERS_REGION}/${process.env.CUSTOM_LAYERS_BUCKET}/${custom}.zip`;
   createFile(path);
   return path;
 };
@@ -52,7 +52,7 @@ export const downloadImagery = (imagery) => {
 export const downloadCustom = (custom) => {
   const dirPath = `${process.env.CACHE_PATH}/custom/${process.env.CUSTOM_LAYERS_REGION}/${process.env.CUSTOM_LAYERS_BUCKET}`;
   const destPath = `${dirPath}/${custom}`;
-  const srcPath = `${__dirname}/fixtures/custom/${custom}`;
+  const srcPath = `${__dirname}/fixtures/custom/${custom}.zip`;
 
   fs.mkdirSync(dirPath, { recursive: true });
   fs.copySync(srcPath, destPath);
