@@ -167,3 +167,12 @@ export const validatePath = (req, res, next) => {
 
   throw new ValidationError(`Path: ${req.query.path}`, 'String (/[path]/*, /*)');
 };
+
+// Validate flush key
+export const validateKey = (req, res, next) => {
+  if (req.query.key == process.env.CLOUDFRONT_DISTRIBUTION) {
+    return next();
+  }
+  
+  throw new ValidationError(`Key: ${req.query.key}`, 'String');
+}
