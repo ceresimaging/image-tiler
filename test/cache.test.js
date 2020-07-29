@@ -4,18 +4,29 @@ const base = 'cache';
 const imagery = '7326e81d-40b0-4053-8f33-cd22f9a53df9';
 const custom = '0e220754-e251-41c2-ab8b-1f05962ab7e9';
 
-jest.mock('aws-sdk', () => ({
-  CloudFront: jest.fn(() => ({
-    createInvalidation: jest.fn((params) => ({
-      promise: jest.fn().mockResolvedValue({
-        Invalidation: params
-      })
+jest.mock('aws-sdk', () => {
+  const fs = require('fs-extra');
+
+  return {
+    CloudFront: jest.fn(() => ({
+      createInvalidation: jest.fn((params) => ({
+        promise: jest.fn().mockResolvedValue({
+          Invalidation: params
+        })
+      })),
+      waitFor: jest.fn((state, params) => ({
+        promise: jest.fn().mockResolvedValue()
+      }))
     })),
-    waitFor: jest.fn((state, params) => ({
-      promise: jest.fn().mockResolvedValue()
+    S3: jest.fn(() => ({
+      getObject: jest.fn(({ Bucket, Key }) => ({
+        promise: jest.fn().mockResolvedValue({
+          Body: fs.readFileSync(`./fixtures/${Bucket}/${Key}${Bucket === process.env.CUSTOM_LAYERS_BUCKET ? '.zip' : ''}`)
+        })
+      })),
     }))
-  }))
-}));
+  };
+});
 
 describe('cache', () => {
   beforeEach(() => {
@@ -57,7 +68,7 @@ describe('cache', () => {
     createFiles(2, 3);
     createFiles(2, 5);
 
-    const res = await request.get(`/${base}?age=3`);
+    const res = await request.get(`/${base}?key=${process.env.CLOUDFRONT_DISTRIBUTION}&age=3`);
 
     expect(res.body).toEqual({ files: 4, invalidations: 0 });
 
@@ -67,7 +78,7 @@ describe('cache', () => {
   test('should flush all cache', async done => {
     createFiles(10);
 
-    const res = await request.get(`/${base}?age=0`);
+    const res = await request.get(`/${base}?key=${process.env.CLOUDFRONT_DISTRIBUTION}&age=0`);
 
     expect(res.body).toEqual({ files: 10, invalidations: 0 });
 
@@ -75,7 +86,7 @@ describe('cache', () => {
   });
 
   test('should invalidate path', async done => {
-    const res = await request.get(`/${base}/invalidate`);
+    const res = await request.get(`/${base}/invalidate?key=${process.env.CLOUDFRONT_DISTRIBUTION}`);
 
     expect(res.body).toEqual({ files: 0, invalidations: 1 });
 
