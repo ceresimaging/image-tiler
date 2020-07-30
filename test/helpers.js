@@ -43,7 +43,7 @@ export const createFiles = (count = 10, age = 0, factory = createImagery) => {
 export const downloadImagery = (imagery) => {
   const dirPath = `${process.env.CACHE_PATH}/imagery/${process.env.IMAGERY_REGION}/${process.env.IMAGERY_BUCKET}`;
   const destPath = `${dirPath}/${imagery}.tif`;
-  const srcPath = `${__dirname}/fixtures/imagery/${imagery}.tif`;
+  const srcPath = `${process.cwd()}/test/fixtures/imagery/${imagery}.tif`;
 
   fs.mkdirSync(dirPath, { recursive: true });
   fs.copySync(srcPath, destPath);
@@ -52,7 +52,7 @@ export const downloadImagery = (imagery) => {
 export const downloadCustom = (custom) => {
   const dirPath = `${process.env.CACHE_PATH}/custom/${process.env.CUSTOM_LAYERS_REGION}/${process.env.CUSTOM_LAYERS_BUCKET}`;
   const destPath = `${dirPath}/${custom}`;
-  const srcPath = `${__dirname}/fixtures/custom/${custom}.zip`;
+  const srcPath = `${process.cwd()}/test/fixtures/custom/${custom}.zip`;
 
   fs.mkdirSync(dirPath, { recursive: true });
   fs.copySync(srcPath, destPath);
@@ -60,7 +60,7 @@ export const downloadCustom = (custom) => {
 
 export const downloadSatellite = () => {
   const destPath = `${process.env.CACHE_PATH}/gdal`;
-  const srcPath = `${__dirname}/fixtures/gdal`;
+  const srcPath = `${process.cwd()}/test/fixtures/gdal`;
 
   fs.mkdirSync(destPath, { recursive: true });
   fs.copySync(srcPath, destPath);
@@ -68,7 +68,7 @@ export const downloadSatellite = () => {
 
 export const uploadSatellite = () => {
   const srcPath = `${process.env.CACHE_PATH}/gdal`;
-  const destPath = `${__dirname}/fixtures/gdal`;
+  const destPath = `${process.cwd()}/test/fixtures/gdal`;
 
   fs.mkdirSync(destPath, { recursive: true });
   fs.emptyDirSync(destPath);
