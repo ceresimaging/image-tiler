@@ -68,7 +68,7 @@ const downloadFile = (req, res, next) => {
       return retry();
     }
 
-    // Download file from S3 to local cache  
+    // Download file from S3 to local cache
     s3.getObject({ Bucket: bucket, Key: key }).promise()
       .then(data => {
         fs.writeFileSync(path, data.Body, onError);

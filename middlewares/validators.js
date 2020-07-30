@@ -108,7 +108,7 @@ export const validateBuffer = (req, res, next) => {
   } else {
     throw new BufferError(req.query.buffer);
   }
-  
+
   if (Array.isArray(req.query.minBuffer)) {
     if (req.query.minBuffer.length !== 4) throw new MinBufferError(req.query.minBuffer);
     req.query.minBuffer = req.query.minBuffer.map(v => parseInt(v));
@@ -118,7 +118,7 @@ export const validateBuffer = (req, res, next) => {
   } else {
     throw new MinBufferError(req.query.minBuffer);
   }
-  
+
   next();
 };
 
@@ -170,9 +170,9 @@ export const validatePath = (req, res, next) => {
 
 // Validate flush key
 export const validateKey = (req, res, next) => {
-  if (req.query.key == process.env.CLOUDFRONT_DISTRIBUTION) {
+  if (req.query.key === process.env.CLOUDFRONT_DISTRIBUTION) {
     return next();
   }
-  
+
   throw new ValidationError(`Key: ${req.query.key}`, 'String');
-}
+};
