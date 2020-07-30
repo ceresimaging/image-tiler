@@ -20,9 +20,7 @@ const buildQuery = (imagery, flight, user, exclusive) => {
     } else {
       userFilter = `
         AND dwf.is_staff = false
-        AND (
-          dwf.is_private = false OR dwf.user_profile_id = '${user}'
-        )
+        AND dwf.user_profile_id = '${user}'
       `;
     }
   }
@@ -90,11 +88,10 @@ export const markerLayer = (req, res, next) => {
   const { flight, imagery } = req.params;
   const { user } = req.query;
   const { map } = res.locals;
-  let { exclusive = false } = req.query;
+  const { exclusive = false } = req.query;
 
   if (user === process.env.SUPPORT_USER) {
     map.fromStringSync(issueStyle);
-    exclusive = true;
   } else {
     map.fromStringSync(style);
   }
