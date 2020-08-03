@@ -1,11 +1,12 @@
 import { app, request, fixture, downloadSatellite } from './helpers';
+import { writeFileSync } from 'fs-extra';
 
 const base = 'combo';
 const imagery = '7326e81d-40b0-4053-8f33-bd22f9a53df9';
 
 jest.mock('aws-sdk');
 
-describe.skip('combo routes', () => {
+describe('combo routes', () => {
   beforeAll(() => {
     downloadSatellite();
   });
@@ -13,7 +14,7 @@ describe.skip('combo routes', () => {
   test('should return a raster tile', async done => {
     const res = await request.get(`/${base}/${imagery}/17/21455/50471.png`);
 
-    expect(res.body).toEqual(fixture('combo-raster-tile.png'));
+    expect(res.body.equals(fixture('combo-raster-tile.png'))).toBeTruthy();
 
     done();
   });
@@ -21,7 +22,7 @@ describe.skip('combo routes', () => {
   test('should return a single image', async done => {
     const res = await request.get(`/${base}/${imagery}.png`);
 
-    expect(res.body).toEqual(fixture('combo-image.png'));
+    expect(res.body.equals(fixture('combo-image.png'))).toBeTruthy();
 
     done();
   });
@@ -29,7 +30,7 @@ describe.skip('combo routes', () => {
   test('should return a single image with specific size', async done => {
     const res = await request.get(`/${base}/${imagery}.png?size=512`);
 
-    expect(res.body).toEqual(fixture('combo-image-size.png'));
+    expect(res.body.equals(fixture('combo-image-size.png'))).toBeTruthy();
 
     done();
   });
@@ -37,7 +38,7 @@ describe.skip('combo routes', () => {
   test('should return a single image with specific buffer', async done => {
     const res = await request.get(`/${base}/${imagery}.png?buffer=0.2`);
 
-    expect(res.body).toEqual(fixture('combo-image-buffer.png'));
+    expect(res.body.equals(fixture('combo-image-buffer.png'))).toBeTruthy();
 
     done();
   });
@@ -48,7 +49,7 @@ describe.skip('combo routes', () => {
 
     const res = await request.get(`/${base}/${imagery}/${flight}.png`);
 
-    expect(res.body).toEqual(fixture('combo-marker.png'));
+    expect(res.body.equals(fixture('combo-marker.png'))).toBeTruthy();
 
     done();
   });
@@ -59,7 +60,7 @@ describe.skip('combo routes', () => {
 
     const res = await request.get(`/${base}/issues/${imagery}/${flight}.png?minBuffer=50`);
 
-    expect(res.body).toEqual(fixture('combo-issues.png'));
+    expect(res.body.equals(fixture('combo-issues.png'))).toBeTruthy();
 
     done();
   });
@@ -70,7 +71,7 @@ describe.skip('combo routes', () => {
 
     const res = await request.get(`/${base}/issues/${imagery}/${flight}.png??minBuffer=50&ratio=2`);
 
-    expect(res.body).toEqual(fixture('combo-issues-ratio.png'));
+    expect(res.body.equals(fixture('combo-issues-ratio.png'))).toBeTruthy();
 
     done();
   });
