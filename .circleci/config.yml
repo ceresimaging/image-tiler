@@ -57,5 +57,5 @@ workflows:
           requires:
             - build
       - lint:
-        requires:
-          - build
+          requires:
+            - build
