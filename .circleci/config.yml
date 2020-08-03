@@ -3,6 +3,7 @@
 # Check https://circleci.com/docs/2.0/language-javascript/ for more details
 #
 version: 2
+
 jobs:
   build:
     docker:
@@ -29,11 +30,23 @@ jobs:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
   lint:
+    docker:
+      # specify the version you desire here
+      - image: maurimiranda/node-mapnik-gdal:latest
+      - image: redis
+
     steps:
+      - checkout
       - run: npm run lint
   
   test:
+    docker:
+      # specify the version you desire here
+      - image: maurimiranda/node-mapnik-gdal:latest
+      - image: redis
+
     steps:
+      - checkout
       - run:
           name: Install JUnit coverage reporter
           command: npm install --dev jest-junit
@@ -46,4 +59,14 @@ jobs:
           path: ./reports/junit/
       - store_artifacts:
           path: ./coverage
-    
+  
+workflows:
+  build_and_test:
+    jobs:
+      - build
+      - test:
+          requires:
+            - build
+      - lint:
+        requires:
+          - build
