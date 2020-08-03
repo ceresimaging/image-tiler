@@ -10,12 +10,16 @@
     "test": "NODE_ENV=test node --expose-gc ./node_modules/.bin/jest --forceExit",
     "test:watch": "npm run test --watch",
     "test:coverage": "npm run test --collect-coverage",
-    "lint": "eslint . --fix"
+    "lint": "eslint .",
+    "lint:fix": "npm run lint --fix"
   },
   "nodemonConfig": {
     "ignore": [
       "test"
     ]
+  },
+  "jest": {
+    "setupFilesAfterEnv": ["<rootDir>/test/setup.js"]
   },
   "author": "Ceres Dev Team",
   "license": "ISC",

@@ -1,4 +1,4 @@
-import { app, request, fixture } from './helpers';
+import { app, request } from './helpers';
 
 const base = 'imagery';
 const imagery = '7326e81d-40b0-4053-8f33-bd22f9a53df9';
@@ -9,7 +9,7 @@ describe('imagery routes', () => {
   test('should return a raster tile', async done => {
     const res = await request.get(`/${base}/${imagery}/17/21455/50471.png`);
 
-    expect(res.body).toEqual(fixture('imagery-raster-tile.png'));
+    expect(res.body).matchFixture('imagery-raster-tile.png');
 
     done();
   });
@@ -17,7 +17,7 @@ describe('imagery routes', () => {
   test('should return a single image', async done => {
     const res = await request.get(`/${base}/${imagery}.png`);
 
-    expect(res.body).toEqual(fixture('imagery-image.png'));
+    expect(res.body).matchFixture('imagery-image.png');
 
     done();
   });
@@ -25,7 +25,7 @@ describe('imagery routes', () => {
   test('should accept bucket as parameters', async done => {
     const res = await request.get(`/${base}/${imagery}.png?bucket=ceres-geotiff-data`);
 
-    expect(res.body).toEqual(fixture('imagery-image.png'));
+    expect(res.body).matchFixture('imagery-image.png');
 
     done();
   });
@@ -41,7 +41,7 @@ describe('imagery routes', () => {
   test('should return a single image with specific size', async done => {
     const res = await request.get(`/${base}/${imagery}.png?size=512`);
 
-    expect(res.body).toEqual(fixture('imagery-image-size.png'));
+    expect(res.body).matchFixture('imagery-image-size.png');
 
     done();
   });

@@ -10,10 +10,6 @@ export const request = supertest(app);
 
 jest.setTimeout(60000);
 
-export const fixture = (path) => {
-  return fs.readFileSync(`${process.cwd()}/test/fixtures/${path}`);
-};
-
 export const createFile = (filePath) => {
   fs.mkdirSync(path.dirname(filePath), { recursive: true });
   fs.closeSync(fs.openSync(filePath, 'w'));
