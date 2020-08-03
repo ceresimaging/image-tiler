@@ -28,7 +28,22 @@ jobs:
           paths:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
-
+  lint:
+    steps:
       - run: npm run lint
-
-      - run: npm run test
+  
+  test:
+    steps:
+      - run:
+          name: Install JUnit coverage reporter
+          command: npm install --dev jest-junit
+      - run:
+          name: Run tests with JUnit as reporter
+          command: npm run test:covertage -- --ci --runInBand --reporters=default --reporters=jest-junit
+          environment:
+            JEST_JUNIT_OUTPUT_DIR: ./reports/junit/
+      - store_test_results:
+          path: ./reports/junit/
+      - store_artifacts:
+          path: ./coverage
+    
