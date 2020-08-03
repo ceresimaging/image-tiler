@@ -1,5 +1,3 @@
-import { app, request } from './helpers';
-
 describe('main routes', () => {
   test('index should redirect to status', async done => {
     const res = await request.get('/');
@@ -26,6 +24,4 @@ describe('main routes', () => {
 
     done();
   });
-
-  afterAll(app.close);
 });

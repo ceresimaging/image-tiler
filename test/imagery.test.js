@@ -1,4 +1,3 @@
-import { app, request } from './helpers';
 
 const base = 'imagery';
 const imagery = '7326e81d-40b0-4053-8f33-bd22f9a53df9';
@@ -45,6 +44,4 @@ describe('imagery routes', () => {
 
     done();
   });
-
-  afterAll(app.close);
 });

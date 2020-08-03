@@ -1,4 +1,3 @@
-import { app, request } from './helpers';
 
 const base = 'marker';
 const imagery = 'c1923c08-5c61-420e-b569-5e00baf0c114';
@@ -20,6 +19,4 @@ describe('marker routes', () => {
 
     done();
   });
-
-  afterAll(app.close);
 });

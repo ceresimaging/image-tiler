@@ -11,7 +11,7 @@
     "test:watch": "npm run test --watch",
     "test:coverage": "npm run test --collect-coverage",
     "lint": "eslint .",
-    "lint:fix": "npm run lint --fix"
+    "lint:fix": "eslint . --fix"
   },
   "nodemonConfig": {
     "ignore": [
