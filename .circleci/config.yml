@@ -11,7 +11,8 @@ executors:
 
 jobs:
   build:
-    executor: tiler-executor
+    executor:
+      name: tiler-executor
 
     steps:
       - checkout
@@ -21,7 +22,8 @@ jobs:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
   lint:
-    executor: tiler-executor
+    executor:
+      name: tiler-executor
 
     steps:
       - checkout
@@ -32,7 +34,8 @@ jobs:
       - run: npm run lint
   
   test:
-    executor: tiler-executor
+    executor:
+      name: tiler-executor
 
     steps:
       - checkout
