@@ -6,7 +6,8 @@ executors:
       - image: maurimiranda/node-mapnik-gdal:latest
       - image: redis
     working_directory: ~/repo
-    docker_layer_caching: true
+    setup_remote_docker: 
+      docker_layer_caching: true
 
 jobs:
   build:
@@ -14,10 +15,6 @@ jobs:
 
     steps:
       - checkout
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "package.json" }}
-            - v1-dependencies-
       - run: npm install
       - save_cache:
           paths:
@@ -28,6 +25,10 @@ jobs:
 
     steps:
       - checkout
+      - restore_cache:
+        keys:
+          - v1-dependencies-{{ checksum "package.json" }}
+          - v1-dependencies-
       - run: npm run lint
   
   test:
@@ -35,6 +36,10 @@ jobs:
 
     steps:
       - checkout
+      - restore_cache:
+        keys:
+          - v1-dependencies-{{ checksum "package.json" }}
+          - v1-dependencies-
       - run:
           name: Install JUnit coverage reporter
           command: npm install -D jest-junit
