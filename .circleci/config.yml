@@ -1,12 +1,16 @@
 version: 2.1
 
-jobs:
-  build:
+executors:
+  tiler-executor:
     docker:
       - image: maurimiranda/node-mapnik-gdal:latest
       - image: redis
-
     working_directory: ~/repo
+    docker_layer_caching: true
+
+jobs:
+  build:
+    executor: tiler-executor
 
     steps:
       - checkout
@@ -20,27 +24,23 @@ jobs:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
   lint:
-    docker:
-      - image: maurimiranda/node-mapnik-gdal:latest
-      - image: redis
+    executor: tiler-executor
 
     steps:
       - checkout
       - run: npm run lint
   
   test:
-    docker:
-      - image: maurimiranda/node-mapnik-gdal:latest
-      - image: redis
+    executor: tiler-executor
 
     steps:
       - checkout
       - run:
           name: Install JUnit coverage reporter
-          command: npm install --dev jest-junit
+          command: npm install -D jest-junit
       - run:
           name: Run tests with JUnit as reporter
-          command: npm run test:covertage -- --ci --runInBand --reporters=default --reporters=jest-junit
+          command: npm run test:coverage -- --ci --runInBand --reporters=default --reporters=jest-junit
           environment:
             JEST_JUNIT_OUTPUT_DIR: ./reports/junit/
       - store_test_results:
