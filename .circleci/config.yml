@@ -1,11 +1,11 @@
 version: 2.1
 jobs:
-  build:
+  lint_and_test:
     docker:
       - image: maurimiranda/node-mapnik-gdal:latest
       - image: redis
 
-    working_directory: ~/repo
+    working_directory: ~/tiler
 
     steps:
       - checkout
@@ -36,4 +36,9 @@ jobs:
           path: ./junit/
 
       - store_artifacts:
+          path: ./coverage/lcov.info
+          prefix: tests
+
+      - store_artifacts:
           path: ./coverage/lcov-report/
+          destination: coverage
