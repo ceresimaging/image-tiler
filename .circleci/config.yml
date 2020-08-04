@@ -19,21 +19,15 @@ jobs:
       - run: 
           name: Installing dependencies
           command: npm install
-      - save_cache:
+      - persist_to_workspace:
+          root: .
           paths:
-            - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
+            - .
   lint:
     executor:
       name: my-executor
 
     steps:
-      - setup_remote_docker: 
-          docker_layer_caching: true
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "package.json" }}
-            - v1-dependencies-
       - run: 
           name: Running linter
           command: npm run lint
@@ -43,12 +37,6 @@ jobs:
       name: my-executor
 
     steps:
-      - setup_remote_docker: 
-          docker_layer_caching: true
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "package.json" }}
-            - v1-dependencies-
       - run:
           name: Installing dependencies
           command: npm install -D jest-junit
