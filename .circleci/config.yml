@@ -1,6 +1,6 @@
 version: 2.1
 jobs:
-  lint_and_test:
+  build:
     docker:
       - image: maurimiranda/node-mapnik-gdal:latest
       - image: redis
