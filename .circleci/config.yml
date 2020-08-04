@@ -1,18 +1,16 @@
 version: 2.1
 
 executors:
-  tiler-executor:
+  my-executor:
     docker:
       - image: maurimiranda/node-mapnik-gdal:latest
       - image: redis
     working_directory: ~/repo
-    setup_remote_docker: 
-      docker_layer_caching: true
 
 jobs:
   build:
     executor:
-      name: tiler-executor
+      name: my-executor
 
     steps:
       - checkout
@@ -23,26 +21,26 @@ jobs:
           key: v1-dependencies-{{ checksum "package.json" }}
   lint:
     executor:
-      name: tiler-executor
+      name: my-executor
 
     steps:
       - checkout
       - restore_cache:
-        keys:
-          - v1-dependencies-{{ checksum "package.json" }}
-          - v1-dependencies-
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+            - v1-dependencies-
       - run: npm run lint
   
   test:
     executor:
-      name: tiler-executor
+      name: my-executor
 
     steps:
       - checkout
       - restore_cache:
-        keys:
-          - v1-dependencies-{{ checksum "package.json" }}
-          - v1-dependencies-
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+            - v1-dependencies-
       - run:
           name: Install JUnit coverage reporter
           command: npm install -D jest-junit
