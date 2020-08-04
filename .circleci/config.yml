@@ -28,7 +28,6 @@ jobs:
       name: my-executor
 
     steps:
-      - checkout
       - setup_remote_docker: 
           docker_layer_caching: true
       - restore_cache:
@@ -44,7 +43,6 @@ jobs:
       name: my-executor
 
     steps:
-      - checkout
       - setup_remote_docker: 
           docker_layer_caching: true
       - restore_cache:
