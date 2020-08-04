@@ -1,5 +1,3 @@
-import { app, request } from './helpers';
-
 const base = 'combo';
 const imagery = '7326e81d-40b0-4053-8f33-bd22f9a53df9';
 
@@ -128,6 +126,4 @@ describe('validators', () => {
 
     done();
   });
-
-  afterAll(app.close);
 });
