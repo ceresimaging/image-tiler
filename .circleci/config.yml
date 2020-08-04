@@ -10,19 +10,9 @@ jobs:
     steps:
       - checkout
 
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "package.json" }}
-            - v1-dependencies-
-
       - run: 
           name: Installing dependencies
           command: npm install
-
-      - save_cache:
-          paths:
-            - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
 
       - run: 
           name: Running linter
@@ -34,10 +24,6 @@ jobs:
       
       - store_test_results:
           path: ./junit/
-
-      - store_artifacts:
-          path: ./coverage/lcov.info
-          prefix: tests
 
       - store_artifacts:
           path: ./coverage/lcov-report/
