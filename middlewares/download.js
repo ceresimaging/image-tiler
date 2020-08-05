@@ -68,15 +68,13 @@ const downloadFile = (req, res, next) => {
       return retry();
     }
 
-    // Download file from S3 to local cache  
-    s3.getObject({
-      Bucket: bucket, 
-      Key: key
-    }, (error, data) => {
-      if (error) return onError(error);
-      fs.writeFileSync(path, data.Body, onError);
-      retry();
-    });
+    // Download file from S3 to local cache
+    s3.getObject({ Bucket: bucket, Key: key }).promise()
+      .then(data => {
+        fs.writeFileSync(path, data.Body, onError);
+        retry();
+      })
+      .catch(onError);
   };
 
   // Create directory and trigger download

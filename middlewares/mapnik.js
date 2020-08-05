@@ -66,10 +66,10 @@ export const setExtent = (req, res, next) => {
 
   if (!buffer) return next();
 
-  // Calculate buffer 
+  // Calculate buffer
   // Left/Right use map width, Top/Bottom use height
   // If buffer is not enough, minBuffer is applied
-  let bufferSize = buffer.map((b, i) => {
+  const bufferSize = buffer.map((b, i) => {
     let bufferSize = ([0, 2].includes(i) ? map.width : map.height) * b * map.scale();
     if (bufferSize < minBuffer[i]) {
       bufferSize = minBuffer[i];
@@ -83,7 +83,7 @@ export const setExtent = (req, res, next) => {
   extent[2] += bufferSize[2];
   extent[1] -= bufferSize[1];
   extent[3] += bufferSize[3];
-  
+
   map.extent = extent;
 
   next();

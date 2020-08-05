@@ -70,5 +70,7 @@ app.use((error, req, res, next) => {
 
 // Start Server
 export default app.listen(process.env.PORT, process.env.HOST, () => {
-  console.info(`Running on http://${process.env.HOST}:${process.env.PORT}`);
+  if (process.env.NODE_ENV !== 'test') {
+    console.info(`Running on http://${process.env.HOST}:${process.env.PORT}`);
+  }
 });

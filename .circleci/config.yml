@@ -1,34 +1,30 @@
-# JavaScript Node CircleCI 2.0 configuration file
-#
-# Check https://circleci.com/docs/2.0/language-javascript/ for more details
-#
-version: 2
+version: 2.1
 jobs:
   build:
     docker:
-      # specify the version you desire here
       - image: maurimiranda/node-mapnik-gdal:latest
       - image: redis
 
-    working_directory: ~/repo
+    working_directory: ~/tiler
 
     steps:
       - checkout
 
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "package.json" }}
-            # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-
+      - run: 
+          name: Installing dependencies
+          command: npm install
 
-      - run: npm install
+      - run: 
+          name: Running linter
+          command: npm run lint
 
-      - save_cache:
-          paths:
-            - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
+      - run:
+          name: Running tests
+          command: npm run test:report
+      
+      - store_test_results:
+          path: ./junit/
 
-      - run: npm run lint
-
-      - run: npm run test
+      - store_artifacts:
+          path: ./coverage/lcov-report/
+          destination: coverage
