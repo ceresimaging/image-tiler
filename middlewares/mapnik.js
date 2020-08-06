@@ -61,9 +61,16 @@ export const setExtent = (req, res, next) => {
   const { buffer, minBuffer } = req.query;
   const { map } = res.locals;
 
+  // If there are not layers, continue
+  if (!map.layers().length) return next();
+  
+  // If extent is already set, continue
+  if (map.extent[0] !== Number.MAX_VALUE) return next();
+
   // Zoom to current layers
   map.zoomAll();
 
+  // If there's no buffer to add, continue
   if (!buffer) return next();
 
   // Calculate buffer
