@@ -101,7 +101,10 @@ export const markerLayer = (req, res, next) => {
   layer.datasource = buildDataSource(imagery, flight, user, exclusive);
   layer.styles = ['marker-icon'];
 
-  map.add_layer(layer);
+  // Add layer if contains at least 1 feature
+  if (layer.datasource.extent()[0] !== Number.MAX_VALUE) {
+    map.add_layer(layer);
+  }
 
   next();
 };

@@ -72,6 +72,7 @@ router
     markerLayer,
     setExtent,
     imageryLayer,
+    setExtent,
     satelliteLayer,
     rasterResponse,
     respond
