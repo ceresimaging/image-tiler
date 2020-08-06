@@ -63,7 +63,7 @@ export const setExtent = (req, res, next) => {
 
   // If there are not layers, continue
   if (!map.layers().length) return next();
-  
+
   // If extent is already set, continue
   if (map.extent[0] !== Number.MAX_VALUE) return next();
 
