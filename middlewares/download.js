@@ -72,7 +72,7 @@ const downloadFile = (req, res, next) => {
     s3.getObject({ Bucket: bucket, Key: key }).promise()
       .then(data => {
         fs.writeFileSync(path, data.Body, onError);
-        retry();
+        setTimeout(retry, 1000);
       })
       .catch(onError);
   };
