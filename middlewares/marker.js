@@ -19,7 +19,7 @@ const buildQuery = (imagery, flight, user, exclusive) => {
       userFilter = `AND cup.id = '${user}'`;
     } else {
       userFilter = `
-        AND m.is_staff = false
+        AND m.staff_only = false
         AND cup.id = '${user}'
       `;
     }
@@ -55,6 +55,13 @@ const buildQuery = (imagery, flight, user, exclusive) => {
             JOIN published_imagery_flight pfl2
               ON pfl2.field_id = pdf.id
             WHERE pio.geotiff_url LIKE '%${imagery}%'
+          )
+          AND (
+            -- Remove flight-only markers
+            m.end_date is NULL OR
+            m.start_date is NULL OR
+            m.start_date::date != pif.date OR
+            m.end_date::date != pif.date
           )
           AND (
             m.start_date IS NULL OR m.start_date::date <= pif.date
