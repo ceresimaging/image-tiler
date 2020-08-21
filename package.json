@@ -37,7 +37,7 @@
     "cors": "^2.8.5",
     "express": "~4.16.4",
     "ioredis": "^4.17.3",
-    "mapnik": "file:/src/node-mapnik",
+    "mapnik": "^4.5.2",
     "morgan": "^1.9.1",
     "redlock": "^4.1.0",
     "sharp": "^0.25.4",
