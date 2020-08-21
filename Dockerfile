@@ -1,4 +1,4 @@
-inkFROM maurimiranda/node-mapnik-gdal:latest
+FROM maurimiranda/node-mapnik-gdal:latest
 
 RUN \
   cd /src/node-mapnik && \
