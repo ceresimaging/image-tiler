@@ -60,14 +60,14 @@ const buildQuery = (imagery, flight, user, exclusive) => {
             -- Remove flight-only markers
             m.end_date is NULL OR
             m.start_date is NULL OR
-            m.start_date::date != pif.date OR
-            m.end_date::date != pif.date
+            m.start_date != pif.date OR
+            m.end_date != pif.date
           )
           AND (
-            m.start_date IS NULL OR m.start_date::date <= pif.date
+            m.start_date IS NULL OR m.start_date <= pif.date
           )
           AND (
-            m.end_date IS NULL OR m.start_date::date >= pif.date
+            m.end_date IS NULL OR m.start_date >= pif.date
           )
         )
       )
