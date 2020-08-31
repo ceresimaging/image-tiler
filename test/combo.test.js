@@ -68,7 +68,7 @@ describe('combo routes', () => {
     const imagery = '4a6fa821-f022-4864-8e55-b8c9231693d4';
     const flight = '5e771760-a22f-4a98-aa38-f63e0de40827';
 
-    const res = await request.get(`/${base}/issues/${imagery}/${flight}.png??minBuffer=50&ratio=2`);
+    const res = await request.get(`/${base}/issues/${imagery}/${flight}.png?minBuffer=50&ratio=2`);
 
     expect(res.body).matchFixture('combo-issues-ratio.png');
 
