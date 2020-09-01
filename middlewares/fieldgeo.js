@@ -23,9 +23,9 @@ const buildQuery = (farm, field) => {
     JOIN customers_oldfarm cof
       ON cof.id = cf.farm_id
     WHERE
-      cof.id = '${farm}'
+      df.is_active = true
+      ${farm ? `AND cof.id = '${farm}'` : ''}
       ${field ? `AND df.id = '${field}'` : ''}
-      AND df.is_active = true
   ) AS fields`;
 };
 
