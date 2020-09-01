@@ -1,12 +1,11 @@
 FROM maurimiranda/node-mapnik-gdal:latest
 
-RUN cd /src/node-mapnik && npm link
-
+# Install Node packages
 WORKDIR /srv/tiler
 
-# Install Node packages
 COPY package.json package-lock.json ./
-RUN npm install && npm link mapnik
+
+RUN npm install && npm link /src/node-mapnik
 
 # Copy code
 COPY . .
