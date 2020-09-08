@@ -55,7 +55,7 @@ const buildQuery = (imagery, flight, user, exclusive) => {
         OR dwf.start_date <= (
           SELECT date
           FROM published_imagery_flight
-          WHERE id = '25191b4d-e855-4064-8a07-10cc9e8f74db'
+          WHERE id = '${flight}'
         )
       )
       AND (
@@ -63,7 +63,7 @@ const buildQuery = (imagery, flight, user, exclusive) => {
         OR dwf.end_date >= (
           SELECT date
           FROM published_imagery_flight
-          WHERE id = '25191b4d-e855-4064-8a07-10cc9e8f74db'
+          WHERE id = '${flight}'
         )
       )
  
