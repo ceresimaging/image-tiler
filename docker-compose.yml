@@ -20,8 +20,11 @@ services:
     working_dir: /srv/tiler
     command: npm run dev
     env_file: .env
+    environment:
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
     depends_on:
-      - redis
+      - redis-tiler
 
-  redis:
+  redis-tiler:
     image: redis:latest

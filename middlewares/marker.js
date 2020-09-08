@@ -16,33 +16,36 @@ const buildQuery = (imagery, flight, user, exclusive) => {
 
   if (user) {
     if (exclusive) {
-      userFilter = `AND dwf.user_profile_id = '${user}'`;
+      userFilter = `AND cup.id = '${user}'`;
     } else {
       userFilter = `
-        AND dwf.is_staff = false
-        AND dwf.user_profile_id = '${user}'
+        AND m.staff_only = false
+        AND cup.id = '${user}'
       `;
     }
   }
 
   return `(
-    SELECT dwf.id AS id,
-      ptf.feature AS geom,
-      dwf.marker_category AS category,
-      dwf.marker_type AS type,
+    SELECT m.id AS id,
+      m.geometry AS geom,
+      m.type AS category,
       ROW_NUMBER() OVER () AS number
-    FROM published_imagery_drawingfeature dwf
-    JOIN published_imagery_pointfeature ptf
-      ON ptf.drawingfeature_ptr_id = dwf.id
+    FROM markers m
+    JOIN auth_user as u 
+      ON m.created_by_id = u.id
+    JOIN platform_auth_ceresuserprofile cup
+      ON u.id = cup.user_id
+    JOIN visits v 
+      ON m.visit_id = v.id
     JOIN published_imagery_flight pif
-      ON pif.id = dwf.flight_id
-    WHERE dwf.type = 'Point'
-      AND dwf.deleted = false
-      AND dwf.is_open = true
+      ON v.id = pif.visit_id
+    WHERE ST_GeometryType(m.geometry) = 'ST_Point'
+      AND m.deleted is null 
+      AND m.is_open = true
       AND (
-        dwf.flight_id = '${flight}'
+        pif.id = '${flight}'
         OR (
-          dwf.flight_id IN (
+          pif.id IN (
             SELECT pfl2.id
             FROM published_imagery_imageryoverlay pio
             JOIN published_imagery_flight pfl
@@ -53,27 +56,23 @@ const buildQuery = (imagery, flight, user, exclusive) => {
               ON pfl2.field_id = pdf.id
             WHERE pio.geotiff_url LIKE '%${imagery}%'
           )
-          AND dwf.flight_only = false
-        )
-      )
-      AND (
-        dwf.start_date IS NULL
-        OR dwf.start_date <= (
-          SELECT date
-          FROM published_imagery_flight
-          WHERE id = '${flight}'
-        )
-      )
-      AND (
-        dwf.end_date IS NULL
-        OR dwf.end_date >= (
-          SELECT date
-          FROM published_imagery_flight
-          WHERE id = '${flight}'
+          AND (
+            -- Remove flight-only markers
+            m.end_date is NULL OR
+            m.start_date is NULL OR
+            m.start_date != pif.date OR
+            m.end_date != pif.date
+          )
+          AND (
+            m.start_date IS NULL OR m.start_date <= pif.date
+          )
+          AND (
+            m.end_date IS NULL OR m.start_date >= pif.date
+          )
         )
       )
       ${userFilter}
-    ORDER BY dwf.date_created
+    ORDER BY m.created_at
   ) AS markers`;
 };
 
