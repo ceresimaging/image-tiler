@@ -51,16 +51,16 @@ const buildQuery = (imagery, flight, user, exclusive) => {
         m.end_date != pif.date
       )
       AND (
-        dwf.start_date IS NULL
-        OR dwf.start_date <= (
+        m.start_date IS NULL
+        OR m.start_date <= (
           SELECT date
           FROM published_imagery_flight
           WHERE id = '${flight}'
         )
       )
       AND (
-        dwf.end_date IS NULL
-        OR dwf.end_date >= (
+        m.end_date IS NULL
+        OR m.end_date >= (
           SELECT date
           FROM published_imagery_flight
           WHERE id = '${flight}'
