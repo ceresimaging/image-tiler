@@ -42,31 +42,35 @@ const buildQuery = (imagery, flight, user, exclusive) => {
     WHERE ST_GeometryType(m.geometry) = 'ST_Point'
       AND m.deleted is null 
       AND m.is_open = true
-      AND pif.id = '${flight}'
       AND (
-        -- Remove flight-only markers
-        m.end_date is NULL OR
-        m.start_date is NULL OR
-        m.start_date != pif.date OR
-        m.end_date != pif.date
-      )
-      AND (
-        m.start_date IS NULL
-        OR m.start_date <= (
-          SELECT date
-          FROM published_imagery_flight
-          WHERE id = '${flight}'
+        pif.id = '${flight}'
+        OR (
+          pif.id IN (
+            SELECT pfl2.id
+            FROM published_imagery_imageryoverlay pio
+            JOIN published_imagery_flight pfl
+              ON pfl.id = pio.flight_id
+            JOIN published_imagery_displayfield pdf
+              ON pdf.id = pfl.field_id
+            JOIN published_imagery_flight pfl2
+              ON pfl2.field_id = pdf.id
+            WHERE pio.geotiff_url LIKE '%${imagery}%'
+          )
+          AND (
+            -- Remove flight-only markers
+            m.end_date is NULL OR
+            m.start_date is NULL OR
+            m.start_date != pif.date OR
+            m.end_date != pif.date
+          )
+          AND (
+            m.start_date IS NULL OR m.start_date <= pif.date
+          )
+          AND (
+            m.end_date IS NULL OR m.start_date >= pif.date
+          )
         )
       )
-      AND (
-        m.end_date IS NULL
-        OR m.end_date >= (
-          SELECT date
-          FROM published_imagery_flight
-          WHERE id = '${flight}'
-        )
-      )
- 
       ${userFilter}
     ORDER BY m.created_at
   ) AS markers`;
