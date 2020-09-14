@@ -1,3 +1,4 @@
+import { request, app } from './helpers';
 
 const base = 'soil';
 
@@ -17,4 +18,6 @@ describe('soil routes', () => {
 
     done();
   });
+
+  afterAll(app.close);
 });

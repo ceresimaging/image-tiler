@@ -4,3 +4,4 @@ coverage
 demo
 junit
 .vscode
+test/log

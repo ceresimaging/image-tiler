@@ -57,17 +57,20 @@ const buildQuery = (imagery, flight, user, exclusive) => {
             WHERE pio.geotiff_url LIKE '%${imagery}%'
           )
           AND (
-            -- Remove flight-only markers
-            m.end_date is NULL OR
-            m.start_date is NULL OR
-            m.start_date != pif.date OR
-            m.end_date != pif.date
+            m.start_date IS NULL
+            OR m.start_date <= (
+              SELECT date
+              FROM published_imagery_flight
+              WHERE id = '${flight}'
+            )
           )
           AND (
-            m.start_date IS NULL OR m.start_date <= pif.date
-          )
-          AND (
-            m.end_date IS NULL OR m.start_date >= pif.date
+            m.end_date IS NULL
+            OR m.end_date >= (
+              SELECT date
+              FROM published_imagery_flight
+              WHERE id = '${flight}'
+            )
           )
         )
       )

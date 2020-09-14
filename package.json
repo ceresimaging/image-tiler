@@ -8,6 +8,7 @@
     "dev:inspect": "npm run dev --inspect=0.0.0.0:9229",
     "start": "node --expose-gc --experimental-modules --es-module-specifier-resolution=node server",
     "test": "NODE_ENV=test node --expose-gc ./node_modules/.bin/jest --forceExit",
+    "test:refresh": "REFRESH_FIXTURES=true npm run test",
     "test:watch": "npm run test -- --watch",
     "test:report": "npm run test -- --collect-coverage --ci --runInBand --reporters=default --reporters=jest-junit",
     "lint": "eslint .",

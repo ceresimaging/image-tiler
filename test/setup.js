@@ -1,16 +1,21 @@
-import supertest from 'supertest';
 import fs from 'fs-extra';
 
-import app from '../server';
+jest.setTimeout(10000);
 
-jest.setTimeout(60000);
+const logDir = `${process.cwd()}/test/log`;
 
-global.request = supertest(app);
+fs.emptyDirSync(logDir);
 
 expect.extend({
   matchFixture (data, fixture) {
+    fs.writeFileSync(`${logDir}/${fixture}`, data);
+
     return {
-      pass: data.equals(fs.readFileSync(`${process.cwd()}/test/fixtures/${fixture}`)),
+      pass:
+        Buffer.isBuffer(data) &&
+        data.equals(
+          fs.readFileSync(`${process.cwd()}/test/fixtures/${fixture}`)
+        ),
       message: () => 'Response does not match fixture'
     };
   }
