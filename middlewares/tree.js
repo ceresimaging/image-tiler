@@ -12,7 +12,8 @@ const buildTreeQuery = (field) => {
       t.plant_date::text,
       t.remove_date::text,
       v.id::text varietal_id,
-      v.name varietal
+      v.name varietal,
+      v.is_pollinator is_pollinator
     FROM trees t
     LEFT JOIN customers_cropvarietal v ON v.id = t.varietal_id
     JOIN published_imagery_displayfield df ON df.source_field_id = t.field_id
@@ -31,7 +32,8 @@ const buildMissingQuery = (field) => {
       t.plant_date::text,
       t.remove_date::text,
       v.id::text varietal_id,
-      v.name varietal
+      v.name varietal,
+      v.is_pollinator is_pollinator
     FROM trees t
     LEFT JOIN customers_cropvarietal v ON v.id = t.varietal_id
     JOIN published_imagery_displayfield df ON df.source_field_id = t.field_id
