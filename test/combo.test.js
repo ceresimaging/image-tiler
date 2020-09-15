@@ -1,4 +1,4 @@
-import { downloadSatellite } from './helpers';
+import { request, app, downloadSatellite, uploadSatellite } from './helpers';
 
 const base = 'combo';
 const imagery = '7326e81d-40b0-4053-8f33-bd22f9a53df9';
@@ -7,7 +7,7 @@ jest.mock('aws-sdk');
 
 describe('combo routes', () => {
   beforeAll(() => {
-    downloadSatellite();
+    if (!process.env.REFRESH_FIXTURES) downloadSatellite();
   });
 
   test('should return a raster tile', async done => {
@@ -73,5 +73,21 @@ describe('combo routes', () => {
     expect(res.body).matchFixture('combo-issues-ratio.png');
 
     done();
+  });
+
+  test('should return a single image with filtered markers', async (done) => {
+    const imagery = '76bcbd2f-9e5a-44b4-a4a3-48ffc2f9b9c5';
+    const flight = '25191b4d-e855-4064-8a07-10cc9e8f74db';
+
+    const res = await request.get(`/${base}/${imagery}/${flight}.png`);
+
+    expect(res.body).matchFixture('combo-image-filter.png');
+
+    done();
+  });
+
+  afterAll((done) => {
+    if (process.env.REFRESH_FIXTURES) uploadSatellite();
+    app.close(done);
   });
 });

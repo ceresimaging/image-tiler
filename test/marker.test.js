@@ -1,3 +1,5 @@
+import { request, app } from './helpers';
+
 const base = 'marker';
 const imagery = 'c1923c08-5c61-420e-b569-5e00baf0c114';
 const flight = 'ebe0d55b-e957-44ab-8240-7202150a3789';
@@ -18,4 +20,6 @@ describe('marker routes', () => {
 
     done();
   });
+
+  afterAll(app.close);
 });

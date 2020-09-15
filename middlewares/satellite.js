@@ -7,6 +7,9 @@ mapnik.registerDatasource(`${mapnik.settings.paths.input_plugins}/gdal.input`);
 // Read stylesheet files
 const satelliteStyle = fs.readFileSync('styles/satellite.xml', 'utf8');
 
+// Offline mode
+const offline = process.env.NODE_ENV === 'test' && !process.env.REFRESH_FIXTURES;
+
 const config = {
   wms: `<GDAL_WMS>
           <Service name="WMS">
@@ -30,7 +33,7 @@ const config = {
             <Path>${process.env.CACHE_PATH}/gdal</Path>
             <Depth>0</Depth>
           </Cache>
-          <OfflineMode>${process.env.NODE_ENV === 'test'}</OfflineMode>
+          <OfflineMode>${offline}</OfflineMode>
         </GDAL_WMS>`,
   tms: `<GDAL_WMS>
           <Service name="TMS">
@@ -54,7 +57,7 @@ const config = {
             <Path>${process.env.CACHE_PATH}/gdal</Path>
             <Depth>0</Depth>
           </Cache>
-          <OfflineMode>${process.env.NODE_ENV === 'test'}</OfflineMode>
+          <OfflineMode>${offline}</OfflineMode>
         </GDAL_WMS>`,
   wmts: `<GDAL_WMTS>
           <GetCapabilitiesUrl>${process.env.PROXY_BASE_URL}/service?REQUEST=GetCapabilities&amp;SERVICE=WMTS</GetCapabilitiesUrl>
@@ -74,7 +77,7 @@ const config = {
             <Path>${process.env.CACHE_PATH}/gdal</Path>
             <Depth>0</Depth>
           </Cache>
-          <OfflineMode>${process.env.NODE_ENV === 'test'}</OfflineMode>
+          <OfflineMode>${offline}</OfflineMode>
         </GDAL_WMTS>`
 };
 

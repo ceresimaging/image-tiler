@@ -1,6 +1,13 @@
 import fs from 'fs-extra';
 import path from 'path';
 import { v4 as uuid } from 'uuid';
+import supertest from 'supertest';
+
+import app from '../server';
+
+export const request = supertest(app);
+
+export { app };
 
 export const createFile = (filePath) => {
   fs.mkdirSync(path.dirname(filePath), { recursive: true });

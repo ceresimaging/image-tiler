@@ -1,4 +1,4 @@
-import { createImagery, createCustom, createFiles, wipeCache } from './helpers';
+import { request, app, createImagery, createCustom, createFiles, wipeCache } from './helpers';
 
 const base = 'cache';
 const imagery = '7326e81d-40b0-4053-8f33-cd22f9a53df9';
@@ -70,4 +70,6 @@ describe('cache', () => {
 
     done();
   });
+
+  afterAll(app.close);
 });
