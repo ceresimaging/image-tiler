@@ -28,3 +28,7 @@ jobs:
       - store_artifacts:
           path: ./coverage/lcov-report/
           destination: coverage
+
+      - store_artifacts:
+          path: ./log/
+          destination: log
