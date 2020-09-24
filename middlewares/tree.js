@@ -20,6 +20,7 @@ const buildTreeQuery = (field) => {
     WHERE df.id = '${field}'
       AND t.deleted is NULL 
       AND t.is_present = true
+    ORDER BY t.id
   ) AS trees`;
 };
 
@@ -40,7 +41,8 @@ const buildMissingQuery = (field) => {
     WHERE df.id = '${field}'
       AND t.deleted is NULL 
       AND t.is_present = false
-  ) AS trees`;
+    ORDER BY t.id
+    ) AS trees`;
 };
 
 const buildDataSource = (field, queryBuilder) => {
