@@ -1,9 +1,8 @@
 version: '3'
 
 networks:
-  default:
-    external:
-      name: ceres-dev
+  ceres-dev:
+    external: true
 
 services:
   tiler:
@@ -23,8 +22,19 @@ services:
     environment:
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
-    depends_on:
+    links:
       - redis-tiler
+      - postgres-tiler
+    networks:
+      - default
+      - ceres-dev
 
   redis-tiler:
     image: redis:latest
+
+  postgres-tiler:
+    image: postgis/postgis
+    environment:
+      - POSTGRES_USER=tiler
+      - POSTGRES_PASSWORD=tiler
+      - POSTGRES_DBNAME=tiler

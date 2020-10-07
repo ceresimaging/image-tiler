@@ -14,7 +14,7 @@ describe('tree routes', () => {
     done();
   });
 
-  test.skip('should return a vector tile with trees data', async done => {
+  test('should return a vector tile with trees data', async done => {
     const res = await request.get(`/${base}/${field}/${visit}/${overlay}/15/5337/12656.mvt`).responseType('arraybuffer');
 
     expect(res.body).matchFixture('tree-data-vector-tile.mvt');
