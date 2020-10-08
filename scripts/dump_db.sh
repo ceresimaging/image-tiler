@@ -47,11 +47,6 @@ psql $url \
       FROM visits
       WHERE id IN (SELECT DISTINCT visit_id FROM tmp_trees_data)
     );
-    CREATE TABLE tmp_published_imagery_displayfield AS (
-      SELECT * 
-      FROM published_imagery_displayfield 
-      WHERE source_field_id = 55994
-    );
     CREATE TABLE tmp_published_imagery_overlaytype AS (
       SELECT * 
       FROM published_imagery_overlaytype 
@@ -60,7 +55,28 @@ psql $url \
     CREATE TABLE tmp_flights AS (
       SELECT * 
       FROM flights 
-      WHERE id IN (SELECT flight_id FROM tmp_visits)
+      WHERE id IN (SELECT DISTINCT flight_id FROM tmp_visits)
+    );
+    CREATE TABLE tmp_customers_oldfarm AS (
+      SELECT *
+      FROM customers_oldfarm
+      WHERE id = '7355293c-e23d-4aab-8ff0-e2f8f1b83f4e'
+    );
+    CREATE TABLE tmp_customers_farm AS (
+      SELECT *
+      FROM customers_farm
+      WHERE farm_id = (SELECT id FROM tmp_customers_oldfarm)
+    );
+    CREATE TABLE tmp_published_imagery_displayfield AS (
+      SELECT * 
+      FROM published_imagery_displayfield 
+      WHERE source_field_id = 55994 
+        OR source_field_id IN (SELECT id FROM tmp_customers_farm) 
+    );
+    CREATE TABLE tmp_customers_geo AS (
+      SELECT * 
+      FROM customers_geo 
+      WHERE farm_id IN (SELECT DISTINCT source_field_id FROM tmp_published_imagery_displayfield)
     );
   "
 
