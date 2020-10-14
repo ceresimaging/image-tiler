@@ -33,7 +33,8 @@ const buildTreeDataQuery = (field, visit, overlay) => {
       o.name AS overlay,
       t.geometry AS geom,
       v.name varietal,
-      td.value
+      td.value,
+      td.color
     FROM trees_data td
     JOIN trees t ON t.id = td.tree_id
     JOIN customers_cropvarietal v ON v.id = t.varietal_id
