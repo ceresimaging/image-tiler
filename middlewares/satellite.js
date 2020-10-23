@@ -49,8 +49,8 @@ const config = {
             <TileCountY>1</TileCountY>
             <YOrigin>bottom</YOrigin>
           </DataWindow>
-          <BlockSizeX>256</BlockSizeX>
-          <BlockSizeY>256</BlockSizeY>
+          <BlockSizeX>512</BlockSizeX>
+          <BlockSizeY>512</BlockSizeY>
           <Projection>EPSG:3857</Projection>
           <MaxConnections>20</MaxConnections>
           <Cache>
