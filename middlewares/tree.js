@@ -81,7 +81,7 @@ export const treeDataLayer = (req, res, next) => {
   const { field, visit, overlay } = req.params;
   const { map } = res.locals;
 
-  const trees = new mapnik.Layer('trees_data');
+  const trees = new mapnik.Layer('trees');
   trees.datasource = buildDataSource(buildTreeDataQuery, [field, visit, overlay]);
   map.add_layer(trees);
 
