@@ -10,9 +10,6 @@ export const respond = (req, res, next) => {
 
   // Send data
   res.send(res.locals.data);
-
-  // Call Garbage Collector to avoid memory issues
-  global.gc();
 };
 
 // Set no-cache header
