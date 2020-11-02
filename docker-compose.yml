@@ -18,7 +18,7 @@ services:
       - 8888:80
       - 9229:9229
     working_dir: /srv/tiler
-    command: npm run dev
+    command: npm run start
     env_file: .env
     environment:
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
