@@ -51,7 +51,7 @@ router
     createMap,
     imageryLayer,
     setExtent,
-    satelliteLayer,
+    // satelliteLayer,
     markerLayer,
     rasterResponse,
     noCache,
