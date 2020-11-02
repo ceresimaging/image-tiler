@@ -52,7 +52,7 @@ router
     imageryLayer,
     setExtent,
     satelliteLayer,
-    // markerLayer,
+    markerLayer,
     rasterResponse,
     noCache,
     respond
