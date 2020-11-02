@@ -68,8 +68,6 @@ app.use((error, req, res, next) => {
   }
 });
 
-process.env.CACHE_PATH = '/tmp';
-
 // Start Server
 export default app.listen(process.env.PORT, process.env.HOST, () => {
   if (process.env.NODE_ENV !== 'test') {
