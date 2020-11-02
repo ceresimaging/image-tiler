@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "npx nodemon -e js,xml,json --expose-gc --experimental-modules --es-module-specifier-resolution=node server",
     "dev:inspect": "npm run dev --inspect=0.0.0.0:9229",
-    "start": "pm2 start server.js --node-args='--expose-gc --experimental-modules --es-module-specifier-resolution=node'",
+    "start": "pm2 start processes.json --node-args='--expose-gc --experimental-modules --es-module-specifier-resolution=node'",
     "test": "NODE_ENV=test node --expose-gc ./node_modules/.bin/jest --forceExit",
     "test:refresh": "REFRESH_FIXTURES=true npm run test",
     "test:watch": "npm run test -- --watch",
