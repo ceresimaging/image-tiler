@@ -4,8 +4,10 @@ import mapnik from 'mapnik';
 export const rasterResponse = (req, res, next) => {
   const { map } = res.locals;
 
+  const image = new mapnik.Image(map.width, map.height);
+
   map.render(
-    new mapnik.Image(map.width, map.height),
+    image,
     (renderError, tile) => {
       if (renderError) return next(renderError);
 
@@ -17,6 +19,9 @@ export const rasterResponse = (req, res, next) => {
         res.set('Content-Type', 'image/png');
 
         next();
+
+        delete image;
+        delete tile;
       });
     }
   );
