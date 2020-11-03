@@ -2,7 +2,7 @@ import mapnik from 'mapnik';
 
 let image;
 
-console.log(mapnik);
+console.log(mapnik.version);
 
 // Generate PNG
 export const rasterResponse = (req, res, next) => {
