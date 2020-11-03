@@ -50,9 +50,9 @@ router
     downloadTiff,
     createMap,
     imageryLayer,
+    setExtent,
     satelliteLayer,
     markerLayer,
-    setExtent,
     rasterResponse,
     noCache,
     respond
