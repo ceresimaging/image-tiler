@@ -2,6 +2,8 @@ import mapnik from 'mapnik';
 
 let image;
 
+console.log(mapnik);
+
 // Generate PNG
 export const rasterResponse = (req, res, next) => {
   const { map } = res.locals;
