@@ -1,10 +1,12 @@
 import mapnik from 'mapnik';
 
+const image;
+
 // Generate PNG
 export const rasterResponse = (req, res, next) => {
   const { map } = res.locals;
 
-  const image = new mapnik.Image(map.width, map.height);
+  image = new mapnik.Image(map.width, map.height);
 
   map.render(
     image,
@@ -19,9 +21,6 @@ export const rasterResponse = (req, res, next) => {
         res.set('Content-Type', 'image/png');
 
         next();
-
-        delete image;
-        delete tile;
       });
     }
   );
