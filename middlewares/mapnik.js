@@ -1,6 +1,6 @@
 import mapnik from 'mapnik';
 
-const image = new mapnik.Image(100, 100);
+let image;
 
 // Generate PNG
 export const rasterResponse = (req, res, next) => {
