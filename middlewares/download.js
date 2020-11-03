@@ -1,15 +1,15 @@
 import fs from 'fs';
 
-import Redis from 'ioredis';
-import Redlock from 'redlock';
+// import Redis from 'ioredis';
+// import Redlock from 'redlock';
 import AWS from 'aws-sdk';
 
 import { flush } from './cache';
 
-const redis = new Redis({ host: process.env.REDIS_HOST });
-const redlock = new Redlock([redis], {
-  retryCount: -1
-});
+// const redis = new Redis({ host: process.env.REDIS_HOST });
+// const redlock = new Redlock([redis], {
+//   retryCount: -1
+// });
 
 const s3 = new AWS.S3({
   maxRetries: 10
@@ -31,18 +31,18 @@ const downloadFile = (req, res, next) => {
     }
 
     // Get the lock to avoid multiple downloads for the same file
-    const lock = await redlock.lock(filename, 10000);
+    // const lock = await redlock.lock(filename, 10000);
 
     // If something fails, unlock the queue and respond with error
     const fail = () => {
-      lock.unlock().catch(next);
+      // lock.unlock().catch(next);
       res.status(404).send('Error downloading source data file, please check params');
     };
 
     // Before calling download recursively, we have to unlock the queue
     // If the unlock fails is because the lock was lost so we can ignore the error
     const retry = () => {
-      lock.unlock().catch((e) => {});
+      // lock.unlock().catch((e) => {});
       download();
     };
 
