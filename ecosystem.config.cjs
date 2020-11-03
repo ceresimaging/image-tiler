@@ -7,6 +7,9 @@ module.exports = {
     exec_mode: 'cluster',
     max_memory_restart: '550M',
     watch: true,
-    watch_delay: 1000
+    watch_delay: 1000,
+    env: {
+      DEGUG: "",
+    },
   }]
 };
