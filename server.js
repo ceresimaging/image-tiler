@@ -11,6 +11,8 @@ import marker from './routes/marker';
 import custom from './routes/custom';
 import tree from './routes/tree';
 
+process.env.DEBUG = '';
+
 // Create Express App
 const app = express();
 
