@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "npx nodemon -e js,xml,json --experimental-modules --es-module-specifier-resolution=node server",
     "dev:inspect": "npm run dev --inspect=0.0.0.0:9229",
-    "start": "node --experimental-modules --es-module-specifier-resolution=node server",
+    "start": "pm2-runtime start ecosystem.config.cjs",
     "test": "NODE_ENV=test node ./node_modules/.bin/jest --forceExit",
     "test:refresh": "REFRESH_FIXTURES=true npm run test",
     "test:watch": "npm run test -- --watch",
@@ -39,6 +39,7 @@
     "express": "^4.17.1",
     "ioredis": "^4.19.2",
     "morgan": "^1.10.0",
+    "pm2": "^4.5.0",
     "redlock": "^4.2.0",
     "sharp": "^0.25.4",
     "validator": "^12.2.0"
