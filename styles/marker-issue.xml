@@ -2,7 +2,7 @@
   <Style name="marker-icon">
     <Rule>
       <Filter>[category] = 'issue'</Filter>
-      <MarkersSymbolizer allow-overlap="true" fill="#FFFFFF" width="25" file="styles/images/marker-hole.svg" transform="translate(0 -15)" ignore-placement="true" stroke="#000000" stroke-width="25" stroke-opacity="0.6" />
+      <MarkersSymbolizer allow-overlap="true" fill="#FFFFFF" width="25" file="/srv/tiler/styles/images/marker-hole.svg" transform="translate(0 -15)" ignore-placement="true" stroke="#000000" stroke-width="25" stroke-opacity="0.6" />
     </Rule>
   </Style>
 </Map>

@@ -1,4 +1,6 @@
 import mapnik from 'mapnik';
+import fs from 'fs';
+import { exec }  from 'child_process';
 
 // Generate PNG
 export const rasterResponse = (req, res, next) => {
@@ -21,6 +23,33 @@ export const rasterResponse = (req, res, next) => {
     }
   );
 };
+
+// Generate PNG with external renderer
+export const rasterResponseExt = (req, res, next) => {
+  const { map } = res.locals;
+
+  const name = `/tmp/${Date.now()}${Math.random()}`;
+  const xml = `${name}.xml`;
+  const png = `${name}.png`;
+
+  fs.writeFileSync(xml, map.toXML());
+
+  const cmd = `render ${xml} ${png} ${map.width} ${map.height}`;
+
+  exec(cmd, (error) => {
+    if (error) return next(error);
+
+    res.locals.data = fs.readFileSync(`${png}`);
+
+    res.set('Content-Type', 'image/png');
+
+    next();
+
+    fs.unlinkSync(xml);
+    fs.unlinkSync(png);
+  });
+};
+
 
 // Generate Vector Tile
 export const vectorResponse = (req, res, next) => {
@@ -92,6 +121,7 @@ export const setExtent = (req, res, next) => {
   extent[3] += bufferSize[3];
 
   map.extent = extent;
+  map.maximumExtent = extent;
 
   next();
 };
