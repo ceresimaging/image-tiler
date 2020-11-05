@@ -3,9 +3,9 @@ module.exports = {
     name: 'tiler',
     script: './server.js',
     node_args: '--experimental-modules --es-module-specifier-resolution=node',
-    instances: 3,
+    instances: 'max',
     exec_mode: 'cluster',
-    max_memory_restart: '10000M',
+    max_memory_restart: '500M',
     watch: true,
     watch_delay: 1000,
     env: {
