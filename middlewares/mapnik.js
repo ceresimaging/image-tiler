@@ -1,6 +1,6 @@
 import mapnik from 'mapnik';
 import fs from 'fs';
-import { exec }  from 'child_process';
+import { exec } from 'child_process';
 
 // Generate PNG
 export const rasterResponse = (req, res, next) => {
@@ -49,7 +49,6 @@ export const rasterResponseExt = (req, res, next) => {
     fs.unlinkSync(png);
   });
 };
-
 
 // Generate Vector Tile
 export const vectorResponse = (req, res, next) => {
