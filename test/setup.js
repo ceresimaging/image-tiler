@@ -9,7 +9,7 @@ process.env.CORE_DB_PASS = 'tiler';
 process.env.CORE_DB_NAME = 'tiler';
 
 // Jest global config
-jest.setTimeout(10000);
+jest.setTimeout(30000);
 
 // Clean log directory
 const logDir = `${process.cwd()}/test/log`;
