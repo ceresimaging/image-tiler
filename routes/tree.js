@@ -2,26 +2,24 @@ import express from 'express';
 
 import { createMap, vectorResponse } from '../middlewares/mapnik';
 import { validateTile, validateSize, validateField, validateVisit, validateOverlay } from '../middlewares/validators';
-import { treeDataLayer, treeLayer } from '../middlewares/tree';
+import { treeDataLayer, treeCountLayer } from '../middlewares/tree';
 import { respond } from '../middlewares/tools';
 
 const router = express.Router();
 
 router
-  .get('/:field/:z/:x/:y.mvt',
+  .get('/count/:overlay/:z/:x/:y.mvt',
     validateTile,
     validateSize,
-    validateField,
+    validateOverlay,
     createMap,
-    treeLayer,
+    treeCountLayer,
     vectorResponse,
     respond
   )
-  .get('/:field/:visit/:overlay/:z/:x/:y.mvt',
+  .get('/data/:overlay/:z/:x/:y.mvt',
     validateTile,
     validateSize,
-    validateField,
-    validateVisit,
     validateOverlay,
     createMap,
     treeDataLayer,

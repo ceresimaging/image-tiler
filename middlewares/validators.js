@@ -189,9 +189,9 @@ export const validateVisit = (req, res, next) => {
 
 // Validate Overlay
 export const validateOverlay = (req, res, next) => {
-  if (req.params.overlay && !validator.isEmpty(req.params.overlay)) {
+  if (validator.isUUID(req.params.overlay)) {
     return next();
   }
 
-  throw new ValidationError(`Overlay Type: ${req.params.overlay}`, 'String');
+  throw new ValidationError(`Overlay ID: ${req.params.overlay}`, 'UUID');
 };
