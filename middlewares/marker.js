@@ -11,7 +11,7 @@ const issueStyle = fs.readFileSync('styles/marker-issue.xml', 'utf8');
 // Load Mapnik datasource
 mapnik.registerDatasource(`${mapnik.settings.paths.input_plugins}/postgis.input`);
 
-const buildQuery = (imagery, flight, user, exclusive) => {
+const buildQuery = (visit, user, exclusive) => {
   let userFilter = '';
 
   if (user) {
@@ -37,39 +37,34 @@ const buildQuery = (imagery, flight, user, exclusive) => {
       ON u.id = cup.user_id
     JOIN visits v 
       ON m.visit_id = v.id
-    JOIN published_imagery_flight pif
-      ON v.id = pif.visit_id
     WHERE ST_GeometryType(m.geometry) = 'ST_Point'
       AND m.deleted is null 
       AND m.is_open = true
       AND (
-        pif.id = '${flight}'
+        m.visit_id = ${visit}
         OR (
-          pif.id IN (
-            SELECT pfl2.id
-            FROM published_imagery_imageryoverlay pio
-            JOIN published_imagery_flight pfl
-              ON pfl.id = pio.flight_id
-            JOIN published_imagery_displayfield pdf
-              ON pdf.id = pfl.field_id
-            JOIN published_imagery_flight pfl2
-              ON pfl2.field_id = pdf.id
-            WHERE pio.geotiff_url LIKE '%${imagery}%'
+          m.visit_id IN (
+            SELECT v2.id
+            FROM visits v1
+            JOIN visits v2 ON v2.field_id = v1.field_id
+            WHERE v1.id = ${visit}
           )
           AND (
             m.start_date IS NULL
             OR m.start_date <= (
               SELECT date
-              FROM published_imagery_flight
-              WHERE id = '${flight}'
+              FROM flights f
+              JOIN visits v3 ON v3.flight_id = f.id
+              WHERE v3.id = ${visit}
             )
           )
           AND (
             m.end_date IS NULL
             OR m.end_date >= (
               SELECT date
-              FROM published_imagery_flight
-              WHERE id = '${flight}'
+              FROM flights f
+              JOIN visits v3 ON v3.flight_id = f.id
+              WHERE v3.id = ${visit}
             )
           )
         )
@@ -79,7 +74,7 @@ const buildQuery = (imagery, flight, user, exclusive) => {
   ) AS markers`;
 };
 
-const buildDataSource = (imagery, flight, user, exclusive) => {
+const buildDataSource = (visit, user, exclusive) => {
   return new mapnik.Datasource({
     type: 'postgis',
     host: process.env.CORE_DB_HOST,
@@ -87,7 +82,7 @@ const buildDataSource = (imagery, flight, user, exclusive) => {
     user: process.env.CORE_DB_USER,
     password: process.env.CORE_DB_PASS,
     dbname: process.env.CORE_DB_NAME,
-    table: buildQuery(imagery, flight, user, exclusive),
+    table: buildQuery(visit, user, exclusive),
     extent_from_subquery: true,
     geometry_field: 'geom',
     srid: 4326,
@@ -97,7 +92,7 @@ const buildDataSource = (imagery, flight, user, exclusive) => {
 };
 
 export const markerLayer = (req, res, next) => {
-  const { flight, imagery } = req.params;
+  const { visit } = req.params;
   const { user } = req.query;
   const { map } = res.locals;
   const { exclusive = false } = req.query;
@@ -110,7 +105,7 @@ export const markerLayer = (req, res, next) => {
 
   const layer = new mapnik.Layer('markers');
 
-  layer.datasource = buildDataSource(imagery, flight, user, exclusive);
+  layer.datasource = buildDataSource(visit, user, exclusive);
   layer.styles = ['marker-icon'];
 
   // Add layer if contains at least 1 feature

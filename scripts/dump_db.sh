@@ -4,7 +4,7 @@ url="postgres://$CORE_DB_USER:$CORE_DB_PASS@$CORE_DB_HOST:$CORE_DB_PORT/$CORE_DB
 
 tables=(
   customers_geo customers_farm customers_oldfarm customers_cropvarietal 
-  published_imagery_displayfield published_imagery_overlaytype published_imagery_flight
+  published_imagery_displayfield published_imagery_overlay published_imagery_overlaytype
   trees trees_data 
   visits flights markers
   auth_user platform_auth_ceresuserprofile
@@ -33,8 +33,7 @@ psql $url \
     CREATE TABLE tmp_trees_data AS (
       SELECT * 
       FROM trees_data
-      WHERE visit_id = 230675 
-        AND overlay_type_id = 12
+      WHERE overlay_id = '8bcf2e4b-a18b-4857-90c2-8ee80fd8df98'
         AND tree_id IN (SELECT id FROM tmp_trees)
     );
     CREATE TABLE tmp_customers_cropvarietal AS (
@@ -42,20 +41,15 @@ psql $url \
       FROM customers_cropvarietal
       WHERE id IN (SELECT DISTINCT varietal_id FROM tmp_trees)
     );
-    CREATE TABLE tmp_visits AS (
+    CREATE TABLE tmp_published_imagery_overlay AS (
       SELECT * 
-      FROM visits
-      WHERE id IN (SELECT DISTINCT visit_id FROM tmp_trees_data)
+      FROM published_imagery_overlay
+      WHERE id IN (SELECT DISTINCT overlay_id FROM tmp_trees_data)
     );
     CREATE TABLE tmp_published_imagery_overlaytype AS (
       SELECT * 
       FROM published_imagery_overlaytype 
-      WHERE id IN (SELECT DISTINCT overlay_type_id FROM tmp_trees_data)
-    );
-    CREATE TABLE tmp_flights AS (
-      SELECT * 
-      FROM flights 
-      WHERE id IN (SELECT DISTINCT flight_id FROM tmp_visits)
+      WHERE id IN (SELECT DISTINCT overlay_type_id FROM tmp_published_imagery_overlay)
     );
     CREATE TABLE tmp_customers_oldfarm AS (
       SELECT *
@@ -77,6 +71,37 @@ psql $url \
       SELECT * 
       FROM customers_geo 
       WHERE farm_id IN (SELECT DISTINCT source_field_id FROM tmp_published_imagery_displayfield)
+    );
+    CREATE TABLE tmp_markers AS (
+      SELECT *
+      FROM markers
+      WHERE id IN ('84ddd2b1-6a02-468e-94b4-1751fce3c000')
+    );
+    CREATE TABLE tmp_visits AS (
+      SELECT * 
+      FROM visits
+      WHERE id IN (
+        SELECT 122950
+        UNION
+        SELECT DISTINCT visit_id FROM tmp_published_imagery_overlay
+        UNION
+        SELECT DISTINCT visit_id FROM tmp_markers
+      )
+    );
+    CREATE TABLE tmp_flights AS (
+      SELECT * 
+      FROM flights 
+      WHERE id IN (SELECT DISTINCT flight_id FROM tmp_visits)
+    );
+    CREATE TABLE tmp_auth_user AS (
+      SELECT * 
+      FROM auth_user 
+      WHERE id IN (SELECT DISTINCT created_by_id FROM tmp_markers)
+    );
+    CREATE TABLE tmp_platform_auth_ceresuserprofile AS (
+      SELECT * 
+      FROM platform_auth_ceresuserprofile 
+      WHERE user_id IN (SELECT DISTINCT id FROM tmp_auth_user)
     );
   "
 
