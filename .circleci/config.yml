@@ -4,9 +4,6 @@ jobs:
     docker:
       - image: maurimiranda/node-mapnik-gdal:latest
       - image: circleci/postgres
-        auth:
-          username: tiler
-          password: tiler
         environment:
           POSTGRES_DB: tiler
           POSTGRES_USER: tiler
