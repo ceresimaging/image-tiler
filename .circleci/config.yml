@@ -17,9 +17,13 @@ jobs:
 
     steps:
       - checkout
+    
+      - run: 
+          name: Installing system dependencies
+          command: sudo apt install -y postgresql-client || true
 
       - run:
-          name: Installing dependencies
+          name: Installing app dependencies
           command: npm install && npm link /src/node-mapnik
 
       - run:
