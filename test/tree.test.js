@@ -1,21 +1,22 @@
 import { request } from './helpers';
 
 const base = 'tree';
-const field = 'fb23746c-edb0-49d0-884d-d2f64208d086';
-const visit = '230675';
-const overlay = 'water_stress';
 
 describe('tree routes', () => {
   test('should return a vector tile with trees', async done => {
-    const res = await request.get(`/${base}/${field}/15/5337/12656.mvt`).responseType('arraybuffer');
+    const overlay = '14d04294-6636-4fda-a82d-23dc1cd9e0e3';
+
+    const res = await request.get(`/${base}/count/${overlay}/15/5337/12656.mvt`).responseType('arraybuffer');
 
     expect(res.body).matchFixture('tree-vector-tile.mvt');
 
     done();
   });
 
-  test('should return a vector tile with trees data', async done => {
-    const res = await request.get(`/${base}/${field}/${visit}/${overlay}/15/5337/12656.mvt`).responseType('arraybuffer');
+  test('should return a vector tile with tree data', async done => {
+    const overlay = '8bcf2e4b-a18b-4857-90c2-8ee80fd8df98';
+
+    const res = await request.get(`/${base}/data/${overlay}/15/5337/12656.mvt`).responseType('arraybuffer');
 
     expect(res.body).matchFixture('tree-data-vector-tile.mvt');
 
