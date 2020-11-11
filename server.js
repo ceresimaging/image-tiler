@@ -1,10 +1,3 @@
-import express from 'express';
-import cors from 'cors';
-import morgan from 'morgan';
-
-import cache from './routes/cache';
-import imagery from './routes/imagery';
-import gssurgo from './routes/gssurgo';
 import app from './app';
 
 // Start Server

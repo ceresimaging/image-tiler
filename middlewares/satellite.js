@@ -36,7 +36,7 @@ const config = `<GDAL_WMS>
   </GDAL_WMS>`;
 
 // Write config file
-const filePath = `/tmp/satellite.xml`;
+const filePath = '/tmp/satellite.xml';
 fs.writeFileSync(filePath, config);
 
 export const satelliteLayer = (req, res, next) => {

@@ -1,8 +1,4 @@
 import fs from 'fs-extra';
-import { execFile } from 'child_process';
-import supertest from 'supertest';
-
-import app from '../server';
 
 // Override env variables
 process.env.CORE_DB_HOST = 'postgres-tiler';

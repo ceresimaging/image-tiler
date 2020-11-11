@@ -11,37 +11,31 @@ describe('cache', () => {
     wipeCache();
   });
 
-  test('should remove an imagery cached file', async done => {
+  test('should remove an imagery cached file', async () => {
     createImagery(imagery);
 
     const res = await request.get(`/${base}/imagery/${imagery}`);
 
     expect(res.body).toEqual({ files: 1, invalidations: 1 });
-
-    done();
   });
 
-  test('should remove an imagery cached file and wait for invalidation', async done => {
+  test('should remove an imagery cached file and wait for invalidation', async () => {
     createImagery(imagery);
 
     const res = await request.get(`/${base}/imagery/${imagery}?wait=true`);
 
     expect(res.body).toEqual({ files: 1, invalidations: 1 });
-
-    done();
   });
 
-  test('should remove a custom layer cached file', async done => {
+  test('should remove a custom layer cached file', async () => {
     createCustom(custom);
 
     const res = await request.get(`/${base}/custom/${custom}`);
 
     expect(res.body).toEqual({ files: 1, invalidations: 1 });
-
-    done();
   });
 
-  test('should remove all files older than age', async done => {
+  test('should remove all files older than age', async () => {
     createFiles(2);
     createFiles(2, 3);
     createFiles(2, 5);
@@ -49,25 +43,19 @@ describe('cache', () => {
     const res = await request.get(`/${base}?key=${process.env.CLOUDFRONT_DISTRIBUTION}&age=3`);
 
     expect(res.body).toEqual({ files: 4, invalidations: 0 });
-
-    done();
   });
 
-  test('should flush all cache', async done => {
+  test('should flush all cache', async () => {
     createFiles(10);
 
     const res = await request.get(`/${base}?key=${process.env.CLOUDFRONT_DISTRIBUTION}&age=0`);
 
     expect(res.body).toEqual({ files: 10, invalidations: 0 });
-
-    done();
   });
 
-  test('should invalidate path', async done => {
+  test('should invalidate path', async () => {
     const res = await request.get(`/${base}/invalidate?key=${process.env.CLOUDFRONT_DISTRIBUTION}`);
 
     expect(res.body).toEqual({ files: 0, invalidations: 1 });
-
-    done();
   });
 });

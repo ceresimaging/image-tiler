@@ -434,6 +434,7 @@ SET row_security = off;
 --
 
 COPY public.auth_user (id, password, last_login, is_superuser, username, first_name, last_name, email, is_staff, is_active, date_joined) FROM stdin;
+160	pbkdf2_sha256$150000$GvIETJg1wC9Y$pEdXadZ2uro93gA6qPTAiSIygAfXU0pGbyfTLuoRULM=	\N	f	cstarriv@gmail.com	Charlie	Starr	cstarriv@gmail.com	f	t	2018-03-28 13:29:18+00
 2203		\N	f	science-team			science@ceresimaging.net	t	t	2019-06-10 19:20:55.733351+00
 1644	pbkdf2_sha256$150000$YPjULUdupEaE$OHM7vb2tEo9oUoO3n8pxQdGUQyJ2gfWMdx+4rti/BTk=	\N	f	LeslieGilles@eco-drip.com	Leslie	Gilles	LeslieGilles@eco-drip.com	f	t	2019-04-13 01:52:51+00
 3280	pbkdf2_sha256$150000$tB0gZiOGrZ0j$iNP8ioFPqp6BjYgcMHYzrns15ry3RjhoKDCkbXPU3zM=	2020-09-10 21:52:11.073069+00	f	rshiu	Roxanne	Shiu	rshiu@ceresimaging.net	t	t	2020-03-16 21:05:51+00
@@ -487,6 +488,7 @@ COPY public.customers_oldfarm (id, name, customer_id) FROM stdin;
 --
 
 COPY public.flights (id, date, pilot_id, duration, status_id, image_time_est, travel_time_est, created_at, created_by_id, cam_system_id, utc_offset, flight_time, trial_flight, proposed_flight_plan_id, upload_all_assets) FROM stdin;
+7302	2019-07-09	131	5.20270824	18	\N	\N	2019-06-28 17:52:05.814268+00	34	88	-7	2019-07-09 19:00:00+00	f	\N	f
 8025	2019-08-21	148	4.38868999	18	\N	\N	2019-08-05 20:04:57.678208+00	34	70	-7	2019-08-21 19:00:00+00	f	\N	f
 10237	2020-06-07	199	12.7682486	18	\N	\N	2020-06-04 20:51:22.815571+00	34	122	-7	2020-06-07 19:00:00+00	f	\N	f
 11227	2020-07-20	176	6.74035597	18	\N	\N	2020-07-16 06:13:53.424426+00	10	86	-6	2020-07-20 18:00:00+00	f	\N	f
@@ -501,6 +503,8 @@ COPY public.flights (id, date, pilot_id, duration, status_id, image_time_est, tr
 
 COPY public.markers (deleted, id, created_at, geometry, start_date, end_date, source, staff_only, is_open, description, type, extra_data, assignee_id, created_by_id, visit_id) FROM stdin;
 \N	a0ca3f0c-ece2-4ee0-ae5e-94baaa4c81ac	2020-06-09 01:42:08.566507+00	0101000020E6100000B97FD2A49BEE5DC0A931239670264240	2020-06-07	2020-06-07	improc	f	t	Linear pattern indicates possible irrigation issue or separate irrigation set	issue	{"radius": null, "migrated": true, "severity": null, "issue_type": "irrigation", "radius_unit": null}	\N	2203	191225
+\N	b5ace4da-2833-4bf1-b3f4-6650b2b9bc28	2019-07-19 19:28:33.648362+00	0101000020E61000003B8A73D4D14F5EC0BAF3C473B60C4340	2019-07-09	2019-07-09	avian	f	t	Leak	issue	{"radius": null, "migrated": true, "severity": 3, "issue_type": "irrigation", "radius_unit": null}	\N	160	122948
+\N	84ddd2b1-6a02-468e-94b4-1751fce3c000	2019-07-19 19:22:12.996654+00	0101000020E6100000F52B9D0FCF4F5EC00CE6AF90B90C4340	2019-07-09	\N	avian	f	t	Gopher fix	note	{"migrated": true}	\N	160	122948
 \N	ebbf2556-78cc-401a-ab07-7cd58cec482d	2020-07-27 21:20:33.627191+00	0101000020E6100000F419E2C7375F59C0300F568159573F40	2020-07-20	2020-07-31	avian	f	t	17 nodes 2” growth 	note	{"migrated": true}	\N	1644	210555
 \N	e74fb40c-6373-4708-a5f4-739b11e697cb	2020-07-27 21:55:45.92168+00	0101000020E6100000A0C1A2FDB35F59C088CBFE8BBA553F40	2020-07-20	2020-07-31	avian	f	t	17 nodes 1.75” growth 	note	{"migrated": true}	\N	1644	210555
 \N	ac32b441-c096-413a-bbe1-30507f9b2290	2020-07-27 21:50:52.63679+00	0101000020E6100000C85D9151A15F59C094754449E8553F40	2020-07-20	2020-07-31	avian	f	t	17 nodes 2” growth 	note	{"migrated": true}	\N	1644	210555
@@ -523,6 +527,7 @@ COPY public.platform_auth_ceresuserprofile (id, name, user_id, is_active, retail
 0e614637-f89d-4fee-a92b-c6a56f01dbec	Ceres Support	2203	t	\N	f	f	\N	\N
 f51e20e0-40c0-4b5b-95f6-2910305c04cc	rshiu@ceresimaging.net	3280	t	\N	f	f	\N	\N
 436b4974-5df5-426a-9eb1-4f0cad32a98e	LeslieGilles@eco-drip.com	1644	t	43	f	t	24hs	\N
+7581ce56-3995-4bc2-b8bf-62814515ed15	cstarriv@gmail.com	160	t	\N	f	t	4hs	\N
 \.
 
 
@@ -18735,6 +18740,7 @@ COPY public.trees_data (deleted, id, created_at, value, created_by_id, tree_id, 
 --
 
 COPY public.visits (id, flight_id, field_id, blocks, start_time, end_time, altitude, ambient_temp, groundspeed, sensor_temp, housing_temp, relative_humidity, status_id, "end", start, target_date, product_id, created_at, created_by_id, priority, duration, imaging_strategy, comments_by_sales_rep, quote_num, visit_type, processed_geojson, source, flight_request_id) FROM stdin;
+122948	7302	1315	\N	12:21	12:22	688.5	\N	\N	\N	297.545013	\N	8	\N	\N	2019-07-10	14	2019-06-21 20:15:55.392364+00	34	1	0.0280000000000000006	0	\N	\N	0	\N	manual	\N
 122950	8025	1315	\N	13:18	13:19	762	24.6000004	\N	\N	302.350006	\N	8	\N	\N	2019-08-21	14	2019-06-21 20:15:55.403019+00	34	1	0.0179999999999999986	0	\N	\N	0	\N	manual	\N
 191225	10237	59427	\N	12:51	12:53	1810.18994	\N	\N	\N	284.320007	\N	8	\N	\N	2020-06-07	212	2020-05-20 22:43:44.716441+00	900	1	0.0280000000000000006	0	\N	\N	0	\N	manual	\N
 210560	11878	62764	\N	11:19	11:19	3988.34009	\N	\N	\N	287.119995	\N	8	\N	\N	2020-08-24	149	2020-06-28 16:57:18.438713+00	3050	1	0.00400000000000000008	1	\N	\N	0	\N	retailer	3fad2ed0-e9e4-4fe2-92b6-f1b2aa1ad1a1
