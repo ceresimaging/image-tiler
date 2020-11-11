@@ -7,8 +7,6 @@ import app from '../server';
 
 export const request = supertest(app);
 
-export { app };
-
 export const createFile = (filePath) => {
   fs.mkdirSync(path.dirname(filePath), { recursive: true });
   fs.closeSync(fs.openSync(filePath, 'w'));

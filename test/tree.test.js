@@ -1,4 +1,4 @@
-import { request, app } from './helpers';
+import { request } from './helpers';
 
 const base = 'tree';
 const field = 'fb23746c-edb0-49d0-884d-d2f64208d086';
@@ -21,6 +21,4 @@ describe('tree routes', () => {
 
     done();
   });
-
-  afterAll(app.close);
 });

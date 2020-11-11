@@ -1,4 +1,4 @@
-import { request, app } from './helpers';
+import { request } from './helpers';
 
 describe('main routes', () => {
   test('index should redirect to status', async done => {
@@ -26,6 +26,4 @@ describe('main routes', () => {
 
     done();
   });
-
-  afterAll(app.close);
 });

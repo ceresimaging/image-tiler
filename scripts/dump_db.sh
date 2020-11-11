@@ -72,21 +72,17 @@ psql $url \
       FROM customers_geo 
       WHERE farm_id IN (SELECT DISTINCT source_field_id FROM tmp_published_imagery_displayfield)
     );
-    CREATE TABLE tmp_markers AS (
-      SELECT *
-      FROM markers
-      WHERE id IN ('84ddd2b1-6a02-468e-94b4-1751fce3c000')
-    );
     CREATE TABLE tmp_visits AS (
       SELECT * 
       FROM visits
-      WHERE id IN (
-        SELECT 122950
-        UNION
-        SELECT DISTINCT visit_id FROM tmp_published_imagery_overlay
-        UNION
-        SELECT DISTINCT visit_id FROM tmp_markers
+      WHERE id IN (122950, 191225, 210560, 210555)
+        OR id IN (SELECT DISTINCT visit_id FROM tmp_published_imagery_overlay
       )
+    );
+    CREATE TABLE tmp_markers AS (
+      SELECT *
+      FROM markers
+      WHERE visit_id IN (SELECT DISTINCT id FROM tmp_visits)
     );
     CREATE TABLE tmp_flights AS (
       SELECT * 

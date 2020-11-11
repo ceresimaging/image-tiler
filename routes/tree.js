@@ -1,7 +1,7 @@
 import express from 'express';
 
 import { createMap, vectorResponse } from '../middlewares/mapnik';
-import { validateTile, validateSize, validateField, validateVisit, validateOverlay } from '../middlewares/validators';
+import { validateTile, validateSize, validateOverlay } from '../middlewares/validators';
 import { treeDataLayer, treeCountLayer } from '../middlewares/tree';
 import { respond } from '../middlewares/tools';
 

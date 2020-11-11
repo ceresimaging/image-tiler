@@ -1,4 +1,4 @@
-import { request, app } from './helpers';
+import { request } from './helpers';
 
 const base = 'custom';
 const custom = '0e220754-e251-41c2-ab8b-0f05962ab7e9';
@@ -13,6 +13,4 @@ describe('custom routes', () => {
 
     done();
   });
-
-  afterAll(app.close);
 });

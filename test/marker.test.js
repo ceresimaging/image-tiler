@@ -1,4 +1,4 @@
-import { request, app } from './helpers';
+import { request } from './helpers';
 
 const base = 'marker';
 const visit = '122950';
@@ -19,6 +19,4 @@ describe('marker routes', () => {
 
     done();
   });
-
-  afterAll(app.close);
 });

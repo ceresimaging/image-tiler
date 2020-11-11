@@ -1,4 +1,4 @@
-import { request, app } from './helpers';
+import { request } from './helpers';
 
 const base = 'fieldgeo';
 const farm = '7355293c-e23d-4aab-8ff0-e2f8f1b83f4e';
@@ -20,6 +20,4 @@ describe('fieldgeo routes', () => {
 
     done();
   });
-
-  afterAll(app.close);
 });

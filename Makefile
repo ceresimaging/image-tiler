@@ -27,7 +27,6 @@ dump_test_db:
 	@$(DOCKER_RUN) scripts/dump_db.sh
 
 restore_test_db:
-	@echo "Restoring DB structure and sample data from file"
 	@$(DOCKER_RUN) scripts/restore_db.sh
 
 dump_extradb:

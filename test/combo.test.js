@@ -1,4 +1,4 @@
-import { request, app, downloadSatellite, uploadSatellite } from './helpers';
+import { request, downloadSatellite, uploadSatellite } from './helpers';
 
 const base = 'combo';
 const imagery = '7326e81d-40b0-4053-8f33-bd22f9a53df9';
@@ -43,10 +43,10 @@ describe('combo routes', () => {
   });
 
   test('should return a single image with markers', async done => {
-    const imagery = 'c1923c08-5c61-420e-b569-5e00baf0c114';
-    const flight = 'ebe0d55b-e957-44ab-8240-7202150a3789';
+    const imagery = '4a6fa821-f022-4864-8e55-b8c9231693d4';
+    const visit = 191225;
 
-    const res = await request.get(`/${base}/${imagery}/${flight}.png`);
+    const res = await request.get(`/${base}/${imagery}/${visit}.png`);
 
     expect(res.body).matchFixture('combo-marker.png');
 
@@ -55,9 +55,9 @@ describe('combo routes', () => {
 
   test('should return a single image with markers for notifications', async done => {
     const imagery = '4a6fa821-f022-4864-8e55-b8c9231693d4';
-    const flight = '5e771760-a22f-4a98-aa38-f63e0de40827';
+    const visit = 191225;
 
-    const res = await request.get(`/${base}/issues/${imagery}/${flight}.png?minBuffer=50`);
+    const res = await request.get(`/${base}/issues/${imagery}/${visit}.png?minBuffer=50`);
 
     expect(res.body).matchFixture('combo-issues.png');
 
@@ -66,9 +66,9 @@ describe('combo routes', () => {
 
   test('should return a single image with markers for notifications with specific aspect ratio', async done => {
     const imagery = '4a6fa821-f022-4864-8e55-b8c9231693d4';
-    const flight = '5e771760-a22f-4a98-aa38-f63e0de40827';
+    const visit = 191225;
 
-    const res = await request.get(`/${base}/issues/${imagery}/${flight}.png?minBuffer=50&ratio=2`);
+    const res = await request.get(`/${base}/issues/${imagery}/${visit}.png?minBuffer=50&ratio=2`);
 
     expect(res.body).matchFixture('combo-issues-ratio.png');
 
@@ -77,9 +77,9 @@ describe('combo routes', () => {
 
   test('should return a single image with filtered markers', async (done) => {
     const imagery = '76bcbd2f-9e5a-44b4-a4a3-48ffc2f9b9c5';
-    const flight = '25191b4d-e855-4064-8a07-10cc9e8f74db';
+    const visit = 210560;
 
-    const res = await request.get(`/${base}/${imagery}/${flight}.png`);
+    const res = await request.get(`/${base}/${imagery}/${visit}.png`);
 
     expect(res.body).matchFixture('combo-image-filter.png');
 
@@ -88,6 +88,6 @@ describe('combo routes', () => {
 
   afterAll((done) => {
     if (process.env.REFRESH_FIXTURES) uploadSatellite();
-    app.close(done);
+    done();
   });
 });
