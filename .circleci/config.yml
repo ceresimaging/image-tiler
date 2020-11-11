@@ -3,25 +3,25 @@ jobs:
   build:
     docker:
       - image: maurimiranda/node-mapnik-gdal:latest
-      - image: redis
+      - image: circleci/postgres
 
     working_directory: ~/tiler
 
     steps:
       - checkout
 
-      - run: 
+      - run:
           name: Installing dependencies
           command: npm install && npm link /src/node-mapnik
 
-      - run: 
+      - run:
           name: Running linter
           command: npm run lint
 
       - run:
           name: Running tests
           command: npm run test:report
-      
+
       - store_test_results:
           path: ./junit/
 
