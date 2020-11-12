@@ -11,7 +11,7 @@ jobs:
           POSTGRES_PASSWORD: tiler
       - image: redis
 
-    working_directory: ~/tiler
+    working_directory: /srv/tiler
 
     steps:
       - checkout
