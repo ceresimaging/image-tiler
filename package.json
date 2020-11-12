@@ -10,7 +10,7 @@
     "test": "scripts/restore_db.sh && NODE_ENV=test jest --forceExit",
     "test:refresh": "REFRESH_FIXTURES=true npm run test",
     "test:watch": "npm run test -- --watch",
-    "test:report": "npm run test -- --collect-coverage --ci --runInBand --reporters=default --reporters=jest-junit",
+    "test:report": "npm run test -- --collect-coverage --ci --reporters=default --reporters=jest-junit",
     "lint": "eslint .",
     "lint:fix": "npm run lint -- --fix"
   },

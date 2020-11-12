@@ -1,9 +1,5 @@
 version: '3'
 
-networks:
-  ceres-dev:
-    external: true
-
 services:
   tiler:
     build:
@@ -17,16 +13,27 @@ services:
       - 8888:80
       - 9229:9229
     working_dir: /srv/tiler
-    command: npm run dev
+    command: npm run test
     env_file: .env
     environment:
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - TEST_DB_HOST=postgres-tiler
+      - TEST_DB_USER=tiler
+      - TEST_DB_PASS=tiler
+      - TEST_DB_NAME=tiler
     links:
-      - redis-tiler
-    networks:
-      - default
-      - ceres-dev
+      - postgres-tiler
+    depends_on:
+      - postgres-tiler
+
+  postgres-tiler:
+    image: postgis/postgis
+    restart: always
+    environment:
+      - POSTGRES_USER=tiler
+      - POSTGRES_PASSWORD=tiler
+      - POSTGRES_DBNAME=tiler
 
   redis-tiler:
     image: redis:latest

@@ -16,7 +16,7 @@ build:
 
 tests:
 	@echo "Runnning tests"
-	@$(DOCKER_RUN) npm run test
+	docker-compose -f docker-compose-test.yml run --rm tiler
 
 npm_install:
 	@echo "Installing dependencies"
