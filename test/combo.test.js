@@ -43,6 +43,15 @@ describe('combo routes', () => {
     expect(res.body).matchFixture('combo-marker.png');
   });
 
+  test('should return a single image with filtered markers', async () => {
+    const imagery = '76bcbd2f-9e5a-44b4-a4a3-48ffc2f9b9c5';
+    const visit = 210560;
+
+    const res = await request.get(`/${base}/${imagery}/${visit}.png`);
+
+    expect(res.body).matchFixture('combo-image-filter.png');
+  });
+  
   test('should return a single image with markers for notifications', async () => {
     const imagery = '4a6fa821-f022-4864-8e55-b8c9231693d4';
     const visit = 191225;
@@ -59,15 +68,6 @@ describe('combo routes', () => {
     const res = await request.get(`/${base}/issues/${imagery}/${visit}.png?minBuffer=50&ratio=2`);
 
     expect(res.body).matchFixture('combo-issues-ratio.png');
-  });
-
-  test('should return a single image with filtered markers', async () => {
-    const imagery = '76bcbd2f-9e5a-44b4-a4a3-48ffc2f9b9c5';
-    const visit = 210560;
-
-    const res = await request.get(`/${base}/${imagery}/${visit}.png`);
-
-    expect(res.body).matchFixture('combo-image-filter.png');
   });
 
   afterAll(() => {

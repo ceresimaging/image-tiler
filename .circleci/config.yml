@@ -23,6 +23,10 @@ jobs:
       - run:
           name: Installing app dependencies
           command: npm install && npm link /src/node-mapnik
+      
+      - run:
+          name: Copying render to be accessible
+          command: cp render/render /usr/local/bin
 
       - run:
           name: Running linter
