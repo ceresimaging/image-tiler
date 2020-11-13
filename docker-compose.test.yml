@@ -14,14 +14,7 @@ services:
       - 9229:9229
     working_dir: /srv/tiler
     command: npm run test
-    env_file: .env
-    environment:
-      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
-      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
-      - TEST_DB_HOST=postgres-tiler
-      - TEST_DB_USER=tiler
-      - TEST_DB_PASS=tiler
-      - TEST_DB_NAME=tiler
+    env_file: .env.test
     links:
       - postgres-tiler
       - redis-tiler

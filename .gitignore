@@ -5,3 +5,4 @@ demo
 junit
 .vscode
 test/log
+.env.test

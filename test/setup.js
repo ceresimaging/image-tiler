@@ -1,16 +1,5 @@
 import fs from 'fs-extra';
 
-// Override env variables
-process.env.CORE_DB_HOST = process.env.TEST_DB_HOST;
-process.env.CORE_DB_USER = process.env.TEST_DB_USER;
-process.env.CORE_DB_PASS = process.env.TEST_DB_PASS;
-process.env.CORE_DB_NAME = process.env.TEST_DB_NAME;
-process.env.EXTRA_DB_HOST = process.env.TEST_DB_HOST;
-process.env.EXTRA_DB_USER = process.env.TEST_DB_USER;
-process.env.EXTRA_DB_PASS = process.env.TEST_DB_PASS;
-process.env.EXTRA_DB_NAME = process.env.TEST_DB_NAME;
-process.env.NODE_ENV = 'test';
-
 // Jest global config
 jest.setTimeout(30000);
 
