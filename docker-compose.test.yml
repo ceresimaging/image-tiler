@@ -24,8 +24,10 @@ services:
       - TEST_DB_NAME=tiler
     links:
       - postgres-tiler
+      - redis-tiler
     depends_on:
       - postgres-tiler
+      - redis-tiler
 
   postgres-tiler:
     image: postgis/postgis

@@ -7,6 +7,7 @@ ifneq (,$(wildcard ./.env))
 endif
 
 DOCKER_RUN := docker-compose run --rm tiler
+DOCKER_TEST := docker-compose -p test -f docker-compose.test.yml
 
 shell:
 	@$(DOCKER_RUN) bash
@@ -16,7 +17,8 @@ build:
 
 tests:
 	@echo "Runnning tests"
-	docker-compose -f docker-compose-test.yml run --rm tiler
+	@$(DOCKER_TEST) run --rm tiler || true
+	@$(DOCKER_TEST) down -v
 
 npm_install:
 	@echo "Installing dependencies"
