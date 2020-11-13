@@ -18,8 +18,10 @@ sequences=(
 
 list="${sequences[@]/#/-t } ${tables[@]/#/-t }"
 
+extra_lines="^\(GRANT\|REVOKE\|SET\|--\|^$\)"
+
 echo "Dumping database structure..."
-pg_dump $url -O -s --section=pre-data $list > test/fixtures/dump.sql
+pg_dump $url -O -s --section=pre-data $list | grep -v $extra_lines > test/fixtures/dump.sql
 
 echo "Creating temporal tables with sample data..."
 psql $url \
@@ -104,10 +106,23 @@ psql $url \
 list=${tables[@]/#/-t tmp_}
 
 echo "Dumping database data..."
-pg_dump $url -O -a $list | sed 's/public.tmp_/public./' >> test/fixtures/dump.sql
+pg_dump $url -O -a $list | sed 's/public.tmp_/public./' | grep -v $extra_lines >> test/fixtures/dump.sql
 
 list=(${tables[@]/%/;})
 list=${list[@]/#/DROP TABLE IF EXISTS tmp_}
 
 echo "Dropping temporal tables..."
 psql $url -c "$list"
+
+##################################################
+
+url="postgres://$EXTRA_DB_USER:$EXTRA_DB_PASS@$EXTRA_DB_HOST:$EXTRA_DB_PORT/$EXTRA_DB_NAME"
+
+echo "Dumping gssurgo database structure..."
+pg_dump $url -O -s --section=pre-data -t $EXTRA_DB_TABLE | grep -v $extra_lines >> test/fixtures/dump.sql
+
+echo "Dumping gssurgo database data..."
+query="SELECT * FROM $EXTRA_DB_TABLE WHERE geom && ST_MakeEnvelope(-119.17, 35.56, -119.15, 35.58, 4326)"
+echo "COPY public.gssurgo (id, areasymbol, mukey, musym, muname, aws0100wta, drclassdcd, geom) FROM stdin;" >> test/fixtures/dump.sql
+psql $url -c "COPY ($query) TO STDOUT" | grep -v $extra_lines >> test/fixtures/dump.sql
+echo "\." >> test/fixtures/dump.sql

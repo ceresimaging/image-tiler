@@ -29,11 +29,6 @@ dump_test_db:
 restore_test_db:
 	@$(DOCKER_RUN) scripts/restore_db.sh
 
-dump_extradb:
-	@echo "Dumping Extra DB structure to file"
-	@$(DOCKER_RUN) pg_dump postgres://$(EXTRA_DB_USER):$(EXTRA_DB_PASS)@$(EXTRA_DB_HOST):$(EXTRA_DB_PORT)/$(EXTRA_DB_NAME) -O -s \
-		-f test/fixtures/database/create_extra_db.sql -t $(EXTRA_DB_TABLE)
-
 dbshell:
 	@$(DOCKER_RUN) psql postgresql://tiler:tiler@postgres-tiler/tiler
 

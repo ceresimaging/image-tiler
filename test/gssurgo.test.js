@@ -10,7 +10,7 @@ describe('soil routes', () => {
   });
 
   test('should return a vector tile', async () => {
-    const res = await request.get(`/${base}/14/3364/6683.mvt`).responseType('arraybuffer');
+    const res = await request.get(`/${base}/17/22151/51660.mvt`).responseType('arraybuffer');
 
     expect(res.body).matchFixture('soil-vector-tile.mvt');
   });
