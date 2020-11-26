@@ -1,6 +1,6 @@
 import fs from 'fs-extra';
 
-jest.setTimeout(10000);
+jest.setTimeout(30000);
 
 const logDir = `${process.cwd()}/test/log`;
 
