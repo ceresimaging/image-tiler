@@ -32,6 +32,9 @@ export const rasterResponseExt = (req, res, next) => {
   const xml = `${name}.xml`;
   const png = `${name}.png`;
 
+  // External render uses the maximum extent instead of the extent <(ò_ó)>
+  map.maximumExtent = map.extent;
+
   fs.writeFileSync(xml, map.toXML());
 
   const cmd = `render ${xml} ${png} ${map.width} ${map.height}`;
@@ -120,7 +123,6 @@ export const setExtent = (req, res, next) => {
   extent[3] += bufferSize[3];
 
   map.extent = extent;
-  map.maximumExtent = extent;
 
   next();
 };
