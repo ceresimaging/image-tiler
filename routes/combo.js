@@ -76,6 +76,23 @@ router
     satelliteLayer,
     rasterResponse,
     respond
+  )
+  .get('/issue/:imagery/:marker.png',
+    setDefaultSize(256),
+    setDefaultRatio(0.5),
+    setDefaultBuffer([0, 0.15, 0, 0.5], [50, 50, 50, 90]),
+    validateImagery,
+    validateSize,
+    validateBuffer,
+    validateBucket,
+    downloadTiff,
+    createMap,
+    markerLayer,
+    setExtent,
+    imageryLayer,
+    setExtent,
+    rasterResponse,
+    respond
   );
 
 export default router;

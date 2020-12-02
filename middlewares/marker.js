@@ -79,7 +79,18 @@ const buildQuery = (imagery, flight, user, exclusive) => {
   ) AS markers`;
 };
 
-const buildDataSource = (imagery, flight, user, exclusive) => {
+const buildMarkerQuery = (marker) => {
+  return `(
+    SELECT m.id AS id,
+      m.geometry AS geom,
+      m.type AS category,
+      ROW_NUMBER() OVER () AS number
+    FROM markers m
+    WHERE m.id = '${marker}'
+  ) AS markers`;
+};
+
+const buildDataSource = (query) => {
   return new mapnik.Datasource({
     type: 'postgis',
     host: process.env.CORE_DB_HOST,
@@ -87,7 +98,7 @@ const buildDataSource = (imagery, flight, user, exclusive) => {
     user: process.env.CORE_DB_USER,
     password: process.env.CORE_DB_PASS,
     dbname: process.env.CORE_DB_NAME,
-    table: buildQuery(imagery, flight, user, exclusive),
+    table: query,
     extent_from_subquery: true,
     geometry_field: 'geom',
     srid: 4326,
@@ -97,7 +108,7 @@ const buildDataSource = (imagery, flight, user, exclusive) => {
 };
 
 export const markerLayer = (req, res, next) => {
-  const { flight, imagery } = req.params;
+  const { flight, imagery, marker } = req.params;
   const { user } = req.query;
   const { map } = res.locals;
   const { exclusive = false } = req.query;
@@ -110,7 +121,11 @@ export const markerLayer = (req, res, next) => {
 
   const layer = new mapnik.Layer('markers');
 
-  layer.datasource = buildDataSource(imagery, flight, user, exclusive);
+  if (flight) {
+    layer.datasource = buildDataSource(buildQuery(imagery, flight, user, exclusive));
+  } else {
+    layer.datasource = buildDataSource(buildMarkerQuery(marker));
+  }
   layer.styles = ['marker-icon'];
 
   // Add layer if contains at least 1 feature
