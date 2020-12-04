@@ -84,7 +84,7 @@ const buildMarkerQuery = (imagery, marker) => {
     SELECT m.id AS id,
       m.geometry AS geom,
       m.type AS category,
-      ROW_NUMBER() OVER () AS number
+      '' AS number
     FROM markers m
     WHERE m.id = '${marker}'
   ) AS markers`;
@@ -125,7 +125,6 @@ export const markerLayer = (req, res, next) => {
     layer.datasource = buildDataSource(buildFlightQuery(imagery, flight, user, exclusive));
   } else {
     layer.datasource = buildDataSource(buildMarkerQuery(imagery, marker));
-    console.debug("built query");
   }
   layer.styles = ['marker-icon'];
 
