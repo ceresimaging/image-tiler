@@ -11,7 +11,7 @@ const issueStyle = fs.readFileSync('styles/marker-issue.xml', 'utf8');
 // Load Mapnik datasource
 mapnik.registerDatasource(`${mapnik.settings.paths.input_plugins}/postgis.input`);
 
-const buildQuery = (imagery, flight, user, exclusive) => {
+const buildFlightQuery = (imagery, flight, user, exclusive) => {
   let userFilter = '';
 
   if (user) {
@@ -79,7 +79,7 @@ const buildQuery = (imagery, flight, user, exclusive) => {
   ) AS markers`;
 };
 
-const buildMarkerQuery = (marker) => {
+const buildMarkerQuery = (imagery, marker) => {
   return `(
     SELECT m.id AS id,
       m.geometry AS geom,
@@ -122,9 +122,10 @@ export const markerLayer = (req, res, next) => {
   const layer = new mapnik.Layer('markers');
 
   if (flight) {
-    layer.datasource = buildDataSource(buildQuery(imagery, flight, user, exclusive));
+    layer.datasource = buildDataSource(buildFlightQuery(imagery, flight, user, exclusive));
   } else {
-    layer.datasource = buildDataSource(buildMarkerQuery(marker));
+    layer.datasource = buildDataSource(buildMarkerQuery(imagery, marker));
+    console.debug("built query");
   }
   layer.styles = ['marker-icon'];
 

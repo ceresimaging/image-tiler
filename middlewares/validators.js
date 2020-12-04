@@ -72,6 +72,15 @@ export const validateFarm = (req, res, next) => {
   throw new ValidationError(`Farm ID: ${req.params.farm}`, 'UUID');
 };
 
+// Validate Marker parameter
+export const validateMarker = (req, res, next) => {
+  if (validator.isUUID(req.params.marker)) {
+    return next();
+  }
+
+  throw new ValidationError(`Marker ID: ${req.params.marker}`, 'UUID');
+};
+
 // Validate Custom Layer parameter
 export const validateCustom = (req, res, next) => {
   if (validator.isUUID(req.params.custom)) {
