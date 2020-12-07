@@ -7,6 +7,7 @@ mapnik.register_default_fonts();
 // Read stylesheet files
 const markerNumberStyle = fs.readFileSync('styles/marker-number.xml', 'utf8');
 const markerHoleStyle = fs.readFileSync('styles/marker-hole.xml', 'utf8');
+const markerIssueStyle = fs.readFileSync('styles/marker-issue.xml', 'utf8');
 
 // Load Mapnik datasource
 mapnik.registerDatasource(`${mapnik.settings.paths.input_plugins}/postgis.input`);
@@ -83,8 +84,7 @@ const buildMarkerQuery = (marker) => {
   return `(
     SELECT m.id AS id,
       m.geometry AS geom,
-      m.type AS category,
-      '' AS number
+      m.type AS category
     FROM markers m
     WHERE m.id = '${marker}'
   ) AS markers`;
@@ -114,9 +114,13 @@ export const markerLayer = (req, res, next) => {
   const { exclusive = false } = req.query;
 
   if (user === process.env.SUPPORT_USER) {
-    map.fromStringSync(markerHoleStyle);
+    map.fromStringSync(markerIssueStyle);
   } else {
-    map.fromStringSync(markerNumberStyle);
+    if (flight) {
+      map.fromStringSync(markerNumberStyle);
+    } else {
+      map.fromStringSync(markerHoleStyle);
+    }
   }
 
   const layer = new mapnik.Layer('markers');
