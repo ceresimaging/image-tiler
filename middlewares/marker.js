@@ -85,7 +85,7 @@ const buildFlightQuery = (imagery, flight, user, exclusive) => {
   ) AS markers`;
 };
 
-const buildMarkerQuery = (imagery, marker) => {
+const buildMarkerQuery = (marker) => {
   return `(
     SELECT m.id AS id,
       m.geometry AS geom,
@@ -131,7 +131,7 @@ export const markerLayer = (req, res, next) => {
   if (flight) {
     layer.datasource = buildDataSource(buildFlightQuery(imagery, flight, user, exclusive));
   } else {
-    layer.datasource = buildDataSource(buildMarkerQuery(imagery, marker));
+    layer.datasource = buildDataSource(buildMarkerQuery(marker));
   }
   layer.styles = ['marker-icon'];
 
