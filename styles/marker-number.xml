@@ -2,22 +2,22 @@
   <Style name="marker-icon">
     <Rule>
       <Filter>[category] = 'issue'</Filter>
-      <MarkersSymbolizer allow-overlap="true" fill="#F96632" width="25" file="[marker_image]" transform="translate(0 -15)" ignore-placement="true" stroke="#000000" stroke-width="25" stroke-opacity="0.2" />
+      <MarkersSymbolizer allow-overlap="true" fill="#F96632" width="25" file="/srv/tiler/styles/images/marker-solid.svg" transform="translate(0 -15)" ignore-placement="true" stroke="#000000" stroke-width="25" stroke-opacity="0.2" />
       <TextSymbolizer allow-overlap="true" face-name="DejaVu Sans Book" fill="#FFFFFF" halo-fill="rgba(255, 255, 255, 0.2)" halo-radius="1" size="12" dy="-15" margin="5">[number]</TextSymbolizer>
     </Rule>
     <Rule>
       <Filter>[category] = 'note'</Filter>
-      <MarkersSymbolizer allow-overlap="true" fill="#1C8FBD" width="25" file="[marker_image]" transform="translate(0 -15)" ignore-placement="true" stroke="#000000" stroke-width="25" stroke-opacity="0.2" />
+      <MarkersSymbolizer allow-overlap="true" fill="#1C8FBD" width="25" file="/srv/tiler/styles/images/marker-solid.svg" transform="translate(0 -15)" ignore-placement="true" stroke="#000000" stroke-width="25" stroke-opacity="0.2" />
       <TextSymbolizer allow-overlap="true" face-name="DejaVu Sans Book" fill="#FFFFFF" halo-fill="rgba(255, 255, 255, 0.2)" halo-radius="1" size="12" dy="-15" margin="5">[number]</TextSymbolizer>
     </Rule>
     <Rule>
       <Filter>[category] = 'sample'</Filter>
-      <MarkersSymbolizer allow-overlap="true" fill="#40A629" width="25" file="[marker_image]" transform="translate(0 -15)" ignore-placement="true" />
+      <MarkersSymbolizer allow-overlap="true" fill="#40A629" width="25" file="/srv/tiler/styles/images/marker-solid.svg" transform="translate(0 -15)" ignore-placement="true" />
       <TextSymbolizer allow-overlap="true" face-name="DejaVu Sans Book" fill="#FFFFFF" halo-fill="rgba(255, 255, 255, 0.2)" halo-radius="1" size="12" dy="-15" margin="5">[number]</TextSymbolizer>
     </Rule>
     <Rule>
       <Filter>[category] = 'anomaly'</Filter>
-      <MarkersSymbolizer allow-overlap="true" fill="#e0e0e0" width="25" file="[marker_image]" transform="translate(0 -15)" ignore-placement="true" stroke="#000000" stroke-width="25" stroke-opacity="0.2" />
+      <MarkersSymbolizer allow-overlap="true" fill="#e0e0e0" width="25" file="/srv/tiler/styles/images/marker-solid.svg" transform="translate(0 -15)" ignore-placement="true" stroke="#000000" stroke-width="25" stroke-opacity="0.2" />
       <TextSymbolizer allow-overlap="true" face-name="DejaVu Sans Book" fill="#000000" halo-fill="rgba(0, 0, 0, 0.2)" halo-radius="1" size="12" dy="-15" margin="5">[number]</TextSymbolizer>
     </Rule>
   </Style>

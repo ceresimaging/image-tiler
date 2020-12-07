@@ -5,13 +5,8 @@ import fs from 'fs';
 mapnik.register_default_fonts();
 
 // Read stylesheet files
-const markerStyle = fs.readFileSync('styles/marker.xml', 'utf8');
-const issueStyle = fs.readFileSync('styles/marker-issue.xml', 'utf8');
-
-// Get SVG references
-const markerSolidImage = "/srv/tiler/styles/images/marker-solid.svg";
-const markerHoleImage = "/srv/tiler/styles/images/marker-hole.svg";
-
+const markerNumberStyle = fs.readFileSync('styles/marker-number.xml', 'utf8');
+const markerHoleStyle = fs.readFileSync('styles/marker-hole.xml', 'utf8');
 
 // Load Mapnik datasource
 mapnik.registerDatasource(`${mapnik.settings.paths.input_plugins}/postgis.input`);
@@ -34,8 +29,7 @@ const buildFlightQuery = (imagery, flight, user, exclusive) => {
     SELECT m.id AS id,
       m.geometry AS geom,
       m.type AS category,
-      ROW_NUMBER() OVER () AS number,
-      '${markerSolidImage}' AS marker_image
+      ROW_NUMBER() OVER () AS number
     FROM markers m
     JOIN auth_user as u 
       ON m.created_by_id = u.id
@@ -90,8 +84,7 @@ const buildMarkerQuery = (marker) => {
     SELECT m.id AS id,
       m.geometry AS geom,
       m.type AS category,
-      '' AS number,
-      '${markerHoleImage}' AS marker_image
+      '' AS number
     FROM markers m
     WHERE m.id = '${marker}'
   ) AS markers`;
@@ -121,9 +114,9 @@ export const markerLayer = (req, res, next) => {
   const { exclusive = false } = req.query;
 
   if (user === process.env.SUPPORT_USER) {
-    map.fromStringSync(issueStyle);
+    map.fromStringSync(markerHoleStyle);
   } else {
-    map.fromStringSync(markerStyle);
+    map.fromStringSync(markerNumberStyle);
   }
 
   const layer = new mapnik.Layer('markers');
