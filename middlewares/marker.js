@@ -125,6 +125,7 @@ export const markerLayer = (req, res, next) => {
     layer.datasource = buildDataSource(buildFlightQuery(imagery, flight, user, exclusive));
   } else {
     layer.datasource = buildDataSource(buildMarkerQuery(imagery, marker));
+    console.debug("built query");
   }
   layer.styles = ['marker-icon'];
 
