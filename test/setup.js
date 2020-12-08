@@ -5,6 +5,8 @@ jest.setTimeout(30000);
 
 const logDir = `${process.cwd()}/test/log`;
 
+fs.mkdirpSync(logDir);
+
 expect.extend({
   matchFixture (data, fixture) {
     fs.writeFileSync(`${logDir}/${fixture}`, data);
