@@ -1,10 +1,11 @@
 import fs from 'fs-extra';
 
+// Jest global config
 jest.setTimeout(30000);
 
 const logDir = `${process.cwd()}/test/log`;
 
-fs.emptyDirSync(logDir);
+fs.mkdirpSync(logDir);
 
 expect.extend({
   matchFixture (data, fixture) {

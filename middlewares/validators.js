@@ -185,3 +185,22 @@ export const validateKey = (req, res, next) => {
 
   throw new ValidationError(`Key: ${req.query.key}`, 'String');
 };
+
+// Validate Visit
+export const validateVisit = (req, res, next) => {
+  if (req.params.visit && validator.isInt(req.params.visit)) {
+    req.params.visit = parseInt(req.params.visit);
+    return next();
+  }
+
+  throw new ValidationError(`Visit ID: ${req.params.visit}`, 'Int');
+};
+
+// Validate Overlay
+export const validateOverlay = (req, res, next) => {
+  if (validator.isUUID(req.params.overlay)) {
+    return next();
+  }
+
+  throw new ValidationError(`Overlay ID: ${req.params.overlay}`, 'UUID');
+};
