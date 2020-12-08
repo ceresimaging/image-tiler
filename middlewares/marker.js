@@ -77,7 +77,7 @@ const buildVisitQuery = (visit, user, exclusive) => {
 
 const buildMarkerQuery = (marker) => {
   return `(
-    SELECT m.id AS id,
+    SFlightELECT m.id AS id,
       m.geometry AS geom,
       m.type AS category
     FROM markers m
@@ -103,7 +103,7 @@ const buildDataSource = (query) => {
 };
 
 export const markerLayer = (req, res, next) => {
-  const { flight, imagery, marker, visit } = req.params;
+  const { flight, marker, visit } = req.params;
   const { user } = req.query;
   const { map } = res.locals;
   const { exclusive = false } = req.query;
@@ -121,7 +121,7 @@ export const markerLayer = (req, res, next) => {
   const layer = new mapnik.Layer('markers');
 
   if (flight) {
-    layer.datasource = buildDataSource(buildVisitQuery(visit, user, exclusive));
+    layer.datasource = buildDataSource(buildVisitFlightQuery(visit, user, exclusive));
   } else {
     layer.datasource = buildDataSource(buildMarkerQuery(marker));
   }
