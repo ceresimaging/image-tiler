@@ -15,8 +15,8 @@ export default {
     getObject: jest.fn(({ Bucket, Key }) => ({
       promise: [process.env.IMAGERY_BUCKET, process.env.CUSTOM_LAYERS_BUCKET].includes(Bucket)
         ? jest.fn().mockResolvedValue({
-            Body: fs.readFileSync(`${process.cwd()}/test/fixtures/${Bucket}/${Key}${Bucket === process.env.CUSTOM_LAYERS_BUCKET ? '.zip' : ''}`)
-          })
+          Body: fs.readFileSync(`${process.cwd()}/test/fixtures/${Bucket}/${Key}${Bucket === process.env.CUSTOM_LAYERS_BUCKET ? '.zip' : ''}`)
+        })
         : jest.fn().mockRejectedValue({ code: 'NoSuchKey' })
     }))
   }))
