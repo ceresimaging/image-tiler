@@ -2,7 +2,7 @@ import express from 'express';
 
 import { zoomBox, setDefaultSize, setDefaultRatio, setDefaultBuffer, setDefaultUser, respond, noCache } from '../middlewares/tools';
 import { createMap, rasterResponse, rasterResponseExt, setExtent } from '../middlewares/mapnik';
-import { validateTile, validateImagery, validateSize, validateBuffer, validateFlight, validateBucket } from '../middlewares/validators';
+import { validateTile, validateImagery, validateSize, validateBuffer, validateBucket, validateVisit } from '../middlewares/validators';
 import { satelliteLayer } from '../middlewares/satellite';
 import { imageryLayer } from '../middlewares/imagery';
 import { markerLayer } from '../middlewares/marker';
@@ -39,11 +39,11 @@ router
     rasterResponse,
     respond
   )
-  .get('/:imagery/:flight.png',
+  .get('/:imagery/:visit.png',
     setDefaultSize(1024),
     setDefaultBuffer(0.1, 100),
     validateImagery,
-    validateFlight,
+    validateVisit,
     validateSize,
     validateBuffer,
     validateBucket,
@@ -57,13 +57,13 @@ router
     noCache,
     respond
   )
-  .get('/issues/:imagery/:flight.png',
+  .get('/issues/:imagery/:visit.png',
     setDefaultSize(256),
     setDefaultRatio(0.5),
     setDefaultBuffer([0, 0.15, 0, 0.5], [50, 50, 50, 90]),
     setDefaultUser(process.env.SUPPORT_USER),
     validateImagery,
-    validateFlight,
+    validateVisit,
     validateSize,
     validateBuffer,
     validateBucket,

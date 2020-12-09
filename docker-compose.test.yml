@@ -1,0 +1,34 @@
+version: '3'
+
+services:
+  tiler:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - ENV=development
+    volumes:
+      - .:/srv/tiler
+    ports:
+      - 8888:80
+      - 9229:9229
+    working_dir: /srv/tiler
+    command: npm run test
+    env_file: .env.test
+    links:
+      - postgres-tiler
+      - redis-tiler
+    depends_on:
+      - postgres-tiler
+      - redis-tiler
+
+  postgres-tiler:
+    image: postgis/postgis
+    restart: always
+    environment:
+      - POSTGRES_USER=tiler
+      - POSTGRES_PASSWORD=tiler
+      - POSTGRES_DBNAME=tiler
+
+  redis-tiler:
+    image: redis:latest
