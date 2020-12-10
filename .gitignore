@@ -6,3 +6,4 @@ junit
 .vscode
 test/log
 .env.test
+.DS_Store
