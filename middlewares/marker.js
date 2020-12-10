@@ -103,7 +103,7 @@ const buildDataSource = (query) => {
 };
 
 export const markerLayer = (req, res, next) => {
-  const { flight, marker, visit } = req.params;
+  const { marker, visit } = req.params;
   const { user } = req.query;
   const { map } = res.locals;
   const { exclusive = false } = req.query;
@@ -111,7 +111,7 @@ export const markerLayer = (req, res, next) => {
   if (user === process.env.SUPPORT_USER) {
     map.fromStringSync(markerIssueStyle);
   } else {
-    if (flight) {
+    if (visit) {
       map.fromStringSync(markerNumberStyle);
     } else {
       map.fromStringSync(markerHoleStyle);
@@ -120,7 +120,7 @@ export const markerLayer = (req, res, next) => {
 
   const layer = new mapnik.Layer('markers');
 
-  if (flight) {
+  if (visit) {
     layer.datasource = buildDataSource(buildVisitQuery(visit, user, exclusive));
   } else {
     layer.datasource = buildDataSource(buildMarkerQuery(marker));
