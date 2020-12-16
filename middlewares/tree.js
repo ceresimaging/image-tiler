@@ -17,7 +17,6 @@ const buildTreeCountQuery = (overlay) => {
     FROM trees t
     JOIN customers_cropvarietal v ON v.id = t.varietal_id
     WHERE t.overlay_id = '${overlay}'
-      AND t.deleted is NULL
     ORDER BY t.id
   ) AS trees`;
 };
@@ -34,8 +33,6 @@ const buildTreeDataQuery = (overlay) => {
     JOIN trees t ON t.id = td.tree_id
     JOIN customers_cropvarietal v ON v.id = t.varietal_id
     WHERE td.overlay_id = '${overlay}'
-      AND td.deleted is NULL
-      AND t.deleted is NULL
     ORDER BY t.id
   ) AS trees`;
 };
