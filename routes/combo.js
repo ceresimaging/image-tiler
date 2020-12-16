@@ -2,7 +2,7 @@ import express from 'express';
 
 import { zoomBox, setDefaultSize, setDefaultRatio, setDefaultBuffer, setDefaultUser, respond, noCache } from '../middlewares/tools';
 import { createMap, rasterResponse, rasterResponseExt, setExtent } from '../middlewares/mapnik';
-import { validateTile, validateImagery, validateSize, validateBuffer, validateBucket, validateVisit } from '../middlewares/validators';
+import { validateTile, validateImagery, validateSize, validateBuffer, validateBucket, validateMarker, validateVisit } from '../middlewares/validators';
 import { satelliteLayer } from '../middlewares/satellite';
 import { imageryLayer } from '../middlewares/imagery';
 import { markerLayer } from '../middlewares/marker';
@@ -74,6 +74,24 @@ router
     imageryLayer,
     setExtent,
     satelliteLayer,
+    rasterResponse,
+    respond
+  )
+  .get('/marker/:imagery/:marker.png',
+    setDefaultSize(256),
+    setDefaultRatio(0.65),
+    setDefaultBuffer([0, 0.15, 0, 0.5], [50, 50, 50, 90]),
+    validateMarker,
+    validateImagery,
+    validateBuffer,
+    validateSize,
+    validateBucket,
+    downloadTiff,
+    createMap,
+    markerLayer,
+    setExtent,
+    imageryLayer,
+    setExtent,
     rasterResponse,
     respond
   );
