@@ -8,8 +8,6 @@ const buildTreeCountQuery = (overlay) => {
     SELECT
       t.id::text tree_id,
       t.geometry geom,
-      t.plant_date::text,
-      t.remove_date::text,
       v.name varietal,
       v.is_pollinator pollinator,
       NOT t.is_present missing,
