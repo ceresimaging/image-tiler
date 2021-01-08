@@ -13,7 +13,6 @@ services:
       - 8888:80
       - 9229:9229
     working_dir: /srv/tiler
-    command: npm run test
     env_file: .env.test
     links:
       - postgres-tiler
