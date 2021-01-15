@@ -1,0 +1,8 @@
+<Map>
+  <Style name="fieldgeo">
+    <Rule>
+      <LineSymbolizer stroke="#333333" stroke-width="2" smooth="1" />
+      <PolygonSymbolizer fill-opacity="0.75" fill="#DDDDDD" />
+    </Rule>
+  </Style>
+</Map>

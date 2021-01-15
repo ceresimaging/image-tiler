@@ -1,7 +1,11 @@
 import mapnik from 'mapnik';
+import fs from 'fs';
 
 // Load Mapnik datasource
 mapnik.registerDatasource(`${mapnik.settings.paths.input_plugins}/postgis.input`);
+
+// Read stylesheet file
+const style = fs.readFileSync('styles/fieldgeo.xml', 'utf8');
 
 const buildQuery = (farm, field) => {
   return `(
@@ -51,8 +55,11 @@ export const fieldLayer = (req, res, next) => {
   const { map } = res.locals;
   const { farm, field } = req.params;
 
+  map.fromStringSync(style);
+
   const polygon = new mapnik.Layer('polygon');
   polygon.datasource = buildDataSource(farm, field, 'polygon');
+  polygon.styles = ['fieldgeo'];
   map.add_layer(polygon);
 
   const point = new mapnik.Layer('point');
