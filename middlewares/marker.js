@@ -30,7 +30,7 @@ const buildVisitQuery = (visit, user, exclusive) => {
     SELECT m.id AS id,
       m.geometry AS geom,
       m.type AS category,
-      ROW_NUMBER() OVER () AS number
+      ROW_NUMBER() OVER (ORDER BY m.created_at) AS number
     FROM markers m
     JOIN auth_user as u 
       ON m.created_by_id = u.id
