@@ -8,6 +8,7 @@ endif
 
 DOCKER_RUN := docker-compose run --rm tiler
 DOCKER_TEST := docker-compose -p test -f docker-compose.test.yml
+DOCKER_TEST_RUN := @$(DOCKER_TEST) run --rm tiler
 
 shell:
 	@$(DOCKER_RUN) bash
@@ -17,7 +18,7 @@ build:
 
 tests:
 	@echo "Runnning tests"
-	@$(DOCKER_TEST) run --rm tiler || true
+	@$(DOCKER_TEST_RUN) npm run test || true
 	@$(DOCKER_TEST) down -v
 
 npm_install:
@@ -32,7 +33,7 @@ restore_test_db:
 	@$(DOCKER_RUN) scripts/restore_db.sh
 
 dbshell:
-	@$(DOCKER_RUN) psql postgresql://tiler:tiler@postgres-tiler/tiler
+	@$(DOCKER_TEST_RUN) psql postgresql://tiler:tiler@postgres-tiler/tiler
 
 compile_render:
 	@$(DOCKER_RUN) g++ -I /usr/local/include/mapnik/deps render/render.cpp -std=c++11 -lmapnik -o render/render

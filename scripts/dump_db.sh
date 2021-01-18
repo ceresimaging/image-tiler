@@ -29,13 +29,12 @@ psql $url \
     CREATE TABLE tmp_trees AS (
       SELECT * 
       FROM trees 
-      WHERE field_id = 55994 
-        AND deleted IS NULL
+      WHERE overlay_id = '4d5cca2a-5b18-4346-90af-8daa2bcbfc1e'
     );
     CREATE TABLE tmp_trees_data AS (
       SELECT * 
       FROM trees_data
-      WHERE overlay_id = '8bcf2e4b-a18b-4857-90c2-8ee80fd8df98'
+      WHERE overlay_id = '98e1c50d-1d6e-40ac-b955-2c8ab5df07cb'
         AND tree_id IN (SELECT id FROM tmp_trees)
     );
     CREATE TABLE tmp_customers_cropvarietal AS (
