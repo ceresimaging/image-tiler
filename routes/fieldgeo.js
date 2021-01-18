@@ -39,7 +39,6 @@ router
   )
   .get('/:farm.png',
     setDefaultSize(1024),
-    setDefaultBuffer(0.1, 100),
     validateSize,
     validateBuffer,
     validateFarm,
@@ -62,7 +61,6 @@ router
   )
   .get('/:farm/:field.png',
     setDefaultSize(1024),
-    setDefaultBuffer(0.1, 100),
     validateSize,
     validateBuffer,
     validateFarm,
