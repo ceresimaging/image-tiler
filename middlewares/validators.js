@@ -204,3 +204,44 @@ export const validateOverlay = (req, res, next) => {
 
   throw new ValidationError(`Overlay ID: ${req.params.overlay}`, 'UUID');
 };
+
+// Validate Color
+export const validateColor = (req, res, next) => {
+  console.log(req.query.color);
+  if (!req.query.color) {
+    req.query.color = [];
+  } else {
+    req.query.color = Array.isArray(req.query.color) ? req.query.color : [req.query.color];
+
+    if (req.query.color.some((color) => !validator.isHexColor(color))) {
+      throw new ValidationError(`Color: ${req.query.color}`, 'HexColor|Array[HexColor]');
+    }
+  }
+
+  return next();
+};
+
+// Validate Varietal
+export const validateVarietal = (req, res, next) => {
+  if (!req.query.varietal) {
+    req.query.varietal = [];
+  } else {
+    req.query.varietal = Array.isArray(req.query.varietal) ? req.query.varietal : [req.query.varietal];
+
+    if (req.query.varietal.some((varietal) => validator.isEmpty(varietal))) {
+      throw new ValidationError(`Varietal: ${req.query.varietal}`, 'String|Array[String]');
+    }
+  }
+
+  return next();
+};
+
+// Validate Missing
+export const validateMissing = (req, res, next) => {
+  if (!req.query.missing || validator.isBoolean(req.query.missing)) {
+    req.query.missing = validator.toBoolean(req.query.missing || 'false');
+    return next();
+  }
+
+  throw new ValidationError(`Missing: ${req.query.missing}`, 'Boolean');
+};

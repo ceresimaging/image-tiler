@@ -1,9 +1,13 @@
 import mapnik from 'mapnik';
+import fs from 'fs';
 
 // Load Mapnik datasource
 mapnik.registerDatasource(`${mapnik.settings.paths.input_plugins}/postgis.input`);
 
-const buildTreeCountQuery = (overlay) => {
+// Read stylesheet file
+const dataStyle = fs.readFileSync('styles/tree.xml', 'utf8');
+
+const buildTreeCountQuery = ({ overlay, missing, varietal }) => {
   return `(
     SELECT
       t.id::text tree_id,
@@ -15,11 +19,13 @@ const buildTreeCountQuery = (overlay) => {
     FROM trees t
     JOIN customers_cropvarietal v ON v.id = t.varietal_id
     WHERE t.overlay_id = '${overlay}'
+      ${missing ? `AND t.is_present <> ${missing}` : ''}
+      ${varietal.length ? `AND v.name IN ('${varietal.join("','")}')` : ''}
     ORDER BY t.id
   ) AS trees`;
 };
 
-const buildTreeDataQuery = (overlay) => {
+const buildTreeDataQuery = ({ overlay, color, varietal }) => {
   return `(
     SELECT
       t.id::text tree_id,
@@ -31,11 +37,14 @@ const buildTreeDataQuery = (overlay) => {
     JOIN trees t ON t.id = td.tree_id
     JOIN customers_cropvarietal v ON v.id = t.varietal_id
     WHERE td.overlay_id = '${overlay}'
+      ${color.length ? `AND td.color IN ('${color.join("','")}')` : ''}
+      ${varietal.length ? `AND v.name IN ('${varietal.join("','")}')` : ''}
     ORDER BY t.id
   ) AS trees`;
 };
 
-const buildDataSource = (queryBuilder, overlay) => {
+const buildDataSource = (queryBuilder, filters) => {
+  console.log(queryBuilder(filters));
   return new mapnik.Datasource({
     type: 'postgis',
     host: process.env.CORE_DB_HOST,
@@ -43,7 +52,7 @@ const buildDataSource = (queryBuilder, overlay) => {
     user: process.env.CORE_DB_USER,
     password: process.env.CORE_DB_PASS,
     dbname: process.env.CORE_DB_NAME,
-    table: queryBuilder(overlay),
+    table: queryBuilder(filters),
     extent_from_subquery: true,
     geometry_field: 'geom',
     srid: 4326,
@@ -54,10 +63,14 @@ const buildDataSource = (queryBuilder, overlay) => {
 
 export const treeCountLayer = (req, res, next) => {
   const { overlay } = req.params;
+  const { missing, varietal } = req.query;
   const { map } = res.locals;
 
+  map.fromStringSync(dataStyle);
+
   const trees = new mapnik.Layer('trees');
-  trees.datasource = buildDataSource(buildTreeCountQuery, overlay);
+  trees.datasource = buildDataSource(buildTreeCountQuery, { overlay, missing, varietal });
+  trees.styles = ['tree'];
   map.add_layer(trees);
 
   next();
@@ -65,10 +78,14 @@ export const treeCountLayer = (req, res, next) => {
 
 export const treeDataLayer = (req, res, next) => {
   const { overlay } = req.params;
+  const { color, varietal } = req.query;
   const { map } = res.locals;
 
+  map.fromStringSync(dataStyle);
+
   const trees = new mapnik.Layer('trees');
-  trees.datasource = buildDataSource(buildTreeDataQuery, overlay);
+  trees.datasource = buildDataSource(buildTreeDataQuery, { overlay, color, varietal });
+  trees.styles = ['tree'];
   map.add_layer(trees);
 
   next();

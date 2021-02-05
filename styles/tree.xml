@@ -1,0 +1,22 @@
+<Map>
+  <Style filter-mode="first" name="tree">
+    <Rule>
+      <MaxScaleDenominator>3000</MaxScaleDenominator>
+      <MarkersSymbolizer comp-op="lighten" allow-overlap="true" fill="[color]" opacity="1" width="8" height="8" placement="point" />
+    </Rule>
+    <Rule>
+      <MaxScaleDenominator>5000</MaxScaleDenominator>
+      <MinScaleDenominator>3000</MinScaleDenominator>
+      <MarkersSymbolizer comp-op="lighten" allow-overlap="true" fill="[color]" opacity="1" width="5" height="5" placement="point" />
+    </Rule>
+    <Rule>
+      <MaxScaleDenominator>15000</MaxScaleDenominator>
+      <MinScaleDenominator>5000</MinScaleDenominator>
+      <MarkersSymbolizer comp-op="lighten" allow-overlap="true" fill="[color]" opacity="1" width="2" height="2" placement="point" />
+    </Rule>
+    <Rule>
+      <MinScaleDenominator>15000</MinScaleDenominator>
+      <MarkersSymbolizer comp-op="lighten" allow-overlap="true" fill="[color]" opacity="1" width="1" height="1" placement="point" />
+    </Rule>
+  </Style>
+</Map>
