@@ -207,7 +207,6 @@ export const validateOverlay = (req, res, next) => {
 
 // Validate Color
 export const validateColor = (req, res, next) => {
-  console.log(req.query.color);
   if (!req.query.color) {
     req.query.color = [];
   } else {

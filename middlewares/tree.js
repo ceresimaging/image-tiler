@@ -44,7 +44,6 @@ const buildTreeDataQuery = ({ overlay, color, varietal }) => {
 };
 
 const buildDataSource = (queryBuilder, filters) => {
-  console.log(queryBuilder(filters));
   return new mapnik.Datasource({
     type: 'postgis',
     host: process.env.CORE_DB_HOST,

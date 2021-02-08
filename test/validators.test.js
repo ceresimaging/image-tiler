@@ -108,4 +108,39 @@ describe('validators', () => {
 
     expect(res.status).toBe(400);
   });
+
+  test('should return an error if color format is wrong', async () => {
+    const base = 'tree';
+    const overlay = '98e1c50d-1d6e-40ac-b955-2c8ab5df07cb';
+
+    let res = await request.get(`/${base}/data/${overlay}/15/5337/12656.png?color=xxx`);
+
+    expect(res.status).toBe(400);
+
+    res = await request.get(`/${base}/data/${overlay}/15/5337/12656.png?color=xxx&color=yyy`);
+
+    expect(res.status).toBe(400);
+
+    res = await request.get(`/${base}/data/${overlay}/15/5337/12656.png?color=%23AAAAAA&color=yyy`);
+
+    expect(res.status).toBe(400);
+  });
+
+  test('should return an error if varietal format is wrong', async () => {
+    const base = 'tree';
+    const overlay = '98e1c50d-1d6e-40ac-b955-2c8ab5df07cb';
+
+    const res = await request.get(`/${base}/data/${overlay}/15/5337/12656.png?varietal=aaa&varietal=`);
+
+    expect(res.status).toBe(400);
+  });
+
+  test('should return an error if missing format is wrong', async () => {
+    const base = 'tree';
+    const overlay = '98e1c50d-1d6e-40ac-b955-2c8ab5df07cb';
+
+    const res = await request.get(`/${base}/count/${overlay}/15/5337/12656.png?missing=123`);
+
+    expect(res.status).toBe(400);
+  });
 });
