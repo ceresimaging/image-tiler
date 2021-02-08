@@ -6,7 +6,7 @@ module.exports = {
       node_args: "--experimental-modules --es-module-specifier-resolution=node",
       instances: "max",
       exec_mode: "cluster",
-      max_memory_restart: "500M",
+      max_memory_restart: "2000M",
       watch: true,
       watch_delay: 1000,
       env: {
