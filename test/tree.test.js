@@ -70,7 +70,7 @@ describe('tree routes', () => {
   test('should return a raster image with tree data filtered by color', async () => {
     const overlay = '98e1c50d-1d6e-40ac-b955-2c8ab5df07cb';
 
-    const res = await request.get(`/${base}/data/${overlay}.pn?color=%23ff0101&color=%230101ff`);
+    const res = await request.get(`/${base}/data/${overlay}.png?color=%23ff0101&color=%230101ff`);
 
     expect(res.body).matchFixture('tree-data-color-image.png');
   });
