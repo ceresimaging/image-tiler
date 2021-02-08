@@ -1,14 +1,27 @@
-import express from 'express';
+import express from "express";
 
-import { createMap, rasterResponse, setExtent, vectorResponse } from '../middlewares/mapnik';
-import { validateTile, validateSize, validateOverlay, validateColor, validateVarietal, validateMissing } from '../middlewares/validators';
-import { treeDataLayer, treeCountLayer } from '../middlewares/tree';
-import { respond, setDefaultSize, zoomBox } from '../middlewares/tools';
+import {
+  createMap,
+  rasterResponse,
+  setExtent,
+  vectorResponse,
+} from "../middlewares/mapnik";
+import {
+  validateTile,
+  validateSize,
+  validateOverlay,
+  validateColor,
+  validateVarietal,
+  validateMissing,
+} from "../middlewares/validators";
+import { treeDataLayer, treeCountLayer } from "../middlewares/tree";
+import { respond, setDefaultSize, zoomBox } from "../middlewares/tools";
 
 const router = express.Router();
 
 router
-  .get('/count/:overlay/:z/:x/:y.mvt',
+  .get(
+    "/count/:overlay/:z/:x/:y.mvt",
     validateTile,
     validateSize,
     validateOverlay,
@@ -19,7 +32,8 @@ router
     vectorResponse,
     respond
   )
-  .get('/count/:overlay/:z/:x/:y.png',
+  .get(
+    "/count/:overlay/:z/:x/:y.png",
     validateTile,
     validateSize,
     validateOverlay,
@@ -31,7 +45,8 @@ router
     rasterResponse,
     respond
   )
-  .get('/count/:overlay.png',
+  .get(
+    "/count/:overlay.png",
     setDefaultSize(1024),
     validateSize,
     validateOverlay,
@@ -43,7 +58,8 @@ router
     rasterResponse,
     respond
   )
-  .get('/data/:overlay/:z/:x/:y.mvt',
+  .get(
+    "/data/:overlay/:z/:x/:y.mvt",
     validateTile,
     validateSize,
     validateOverlay,
@@ -54,7 +70,8 @@ router
     vectorResponse,
     respond
   )
-  .get('/data/:overlay/:z/:x/:y.png',
+  .get(
+    "/data/:overlay/:z/:x/:y.png",
     validateTile,
     validateSize,
     validateOverlay,
@@ -66,7 +83,8 @@ router
     rasterResponse,
     respond
   )
-  .get('/data/:overlay.png',
+  .get(
+    "/data/:overlay.png",
     setDefaultSize(1024),
     validateSize,
     validateOverlay,

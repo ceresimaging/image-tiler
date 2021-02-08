@@ -1,12 +1,12 @@
-import SphericalMercator from '@mapbox/sphericalmercator';
-import sharp from 'sharp';
+import SphericalMercator from "@mapbox/sphericalmercator";
+import sharp from "sharp";
 
 const mercator = new SphericalMercator();
 
 // Respond request
 export const respond = (req, res, next) => {
   // Set cache age to 90 days
-  res.set('Cache-Control', res.locals.cache || 'max-age=7776000');
+  res.set("Cache-Control", res.locals.cache || "max-age=7776000");
 
   // Send data
   res.send(res.locals.data);
@@ -14,7 +14,7 @@ export const respond = (req, res, next) => {
 
 // Set no-cache header
 export const noCache = (req, res, next) => {
-  res.locals.cache = 'no-store,no-cache';
+  res.locals.cache = "no-store,no-cache";
   next();
 };
 
@@ -34,9 +34,7 @@ export const autocropImage = (req, res, next) => {
 export const zoomBox = (req, res, next) => {
   const { x, y, z } = req.params;
 
-  res.locals.map.zoomToBox(
-    mercator.bbox(x, y, z, false, '900913')
-  );
+  res.locals.map.zoomToBox(mercator.bbox(x, y, z, false, "900913"));
 
   next();
 };
@@ -60,8 +58,11 @@ export const setDefaultRatio = (ratio) => {
 // Set buffer
 export const setDefaultBuffer = (buffer, minBuffer) => {
   return (req, res, next) => {
-    req.query.buffer = req.query.buffer || (Array.isArray(buffer) ? buffer : `${buffer}`);
-    req.query.minBuffer = req.query.minBuffer || (Array.isArray(minBuffer) ? minBuffer : `${minBuffer}`);
+    req.query.buffer =
+      req.query.buffer || (Array.isArray(buffer) ? buffer : `${buffer}`);
+    req.query.minBuffer =
+      req.query.minBuffer ||
+      (Array.isArray(minBuffer) ? minBuffer : `${minBuffer}`);
     next();
   };
 };

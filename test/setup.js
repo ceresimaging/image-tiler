@@ -1,4 +1,4 @@
-import fs from 'fs-extra';
+import fs from "fs-extra";
 
 // Jest global config
 jest.setTimeout(30000);
@@ -8,7 +8,7 @@ const logDir = `${process.cwd()}/test/log`;
 fs.mkdirpSync(logDir);
 
 expect.extend({
-  matchFixture (data, fixture) {
+  matchFixture(data, fixture) {
     fs.writeFileSync(`${logDir}/${fixture}`, data);
 
     return {
@@ -17,7 +17,7 @@ expect.extend({
         data.equals(
           fs.readFileSync(`${process.cwd()}/test/fixtures/${fixture}`)
         ),
-      message: () => 'Response does not match fixture'
+      message: () => "Response does not match fixture",
     };
-  }
+  },
 });

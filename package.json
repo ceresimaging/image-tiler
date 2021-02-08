@@ -11,8 +11,8 @@
     "test:refresh": "REFRESH_FIXTURES=true npm run test",
     "test:watch": "npm run test -- --watch",
     "test:report": "npm run test -- --collect-coverage --ci --runInBand --reporters=default --reporters=jest-junit",
-    "lint": "eslint .",
-    "lint:fix": "npm run lint -- --fix"
+    "lint": "prettier --check .",
+    "lint:fix": "prettier --write ."
   },
   "nodemonConfig": {
     "ignore": [
@@ -48,13 +48,7 @@
     "@babel/core": "^7.12.3",
     "@babel/preset-env": "^7.12.1",
     "babel-jest": "^26.6.3",
-    "eslint": "^7.13.0",
-    "eslint-config-standard": "^16.0.1",
-    "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-jest": "^24.1.0",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-standard": "^4.1.0",
+    "prettier": "^2.1.2",
     "fs-extra": "^9.0.1",
     "jest": "^26.6.3",
     "jest-junit": "^12.0.0",

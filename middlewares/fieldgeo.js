@@ -1,11 +1,13 @@
-import mapnik from 'mapnik';
-import fs from 'fs';
+import mapnik from "mapnik";
+import fs from "fs";
 
 // Load Mapnik datasource
-mapnik.registerDatasource(`${mapnik.settings.paths.input_plugins}/postgis.input`);
+mapnik.registerDatasource(
+  `${mapnik.settings.paths.input_plugins}/postgis.input`
+);
 
 // Read stylesheet file
-const style = fs.readFileSync('styles/fieldgeo.xml', 'utf8');
+const style = fs.readFileSync("styles/fieldgeo.xml", "utf8");
 
 const buildQuery = (farm, field) => {
   return `(
@@ -28,14 +30,14 @@ const buildQuery = (farm, field) => {
       ON cof.id = cf.farm_id
     WHERE
       df.is_active = true
-      ${farm ? `AND cof.id = '${farm}'` : ''}
-      ${field ? `AND df.id = '${field}'` : ''}
+      ${farm ? `AND cof.id = '${farm}'` : ""}
+      ${field ? `AND df.id = '${field}'` : ""}
   ) AS fields`;
 };
 
 const buildDataSource = (farm, field, geom) => {
   return new mapnik.Datasource({
-    type: 'postgis',
+    type: "postgis",
     host: process.env.CORE_DB_HOST,
     port: process.env.CORE_DB_PORT,
     user: process.env.CORE_DB_USER,
@@ -47,7 +49,7 @@ const buildDataSource = (farm, field, geom) => {
     srid: 4326,
     max_size: 10,
     connect_timeout: 30,
-    simplify_geometries: false
+    simplify_geometries: false,
   });
 };
 
@@ -57,13 +59,13 @@ export const fieldLayer = (req, res, next) => {
 
   map.fromStringSync(style);
 
-  const polygon = new mapnik.Layer('polygon');
-  polygon.datasource = buildDataSource(farm, field, 'polygon');
-  polygon.styles = ['fieldgeo'];
+  const polygon = new mapnik.Layer("polygon");
+  polygon.datasource = buildDataSource(farm, field, "polygon");
+  polygon.styles = ["fieldgeo"];
   map.add_layer(polygon);
 
-  const point = new mapnik.Layer('point');
-  point.datasource = buildDataSource(farm, field, 'point');
+  const point = new mapnik.Layer("point");
+  point.datasource = buildDataSource(farm, field, "point");
   map.add_layer(point);
 
   next();

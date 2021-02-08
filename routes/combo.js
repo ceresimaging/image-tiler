@@ -1,17 +1,39 @@
-import express from 'express';
+import express from "express";
 
-import { zoomBox, setDefaultSize, setDefaultRatio, setDefaultBuffer, setDefaultUser, respond, noCache } from '../middlewares/tools';
-import { createMap, rasterResponse, rasterResponseExt, setExtent } from '../middlewares/mapnik';
-import { validateTile, validateImagery, validateSize, validateBuffer, validateBucket, validateMarker, validateVisit } from '../middlewares/validators';
-import { satelliteLayer } from '../middlewares/satellite';
-import { imageryLayer } from '../middlewares/imagery';
-import { markerLayer } from '../middlewares/marker';
-import { downloadTiff } from '../middlewares/download';
+import {
+  zoomBox,
+  setDefaultSize,
+  setDefaultRatio,
+  setDefaultBuffer,
+  setDefaultUser,
+  respond,
+  noCache,
+} from "../middlewares/tools";
+import {
+  createMap,
+  rasterResponse,
+  rasterResponseExt,
+  setExtent,
+} from "../middlewares/mapnik";
+import {
+  validateTile,
+  validateImagery,
+  validateSize,
+  validateBuffer,
+  validateBucket,
+  validateMarker,
+  validateVisit,
+} from "../middlewares/validators";
+import { satelliteLayer } from "../middlewares/satellite";
+import { imageryLayer } from "../middlewares/imagery";
+import { markerLayer } from "../middlewares/marker";
+import { downloadTiff } from "../middlewares/download";
 
 const router = express.Router();
 
 router
-  .get('/:imagery/:z/:x/:y.png',
+  .get(
+    "/:imagery/:z/:x/:y.png",
     validateTile,
     validateSize,
     validateImagery,
@@ -24,7 +46,8 @@ router
     rasterResponse,
     respond
   )
-  .get('/:imagery.png',
+  .get(
+    "/:imagery.png",
     setDefaultSize(1024),
     setDefaultBuffer(0.1, 100),
     validateImagery,
@@ -39,7 +62,8 @@ router
     rasterResponse,
     respond
   )
-  .get('/:imagery/:visit.png',
+  .get(
+    "/:imagery/:visit.png",
     setDefaultSize(1024),
     setDefaultBuffer(0.1, 100),
     validateImagery,
@@ -57,7 +81,8 @@ router
     noCache,
     respond
   )
-  .get('/issues/:imagery/:visit.png',
+  .get(
+    "/issues/:imagery/:visit.png",
     setDefaultSize(256),
     setDefaultRatio(0.5),
     setDefaultBuffer([0, 0.15, 0, 0.5], [50, 50, 50, 90]),
@@ -77,7 +102,8 @@ router
     rasterResponse,
     respond
   )
-  .get('/marker/:imagery/:marker.png',
+  .get(
+    "/marker/:imagery/:marker.png",
     setDefaultSize(256),
     setDefaultRatio(0.65),
     setDefaultBuffer([0, 0.15, 0, 0.5], [50, 50, 50, 90]),

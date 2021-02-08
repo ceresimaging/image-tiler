@@ -1,14 +1,15 @@
-import mapnik from 'mapnik';
-import fs from 'fs';
+import mapnik from "mapnik";
+import fs from "fs";
 
 // Load Mapnik datasource
 mapnik.registerDatasource(`${mapnik.settings.paths.input_plugins}/gdal.input`);
 
 // Read stylesheet files
-const satelliteStyle = fs.readFileSync('styles/satellite.xml', 'utf8');
+const satelliteStyle = fs.readFileSync("styles/satellite.xml", "utf8");
 
 // Offline mode
-const offline = process.env.NODE_ENV === 'test' && !process.env.REFRESH_FIXTURES;
+const offline =
+  process.env.NODE_ENV === "test" && !process.env.REFRESH_FIXTURES;
 
 const config = `<GDAL_WMS>
     <Service name="TMS">
@@ -36,7 +37,7 @@ const config = `<GDAL_WMS>
   </GDAL_WMS>`;
 
 // Write config file
-const filePath = '/tmp/satellite.xml';
+const filePath = "/tmp/satellite.xml";
 fs.writeFileSync(filePath, config);
 
 export const satelliteLayer = (req, res, next) => {
@@ -45,12 +46,12 @@ export const satelliteLayer = (req, res, next) => {
   map.fromStringSync(satelliteStyle);
 
   // Create satellite layer
-  const satelliteLayer = new mapnik.Layer('satellite', '+init=epsg:3857');
+  const satelliteLayer = new mapnik.Layer("satellite", "+init=epsg:3857");
   satelliteLayer.datasource = new mapnik.Datasource({
-    type: 'gdal',
-    file: filePath
+    type: "gdal",
+    file: filePath,
   });
-  satelliteLayer.styles = ['satellite'];
+  satelliteLayer.styles = ["satellite"];
 
   map.add_layer(satelliteLayer);
 

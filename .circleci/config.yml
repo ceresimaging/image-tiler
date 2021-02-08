@@ -15,15 +15,15 @@ jobs:
 
     steps:
       - checkout
-    
-      - run: 
+
+      - run:
           name: Installing system dependencies
           command: apt install -y postgresql-client || true
 
       - run:
           name: Installing app dependencies
           command: npm install && npm link /src/node-mapnik
-      
+
       - run:
           name: Copying render to be accessible
           command: cp render/render /usr/local/bin
