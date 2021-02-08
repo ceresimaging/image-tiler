@@ -1,18 +1,8 @@
 import express from "express";
 
-import {
-  zoomBox,
-  autocropImage,
-  setDefaultSize,
-  respond,
-} from "../middlewares/tools";
+import { zoomBox, autocropImage, setDefaultSize, respond } from "../middlewares/tools";
 import { createMap, rasterResponse, setExtent } from "../middlewares/mapnik";
-import {
-  validateTile,
-  validateImagery,
-  validateSize,
-  validateBucket,
-} from "../middlewares/validators";
+import { validateTile, validateImagery, validateSize, validateBucket } from "../middlewares/validators";
 import { imageryLayer } from "../middlewares/imagery";
 import { downloadTiff } from "../middlewares/download";
 

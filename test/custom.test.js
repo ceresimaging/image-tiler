@@ -7,9 +7,7 @@ jest.mock("aws-sdk");
 
 describe("custom routes", () => {
   test("should return a vector tile", async () => {
-    const res = await request
-      .get(`/${base}/${custom}/14/2680/6344.mvt`)
-      .responseType("arraybuffer");
+    const res = await request.get(`/${base}/${custom}/14/2680/6344.mvt`).responseType("arraybuffer");
 
     expect(res.body).matchFixture("custom-vector-tile.mvt");
   });

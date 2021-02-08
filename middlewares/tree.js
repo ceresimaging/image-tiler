@@ -2,9 +2,7 @@ import mapnik from "mapnik";
 import fs from "fs";
 
 // Load Mapnik datasource
-mapnik.registerDatasource(
-  `${mapnik.settings.paths.input_plugins}/postgis.input`
-);
+mapnik.registerDatasource(`${mapnik.settings.paths.input_plugins}/postgis.input`);
 
 // Read stylesheet file
 const dataStyle = fs.readFileSync("styles/tree.xml", "utf8");

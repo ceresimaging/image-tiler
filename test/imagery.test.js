@@ -19,9 +19,7 @@ describe("imagery routes", () => {
   });
 
   test("should accept bucket as parameters", async () => {
-    const res = await request.get(
-      `/${base}/${imagery}.png?bucket=ceres-geotiff-data`
-    );
+    const res = await request.get(`/${base}/${imagery}.png?bucket=ceres-geotiff-data`);
 
     expect(res.body).matchFixture("imagery-image.png");
   });

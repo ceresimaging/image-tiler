@@ -1,15 +1,7 @@
 import express from "express";
 
-import {
-  createMap,
-  vectorResponse,
-  rasterResponse,
-} from "../middlewares/mapnik";
-import {
-  validateTile,
-  validateSize,
-  validateVisit,
-} from "../middlewares/validators";
+import { createMap, vectorResponse, rasterResponse } from "../middlewares/mapnik";
+import { validateTile, validateSize, validateVisit } from "../middlewares/validators";
 import { zoomBox, respond } from "../middlewares/tools";
 import { markerLayer } from "../middlewares/marker";
 

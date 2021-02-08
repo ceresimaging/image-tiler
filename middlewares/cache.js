@@ -85,8 +85,7 @@ export const invalidate = (req, res, next) => {
     .createInvalidation(params)
     .promise()
     .then((data) => {
-      res.locals.invalidations =
-        data.Invalidation.InvalidationBatch.Paths.Items;
+      res.locals.invalidations = data.Invalidation.InvalidationBatch.Paths.Items;
 
       if (!wait) {
         return next();

@@ -11,9 +11,7 @@ describe("marker routes", () => {
   });
 
   test("should return a vector tile", async () => {
-    const res = await request
-      .get(`/${base}/${visit}/18/42782/101024.mvt`)
-      .responseType("arraybuffer");
+    const res = await request.get(`/${base}/${visit}/18/42782/101024.mvt`).responseType("arraybuffer");
 
     expect(res.body).matchFixture("marker-vector-tile.mvt");
   });

@@ -23,11 +23,7 @@ class MinBufferError extends ValidationError {
 
 // Validate tile parameters
 export const validateTile = (req, res, next) => {
-  if (
-    validator.isInt(req.params.x) &&
-    validator.isInt(req.params.y) &&
-    validator.isInt(req.params.z)
-  ) {
+  if (validator.isInt(req.params.x) && validator.isInt(req.params.y) && validator.isInt(req.params.z)) {
     req.params.x = parseInt(req.params.x);
     req.params.y = parseInt(req.params.y);
     req.params.z = parseInt(req.params.z);
@@ -35,10 +31,7 @@ export const validateTile = (req, res, next) => {
     return next();
   }
 
-  throw new ValidationError(
-    `ZXY = ${req.params.z}/${req.params.x}/${req.params.y}`,
-    "Int/Int/Int"
-  );
+  throw new ValidationError(`ZXY = ${req.params.z}/${req.params.x}/${req.params.y}`, "Int/Int/Int");
 };
 
 // Validate Imagery imagery parameter
@@ -48,15 +41,6 @@ export const validateImagery = (req, res, next) => {
   }
 
   throw new ValidationError(`Imagery ID: ${req.params.imagery}`, "UUID");
-};
-
-// Validate Flight imagery parameter
-export const validateFlight = (req, res, next) => {
-  if (validator.isUUID(req.params.flight)) {
-    return next();
-  }
-
-  throw new ValidationError(`Flight ID: ${req.params.flight}`, "UUID");
 };
 
 // Validate Field parameter
@@ -117,21 +101,16 @@ export const validateBuffer = (req, res, next) => {
     if (req.query.buffer.length !== 4) throw new BufferError(req.query.buffer);
     req.query.buffer = req.query.buffer.map(parseFloat);
     if (req.query.buffer.some(isNaN)) throw new BufferError(req.query.buffer);
-  } else if (
-    !req.query.buffer ||
-    validator.isFloat(req.query.buffer, { min: 0, max: 1 })
-  ) {
+  } else if (!req.query.buffer || validator.isFloat(req.query.buffer, { min: 0, max: 1 })) {
     req.query.buffer = Array(4).fill(parseFloat(req.query.buffer || 0));
   } else {
     throw new BufferError(req.query.buffer);
   }
 
   if (Array.isArray(req.query.minBuffer)) {
-    if (req.query.minBuffer.length !== 4)
-      throw new MinBufferError(req.query.minBuffer);
+    if (req.query.minBuffer.length !== 4) throw new MinBufferError(req.query.minBuffer);
     req.query.minBuffer = req.query.minBuffer.map((v) => parseInt(v));
-    if (req.query.minBuffer.some(isNaN))
-      throw new MinBufferError(req.query.minBuffer);
+    if (req.query.minBuffer.some(isNaN)) throw new MinBufferError(req.query.minBuffer);
   } else if (!req.query.minBuffer || validator.isInt(req.query.minBuffer)) {
     req.query.minBuffer = Array(4).fill(parseInt(req.query.minBuffer || 0));
   } else {
@@ -184,10 +163,7 @@ export const validatePath = (req, res, next) => {
     return next();
   }
 
-  throw new ValidationError(
-    `Path: ${req.query.path}`,
-    "String (/[path]/*, /*)"
-  );
+  throw new ValidationError(`Path: ${req.query.path}`, "String (/[path]/*, /*)");
 };
 
 // Validate flush key
@@ -223,15 +199,10 @@ export const validateColor = (req, res, next) => {
   if (!req.query.color) {
     req.query.color = [];
   } else {
-    req.query.color = Array.isArray(req.query.color)
-      ? req.query.color
-      : [req.query.color];
+    req.query.color = Array.isArray(req.query.color) ? req.query.color : [req.query.color];
 
     if (req.query.color.some((color) => !validator.isHexColor(color))) {
-      throw new ValidationError(
-        `Color: ${req.query.color}`,
-        "HexColor|Array[HexColor]"
-      );
+      throw new ValidationError(`Color: ${req.query.color}`, "HexColor|Array[HexColor]");
     }
   }
 
@@ -243,15 +214,10 @@ export const validateVarietal = (req, res, next) => {
   if (!req.query.varietal) {
     req.query.varietal = [];
   } else {
-    req.query.varietal = Array.isArray(req.query.varietal)
-      ? req.query.varietal
-      : [req.query.varietal];
+    req.query.varietal = Array.isArray(req.query.varietal) ? req.query.varietal : [req.query.varietal];
 
     if (req.query.varietal.some((varietal) => validator.isEmpty(varietal))) {
-      throw new ValidationError(
-        `Varietal: ${req.query.varietal}`,
-        "String|Array[String]"
-      );
+      throw new ValidationError(`Varietal: ${req.query.varietal}`, "String|Array[String]");
     }
   }
 

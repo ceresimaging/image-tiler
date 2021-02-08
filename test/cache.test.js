@@ -1,10 +1,4 @@
-import {
-  request,
-  createImagery,
-  createCustom,
-  createFiles,
-  wipeCache,
-} from "./helpers";
+import { request, createImagery, createCustom, createFiles, wipeCache } from "./helpers";
 
 const base = "cache";
 const imagery = "7326e81d-40b0-4053-8f33-cd22f9a53df9";
@@ -46,9 +40,7 @@ describe("cache", () => {
     createFiles(2, 3);
     createFiles(2, 5);
 
-    const res = await request.get(
-      `/${base}?key=${process.env.CLOUDFRONT_DISTRIBUTION}&age=3`
-    );
+    const res = await request.get(`/${base}?key=${process.env.CLOUDFRONT_DISTRIBUTION}&age=3`);
 
     expect(res.body).toEqual({ files: 4, invalidations: 0 });
   });
@@ -56,17 +48,13 @@ describe("cache", () => {
   test("should flush all cache", async () => {
     createFiles(10);
 
-    const res = await request.get(
-      `/${base}?key=${process.env.CLOUDFRONT_DISTRIBUTION}&age=0`
-    );
+    const res = await request.get(`/${base}?key=${process.env.CLOUDFRONT_DISTRIBUTION}&age=0`);
 
     expect(res.body).toEqual({ files: 10, invalidations: 0 });
   });
 
   test("should invalidate path", async () => {
-    const res = await request.get(
-      `/${base}/invalidate?key=${process.env.CLOUDFRONT_DISTRIBUTION}`
-    );
+    const res = await request.get(`/${base}/invalidate?key=${process.env.CLOUDFRONT_DISTRIBUTION}`);
 
     expect(res.body).toEqual({ files: 0, invalidations: 1 });
   });

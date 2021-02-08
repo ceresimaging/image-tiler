@@ -8,8 +8,7 @@ mapnik.registerDatasource(`${mapnik.settings.paths.input_plugins}/gdal.input`);
 const satelliteStyle = fs.readFileSync("styles/satellite.xml", "utf8");
 
 // Offline mode
-const offline =
-  process.env.NODE_ENV === "test" && !process.env.REFRESH_FIXTURES;
+const offline = process.env.NODE_ENV === "test" && !process.env.REFRESH_FIXTURES;
 
 const config = `<GDAL_WMS>
     <Service name="TMS">

@@ -8,13 +8,7 @@ import {
   validatePath,
   validateKey,
 } from "../middlewares/validators";
-import {
-  flush,
-  removeTiff,
-  removeShape,
-  cacheResponse,
-  invalidate,
-} from "../middlewares/cache";
+import { flush, removeTiff, removeShape, cacheResponse, invalidate } from "../middlewares/cache";
 import { setDefaultBucket, respond, noCache } from "../middlewares/tools";
 
 const router = express.Router();
@@ -34,10 +28,7 @@ router
   )
   .get(
     "/custom/:custom",
-    setDefaultBucket(
-      process.env.CUSTOM_LAYERS_REGION,
-      process.env.CUSTOM_LAYERS_BUCKET
-    ),
+    setDefaultBucket(process.env.CUSTOM_LAYERS_REGION, process.env.CUSTOM_LAYERS_BUCKET),
     validateBucket,
     validateCustom,
     validateWait,
@@ -47,15 +38,6 @@ router
     noCache,
     respond
   )
-  .get(
-    "/invalidate",
-    validateKey,
-    validatePath,
-    validateWait,
-    invalidate,
-    cacheResponse,
-    noCache,
-    respond
-  );
+  .get("/invalidate", validateKey, validatePath, validateWait, invalidate, cacheResponse, noCache, respond);
 
 export default router;

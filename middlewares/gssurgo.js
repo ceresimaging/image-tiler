@@ -2,9 +2,7 @@ import mapnik from "mapnik";
 import fs from "fs";
 
 // Load Mapnik datasource
-mapnik.registerDatasource(
-  `${mapnik.settings.paths.input_plugins}/postgis.input`
-);
+mapnik.registerDatasource(`${mapnik.settings.paths.input_plugins}/postgis.input`);
 
 // Load fonts (This layer has labels)
 mapnik.register_default_fonts();

@@ -36,9 +36,7 @@ const downloadFile = (req, res, next) => {
     // If something fails, unlock the queue and respond with error
     const fail = () => {
       lock.unlock().catch(next);
-      res
-        .status(404)
-        .send("Error downloading source data file, please check params");
+      res.status(404).send("Error downloading source data file, please check params");
     };
 
     // Before calling download recursively, we have to unlock the queue

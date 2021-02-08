@@ -9,12 +9,7 @@ import {
   respond,
   noCache,
 } from "../middlewares/tools";
-import {
-  createMap,
-  rasterResponse,
-  rasterResponseExt,
-  setExtent,
-} from "../middlewares/mapnik";
+import { createMap, rasterResponse, rasterResponseExt, setExtent } from "../middlewares/mapnik";
 import {
   validateTile,
   validateImagery,

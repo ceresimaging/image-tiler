@@ -12,11 +12,7 @@ expect.extend({
     fs.writeFileSync(`${logDir}/${fixture}`, data);
 
     return {
-      pass:
-        Buffer.isBuffer(data) &&
-        data.equals(
-          fs.readFileSync(`${process.cwd()}/test/fixtures/${fixture}`)
-        ),
+      pass: Buffer.isBuffer(data) && data.equals(fs.readFileSync(`${process.cwd()}/test/fixtures/${fixture}`)),
       message: () => "Response does not match fixture",
     };
   },

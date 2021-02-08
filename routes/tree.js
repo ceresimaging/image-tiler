@@ -1,11 +1,6 @@
 import express from "express";
 
-import {
-  createMap,
-  rasterResponse,
-  setExtent,
-  vectorResponse,
-} from "../middlewares/mapnik";
+import { createMap, rasterResponse, setExtent, vectorResponse } from "../middlewares/mapnik";
 import {
   validateTile,
   validateSize,

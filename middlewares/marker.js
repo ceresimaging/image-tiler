@@ -10,9 +10,7 @@ const markerHoleStyle = fs.readFileSync("styles/marker-hole.xml", "utf8");
 const markerIssueStyle = fs.readFileSync("styles/marker-issue.xml", "utf8");
 
 // Load Mapnik datasource
-mapnik.registerDatasource(
-  `${mapnik.settings.paths.input_plugins}/postgis.input`
-);
+mapnik.registerDatasource(`${mapnik.settings.paths.input_plugins}/postgis.input`);
 
 const buildVisitQuery = (visit, user, exclusive) => {
   let userFilter = "";
