@@ -1,4 +1,4 @@
-import mapnik from 'mapnik';
+import mapnik from "mapnik";
 
 // Load Mapnik datasource
 mapnik.registerDatasource(`${mapnik.settings.paths.input_plugins}/ogr.input`);
@@ -9,11 +9,11 @@ export const customLayer = (req, res, next) => {
   const { custom } = req.params;
 
   // Create layer based on Shapefile
-  const layer = new mapnik.Layer('custom');
+  const layer = new mapnik.Layer("custom");
   layer.datasource = new mapnik.Datasource({
-    type: 'ogr',
+    type: "ogr",
     file: `/vsizip/${path}/${custom}.shp`,
-    layer: custom
+    layer: custom,
   });
 
   map.add_layer(layer);

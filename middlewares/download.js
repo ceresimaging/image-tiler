@@ -1,18 +1,18 @@
-import fs from 'fs';
+import fs from "fs";
 
-import Redis from 'ioredis';
-import Redlock from 'redlock';
-import AWS from 'aws-sdk';
+import Redis from "ioredis";
+import Redlock from "redlock";
+import AWS from "aws-sdk";
 
-import { flush } from './cache';
+import { flush } from "./cache";
 
 const redis = new Redis({ host: process.env.REDIS_HOST });
 const redlock = new Redlock([redis], {
-  retryCount: -1
+  retryCount: -1,
 });
 
 const s3 = new AWS.S3({
-  maxRetries: 10
+  maxRetries: 10,
 });
 
 // Download file from S3 to the local cache
@@ -36,7 +36,7 @@ const downloadFile = (req, res, next) => {
     // If something fails, unlock the queue and respond with error
     const fail = () => {
       lock.unlock().catch(next);
-      res.status(404).send('Error downloading source data file, please check params');
+      res.status(404).send("Error downloading source data file, please check params");
     };
 
     // Before calling download recursively, we have to unlock the queue
@@ -49,12 +49,12 @@ const downloadFile = (req, res, next) => {
     // Download error handler
     const onError = (error) => {
       // If file not found, trigger error!
-      if (error.code === 'NoSuchKey') {
+      if (error.code === "NoSuchKey") {
         return fail();
       }
 
       // If cache dir is full, remove files older than 10 days and retry
-      if (error.code === 'ENOSPC') {
+      if (error.code === "ENOSPC") {
         req.query.age = 10;
         return flush(req, res, retry);
       }
@@ -69,8 +69,9 @@ const downloadFile = (req, res, next) => {
     }
 
     // Download file from S3 to local cache
-    s3.getObject({ Bucket: bucket, Key: key }).promise()
-      .then(data => {
+    s3.getObject({ Bucket: bucket, Key: key })
+      .promise()
+      .then((data) => {
         fs.writeFileSync(path, data.Body, onError);
         setTimeout(retry, 1000);
       })
@@ -86,7 +87,7 @@ const downloadFile = (req, res, next) => {
 export const downloadTiff = (req, res, next) => {
   res.locals.filename = `${req.params.imagery}.tif`;
   res.locals.key = `${req.params.imagery}.tif`;
-  res.locals.dir = 'imagery';
+  res.locals.dir = "imagery";
   downloadFile(req, res, next);
 };
 
@@ -94,6 +95,6 @@ export const downloadTiff = (req, res, next) => {
 export const downloadShape = (req, res, next) => {
   res.locals.filename = `${req.params.custom}.zip`;
   res.locals.key = req.params.custom;
-  res.locals.dir = 'custom';
+  res.locals.dir = "custom";
   downloadFile(req, res, next);
 };

@@ -1,19 +1,19 @@
-import mapnik from 'mapnik';
-import fs from 'fs';
+import mapnik from "mapnik";
+import fs from "fs";
 
 // Load fonts (This layer has labels)
 mapnik.register_default_fonts();
 
 // Read stylesheet files
-const markerNumberStyle = fs.readFileSync('styles/marker-number.xml', 'utf8');
-const markerHoleStyle = fs.readFileSync('styles/marker-hole.xml', 'utf8');
-const markerIssueStyle = fs.readFileSync('styles/marker-issue.xml', 'utf8');
+const markerNumberStyle = fs.readFileSync("styles/marker-number.xml", "utf8");
+const markerHoleStyle = fs.readFileSync("styles/marker-hole.xml", "utf8");
+const markerIssueStyle = fs.readFileSync("styles/marker-issue.xml", "utf8");
 
 // Load Mapnik datasource
 mapnik.registerDatasource(`${mapnik.settings.paths.input_plugins}/postgis.input`);
 
 const buildVisitQuery = (visit, user, exclusive) => {
-  let userFilter = '';
+  let userFilter = "";
 
   if (user) {
     if (exclusive) {
@@ -87,7 +87,7 @@ const buildMarkerQuery = (marker) => {
 
 const buildDataSource = (query) => {
   return new mapnik.Datasource({
-    type: 'postgis',
+    type: "postgis",
     host: process.env.CORE_DB_HOST,
     port: process.env.CORE_DB_PORT,
     user: process.env.CORE_DB_USER,
@@ -95,10 +95,10 @@ const buildDataSource = (query) => {
     dbname: process.env.CORE_DB_NAME,
     table: query,
     extent_from_subquery: true,
-    geometry_field: 'geom',
+    geometry_field: "geom",
     srid: 4326,
     max_size: 10,
-    connect_timeout: 30
+    connect_timeout: 30,
   });
 };
 
@@ -118,14 +118,14 @@ export const markerLayer = (req, res, next) => {
     }
   }
 
-  const layer = new mapnik.Layer('markers');
+  const layer = new mapnik.Layer("markers");
 
   if (visit) {
     layer.datasource = buildDataSource(buildVisitQuery(visit, user, exclusive));
   } else {
     layer.datasource = buildDataSource(buildMarkerQuery(marker));
   }
-  layer.styles = ['marker-icon'];
+  layer.styles = ["marker-icon"];
 
   // Add layer if contains at least 1 feature
   if (layer.datasource.extent()[0] !== Number.MAX_VALUE) {
