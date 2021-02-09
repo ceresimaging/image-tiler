@@ -132,13 +132,13 @@ export const validateAge = (req, res, next) => {
 
 // Validate S3 Region and Bucket
 export const validateBucket = (req, res, next) => {
-  if (!req.query.region || !validator.isEmpty(req.query.region)) {
+  if (!req.query.region || typeof req.query.region == "string") {
     req.query.region = req.query.region || process.env.IMAGERY_REGION;
   } else {
     throw new ValidationError(`Region: ${req.query.region}`, "String");
   }
 
-  if (!req.query.bucket || !validator.isEmpty(req.query.bucket)) {
+  if (!req.query.bucket || typeof req.query.bucket == "string") {
     req.query.bucket = req.query.bucket || process.env.IMAGERY_BUCKET;
     return next();
   }

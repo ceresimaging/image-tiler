@@ -13,11 +13,11 @@ describe("validators", () => {
 
     expect(res.status).toBe(400);
 
-    res = await request.get(`/${base}/${imagery}.png?buffer=[1, 1, 1]`);
+    res = await request.get(`/${base}/${imagery}.png?buffer=1&buffer=1&buffer=1`);
 
     expect(res.status).toBe(400);
 
-    res = await request.get(`/${base}/${imagery}.png?buffer=[1, 1, 1, a]`);
+    res = await request.get(`/${base}/${imagery}.png?buffer=1&buffer=1&buffer=1&buffer=a`);
 
     expect(res.status).toBe(400);
   });
@@ -31,11 +31,11 @@ describe("validators", () => {
 
     expect(res.status).toBe(400);
 
-    res = await request.get(`/${base}/${imagery}.png?minBuffer=[1, 1, 1]`);
+    res = await request.get(`/${base}/${imagery}.png?minBuffer=1&minBuffer=1&minBuffer=1`);
 
     expect(res.status).toBe(400);
 
-    res = await request.get(`/${base}/${imagery}.png?minBuffer=[1, 1, 1, a]`);
+    res = await request.get(`/${base}/${imagery}.png?minBuffer=1&minBuffer=1&minBuffer=1&minBuffer=a`);
 
     expect(res.status).toBe(400);
   });
@@ -81,31 +81,30 @@ describe("validators", () => {
 
   test("should return an error if farm or field UUID format are wrong", async () => {
     const base = "fieldgeo";
-    const farm = "7355293c-e23d-4aab-8ff0-e2f8f1b83f4e";
-    const field = "e6437d6f-4637-4133-bb17-9da0eff0b963";
 
-    let res = await request.get(`/${base}/the-farm/${field}/15/7068/12884.png`);
+    let res = await request.get(`/${base}/the-farm/7355293c-e23d-4aab-8ff0-e2f8f1b83f4e/15/7068/12884.png`);
 
     expect(res.status).toBe(400);
 
-    res = await request.get(`/${base}/${farm}/the-field/15/7068/12884.png`);
+    res = await request.get(`/${base}/7355293c-e23d-4aab-8ff0-e2f8f1b83f4e/the-field/15/7068/12884.png`);
 
     expect(res.status).toBe(400);
   });
 
   test("should return an error if marker UUID format is wrong", async () => {
-    const marker = "e6437d6f-4637-4133-bb17-9da0eff0b963";
-
-    const res = await request.get(`/${base}/marker/:imagery/the-marker.png`);
+    const res = await request.get(`/${base}/marker/e6437d6f-4637-4133-bb17-9da0eff0b963/the-marker.png`);
 
     expect(res.status).toBe(400);
   });
 
   test("should return an error if custom layer UUID format is wrong", async () => {
-    const base = "custom";
-    const custom = "0e220754-e251-41c2-ab8b-0f05962ab7e9";
+    const res = await request.get(`/custom/the-layer/14/2680/6344.mvt`).responseType("arraybuffer");
 
-    const res = await request.get(`/${base}/the-layer/14/2680/6344.mvt`).responseType("arraybuffer");
+    expect(res.status).toBe(400);
+  });
+
+  test("should return an error if overlay UUID format is wrong", async () => {
+    const res = await request.get(`/tree/count/aaa.png`);
 
     expect(res.status).toBe(400);
   });
@@ -122,6 +121,18 @@ describe("validators", () => {
     const base = "/cache/invalidate";
 
     const res = await request.get(`${base}?wait=AAA`);
+
+    expect(res.status).toBe(400);
+  });
+
+  test("should return an error if region/bucket format are wrong", async () => {
+    const base = "/imagery/0e220754-e251-41c2-ab8b-0f05962ab7e9.png";
+
+    let res = await request.get(`${base}?region[]=aaa`);
+
+    expect(res.status).toBe(400);
+
+    res = await request.get(`${base}?bucket[]=aaa`);
 
     expect(res.status).toBe(400);
   });

@@ -61,6 +61,15 @@ describe("combo routes", () => {
     expect(res.body).matchFixture("combo-issues.png");
   });
 
+  test("should return a single image with marker with hole", async () => {
+    const imagery = "4a6fa821-f022-4864-8e55-b8c9231693d4";
+    const marker = "a0ca3f0c-ece2-4ee0-ae5e-94baaa4c81ac";
+
+    const res = await request.get(`/${base}/marker/${imagery}/${marker}.png`);
+
+    expect(res.body).matchFixture("combo-marker-hole.png");
+  });
+
   test("should return a single image with markers for notifications with specific aspect ratio", async () => {
     const imagery = "4a6fa821-f022-4864-8e55-b8c9231693d4";
     const visit = 191225;
