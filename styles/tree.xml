@@ -17,7 +17,7 @@
     <Rule>
       <MaxScaleDenominator>49999</MaxScaleDenominator>
       <MinScaleDenominator>15000</MinScaleDenominator>
-      <MarkersSymbolizer file="/srv/tiler/styles/images/tree.svg" allow-overlap="true" fill="[color]" width="1" height="1" />
+      <MarkersSymbolizer file="/srv/tiler/styles/images/tree.svg" allow-overlap="true" fill="[color]" width="1.5" height="1.5" />
     </Rule>
     <Rule>
       <MaxScaleDenominator>99999</MaxScaleDenominator>
