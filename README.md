@@ -1,8 +1,6 @@
 # Ceres Imaging Tile Server
 
-[![CircleCI](https://circleci.com/gh/ceresimaging/image-tiler.svg?style=svg)](https://circleci.com/gh/ceresimaging/image-tiler)
-
-[Coverage](https://circleci.com/api/v1.1/project/github/ceresimaging/image-tiler/latest/artifacts/0/coverage/index.html)
+[![CircleCI](https://circleci.com/gh/ceresimaging/image-tiler.svg?style=svg)](https://circleci.com/api/v1.1/project/github/ceresimaging/image-tiler/latest/artifacts/0/coverage/index.html)
 
 ## How to make it work locally:
 
