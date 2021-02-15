@@ -1,6 +1,6 @@
 import express from "express";
 
-import { createMap, rasterResponse, setExtent, vectorResponse } from "../middlewares/mapnik";
+import { createMap, rasterResponseExt, setExtent, vectorResponse } from "../middlewares/mapnik";
 import {
   validateTile,
   validateSize,
@@ -37,7 +37,7 @@ router
     createMap,
     treeCountLayer,
     zoomBox,
-    rasterResponse,
+    rasterResponseExt,
     respond
   )
   .get(
@@ -50,7 +50,7 @@ router
     createMap,
     treeCountLayer,
     setExtent,
-    rasterResponse,
+    rasterResponseExt,
     respond
   )
   .get(
@@ -75,7 +75,7 @@ router
     createMap,
     treeDataLayer,
     zoomBox,
-    rasterResponse,
+    rasterResponseExt,
     respond
   )
   .get(
@@ -88,7 +88,7 @@ router
     createMap,
     treeDataLayer,
     setExtent,
-    rasterResponse,
+    rasterResponseExt,
     respond
   );
 

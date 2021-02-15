@@ -2,6 +2,15 @@ import mapnik from "mapnik";
 import fs from "fs";
 import { exec } from "child_process";
 
+// Resize Map based on resolution
+export const autoScale = (req, res, next) => {
+  const { map } = res.locals;
+
+  map.resize(map.width * map.scale(), map.height * map.scale());
+
+  next();
+};
+
 // Generate PNG
 export const rasterResponse = (req, res, next) => {
   const { map } = res.locals;
