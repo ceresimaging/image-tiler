@@ -34,8 +34,6 @@ export const rasterResponse = (req, res, next) => {
 export const rasterResponseExt = (req, res, next) => {
   const { map } = res.locals;
 
-  console.log(map.scale(), map.scaleDenominator());
-
   const name = `/tmp/${Date.now()}${Math.random()}`;
   const xml = `${name}.xml`;
   const png = `${name}.png`;
