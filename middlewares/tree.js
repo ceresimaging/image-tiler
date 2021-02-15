@@ -21,7 +21,7 @@ const buildTreeCountQuery = ({ overlay, missing, varietal }) => {
     WHERE t.overlay_id = '${overlay}'
       ${missing ? `AND t.is_present <> ${missing}` : ""}
       ${varietal.length ? `AND v.name IN ('${varietal.join("','")}')` : ""}
-    ORDER BY td.value, t.id
+    ORDER BY t.id
   ) AS trees`;
 };
 
