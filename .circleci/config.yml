@@ -18,7 +18,7 @@ jobs:
 
       - run:
           name: Installing system dependencies
-          command: apt install -y postgresql-client || true
+          command: apt update && apt install -y postgresql-client
 
       - run:
           name: Installing app dependencies
