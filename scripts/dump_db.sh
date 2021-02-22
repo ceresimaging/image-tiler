@@ -29,7 +29,10 @@ psql $url \
     CREATE TABLE tmp_trees AS (
       SELECT * 
       FROM trees 
-      WHERE overlay_id = '4d5cca2a-5b18-4346-90af-8daa2bcbfc1e'
+      WHERE overlay_id IN (
+        '4d5cca2a-5b18-4346-90af-8daa2bcbfc1e', 
+        '041cfc7f-fd9e-4dc5-bf91-0d3775dcce1b'
+      )
     );
     CREATE TABLE tmp_trees_data AS (
       SELECT * 

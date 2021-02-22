@@ -1,15 +1,15 @@
-import fs from 'fs-extra';
-import path from 'path';
-import { v4 as uuid } from 'uuid';
-import supertest from 'supertest';
+import fs from "fs-extra";
+import path from "path";
+import { v4 as uuid } from "uuid";
+import supertest from "supertest";
 
-import app from '../server';
+import app from "../server";
 
 export const request = supertest(app);
 
 export const createFile = (filePath) => {
   fs.mkdirSync(path.dirname(filePath), { recursive: true });
-  fs.closeSync(fs.openSync(filePath, 'w'));
+  fs.closeSync(fs.openSync(filePath, "w"));
 };
 
 export const createImagery = (imagery) => {

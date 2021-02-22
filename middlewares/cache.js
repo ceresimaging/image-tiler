@@ -1,5 +1,5 @@
-import fs from 'fs';
-import AWS from 'aws-sdk';
+import fs from "fs";
+import AWS from "aws-sdk";
 
 const cloudFront = new AWS.CloudFront();
 
@@ -9,10 +9,10 @@ export const cacheResponse = (req, res, next) => {
 
   res.locals.data = {
     files: files.length,
-    invalidations: invalidations.length
+    invalidations: invalidations.length,
   };
 
-  res.set('Content-Type', 'application/json');
+  res.set("Content-Type", "application/json");
 
   next();
 };
@@ -35,7 +35,7 @@ export const flush = (req, res, next) => {
       if (stats.isDirectory()) {
         flushDir(path);
       } else {
-        if (limit < (now - stats.atimeMs)) {
+        if (limit < now - stats.atimeMs) {
           fs.unlinkSync(path);
           files.push(path);
         }
@@ -76,31 +76,35 @@ export const invalidate = (req, res, next) => {
       CallerReference: `${Date.now()}`,
       Paths: {
         Quantity: 1,
-        Items: [path]
-      }
-    }
+        Items: [path],
+      },
+    },
   };
 
-  cloudFront.createInvalidation(params).promise().then((data) => {
-    res.locals.invalidations = data.Invalidation.InvalidationBatch.Paths.Items;
+  cloudFront
+    .createInvalidation(params)
+    .promise()
+    .then((data) => {
+      res.locals.invalidations = data.Invalidation.InvalidationBatch.Paths.Items;
 
-    if (!wait) {
-      return next();
-    }
+      if (!wait) {
+        return next();
+      }
 
-    const params = {
-      DistributionId: process.env.CLOUDFRONT_DISTRIBUTION,
-      Id: data.Invalidation.Id
-    };
+      const params = {
+        DistributionId: process.env.CLOUDFRONT_DISTRIBUTION,
+        Id: data.Invalidation.Id,
+      };
 
-    cloudFront.waitFor('invalidationCompleted', params).promise().then(next);
-  }).catch(next);
+      cloudFront.waitFor("invalidationCompleted", params).promise().then(next);
+    })
+    .catch(next);
 };
 
 // Remove GeoTiff
 export const removeTiff = (req, res, next) => {
   res.locals.filename = `${req.params.imagery}.tif`;
-  res.locals.dir = 'imagery';
+  res.locals.dir = "imagery";
   req.query.path = `/imagery/${req.params.imagery}/*`;
 
   removeFile(req, res, next);
@@ -109,7 +113,7 @@ export const removeTiff = (req, res, next) => {
 // Remove Shapefile
 export const removeShape = (req, res, next) => {
   res.locals.filename = `${req.params.custom}.zip`;
-  res.locals.dir = 'custom';
+  res.locals.dir = "custom";
   req.query.path = `/custom/${req.params.custom}/*`;
 
   removeFile(req, res, next);
