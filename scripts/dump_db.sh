@@ -79,7 +79,7 @@ psql $url \
     CREATE TABLE tmp_visits AS (
       SELECT * 
       FROM visits
-      WHERE id IN (122950, 191225, 210560, 210555, 122948)
+      WHERE id IN (122950, 191225, 210560, 210555, 122948, 128587)
         OR id IN (SELECT DISTINCT visit_id FROM tmp_published_imagery_overlay
       )
     );

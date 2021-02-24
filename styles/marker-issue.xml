@@ -1,8 +1,13 @@
 <Map>
   <Style name="marker-icon">
     <Rule>
+      <Filter>[mapnik::geometry_type] = polygon</Filter>
+      <LineSymbolizer stroke="#ffffff" stroke-width="2" />
+      <PolygonSymbolizer fill-opacity="0.4" fill="#DDDDDD" />
+    </Rule>
+    <Rule>
       <Filter>[category] = 'issue'</Filter>
-      <MarkersSymbolizer allow-overlap="true" fill="#FFFFFF" width="25" file="/srv/tiler/styles/images/marker-hole.svg" transform="translate(0 -15)" ignore-placement="true" stroke="#000000" stroke-width="25" stroke-opacity="0.6" />
+      <MarkersSymbolizer allow-overlap="true" fill="#FFFFFF" width="25" file="/srv/tiler/styles/images/marker-hole.svg" transform="translate(0 -15)" ignore-placement="true" stroke="#000000" stroke-width="25" stroke-opacity="0.6" placement="interior" />
     </Rule>
   </Style>
 </Map>
