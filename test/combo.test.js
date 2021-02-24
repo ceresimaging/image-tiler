@@ -35,8 +35,8 @@ describe("combo routes", () => {
   });
 
   test("should return a single image with markers", async () => {
-    const imagery = "4a6fa821-f022-4864-8e55-b8c9231693d4";
-    const visit = 191225;
+    const imagery = "45d34c90-5cef-4da8-bbed-ca072fa2b705";
+    const visit = 128587;
 
     const res = await request.get(`/${base}/${imagery}/${visit}.png`);
 
@@ -68,6 +68,15 @@ describe("combo routes", () => {
     const res = await request.get(`/${base}/marker/${imagery}/${marker}.png`);
 
     expect(res.body).matchFixture("combo-marker-hole.png");
+  });
+
+  test("should return a single image with polygon marker with hole", async () => {
+    const imagery = "45d34c90-5cef-4da8-bbed-ca072fa2b705";
+    const marker = "b8af6c12-55c0-40cf-9317-4876436878a2";
+
+    const res = await request.get(`/${base}/marker/${imagery}/${marker}.png`);
+
+    expect(res.body).matchFixture("combo-marker-polygon-hole.png");
   });
 
   test("should return a single image with markers for notifications with specific aspect ratio", async () => {

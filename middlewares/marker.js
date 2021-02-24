@@ -32,14 +32,13 @@ const buildVisitQuery = (visit, user, exclusive) => {
       m.type AS category,
       ROW_NUMBER() OVER (ORDER BY m.created_at) AS number
     FROM markers m
-    JOIN auth_user as u 
+    JOIN auth_user as u
       ON m.created_by_id = u.id
     JOIN platform_auth_ceresuserprofile cup
       ON u.id = cup.user_id
-    JOIN visits v 
+    JOIN visits v
       ON m.visit_id = v.id
-    WHERE ST_GeometryType(m.geometry) = 'ST_Point'
-      AND m.deleted is null 
+    WHERE m.deleted is null
       AND m.is_open = true
       AND (
         m.visit_id = ${visit}
