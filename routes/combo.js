@@ -18,9 +18,13 @@ import {
   validateBucket,
   validateMarker,
   validateVisit,
+  validateOverlay,
+  validateColor,
+  validateVarietal
 } from "../middlewares/validators";
 import { satelliteLayer } from "../middlewares/satellite";
 import { imageryLayer } from "../middlewares/imagery";
+import { treeDataLayer } from "../middlewares/tree";
 import { markerLayer } from "../middlewares/marker";
 import { downloadTiff } from "../middlewares/download";
 
@@ -69,6 +73,25 @@ router
     downloadTiff,
     createMap,
     imageryLayer,
+    setExtent,
+    satelliteLayer,
+    markerLayer,
+    rasterResponseExt,
+    noCache,
+    respond
+  )
+  .get(
+    "/pli/:overlay/:visit.png",
+    setDefaultSize(1024),
+    setDefaultBuffer(0.1, 100),
+    validateOverlay,
+    validateVisit,
+    validateSize,
+    validateBuffer,
+    validateColor,
+    validateVarietal,
+    createMap,
+    treeDataLayer,
     setExtent,
     satelliteLayer,
     markerLayer,
