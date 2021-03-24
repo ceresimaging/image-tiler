@@ -29,13 +29,16 @@ const buildTreeDataQuery = ({ overlay, color, varietal }) => {
   return `(
     SELECT
       t.id::text tree_id,
-      t.geometry AS geom,
+      t.geometry geom,
       v.name varietal,
+      cd.name crop_name,
+      cd.group crop_group,
       td.value,
       td.color
     FROM trees_data td
     JOIN trees t ON t.id = td.tree_id
     JOIN customers_cropvarietal v ON v.id = t.varietal_id
+    JOIN customers_cropdetail cd ON cd.id = v.crop_detail_id
     WHERE td.overlay_id = '${overlay}'
       ${color.length ? `AND td.color IN ('${color.join("','")}')` : ""}
       ${varietal.length ? `AND v.name IN ('${varietal.join("','")}')` : ""}
