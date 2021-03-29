@@ -20,7 +20,7 @@ import {
   validateVisit,
   validateOverlay,
   validateColor,
-  validateVarietal
+  validateVarietal,
 } from "../middlewares/validators";
 import { satelliteLayer } from "../middlewares/satellite";
 import { imageryLayer } from "../middlewares/imagery";
