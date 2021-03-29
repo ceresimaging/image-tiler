@@ -15,7 +15,7 @@ import tree from "./routes/tree";
 const app = express();
 
 // Add CORS
-app.use(cors({ origin: true }));
+app.use(cors({ origin: "*" }));
 
 // Add logger
 if (process.env.NODE_ENV !== "test") {
