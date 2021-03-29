@@ -158,12 +158,17 @@ export const validateWait = (req, res, next) => {
 
 // Validate path
 export const validatePath = (req, res, next) => {
-  if (!req.query.path || validator.matches(req.query.path, /^\/(?:.*)\*$/)) {
-    req.query.path = req.query.path || "/*";
-    return next();
+  if (!req.query.path) {
+    req.query.path = ["/*"];
+  } else {
+    req.query.path = Array.isArray(req.query.path) ? req.query.path : [req.query.path];
+
+    if (req.query.path.some((path) => !validator.matches(path, /^\/(?:.*)\*$/))) {
+      throw new ValidationError(`Path: ${req.query.path}`, "String|Array[String]");
+    }
   }
 
-  throw new ValidationError(`Path: ${req.query.path}`, "String (/[path]/*, /*)");
+  return next();
 };
 
 // Validate flush key
