@@ -1,4 +1,8 @@
 <Map>
+  <!--
+    MarkersSymbolizer has comp-op="dst-over" so that imagery goes to the bottom,
+    no matter when it is added
+   -->
   <Style filter-mode="first" name="tree">
     <Rule>
       <Filter>
@@ -6,11 +10,11 @@
         ([crop_name] = 'Christmas Tree' and [crop_group] = 'Trees')
       </Filter>
       <MaxScaleDenominator>2999</MaxScaleDenominator>
-      <MarkersSymbolizer file="/srv/tiler/styles/images/tree.svg" allow-overlap="true" fill="[color]" width="5" height="5" />
+      <MarkersSymbolizer comp-op="dst-over" file="/srv/tiler/styles/images/tree.svg" allow-overlap="true" fill="[color]" width="5" height="5" />
     </Rule>
     <Rule>
       <MaxScaleDenominator>2999</MaxScaleDenominator>
-      <MarkersSymbolizer file="/srv/tiler/styles/images/tree.svg" allow-overlap="true" fill="[color]" width="8" height="8" />
+      <MarkersSymbolizer comp-op="dst-over" file="/srv/tiler/styles/images/tree.svg" allow-overlap="true" fill="[color]" width="8" height="8" />
     </Rule>
 
     <Rule>
@@ -20,12 +24,12 @@
       </Filter>
       <MaxScaleDenominator>4999</MaxScaleDenominator>
       <MinScaleDenominator>3000</MinScaleDenominator>
-      <MarkersSymbolizer file="/srv/tiler/styles/images/tree.svg" allow-overlap="true" fill="[color]" width="3" height="3" />
+      <MarkersSymbolizer comp-op="dst-over" file="/srv/tiler/styles/images/tree.svg" allow-overlap="true" fill="[color]" width="3" height="3" />
     </Rule>
     <Rule>
       <MaxScaleDenominator>4999</MaxScaleDenominator>
       <MinScaleDenominator>3000</MinScaleDenominator>
-      <MarkersSymbolizer file="/srv/tiler/styles/images/tree.svg" allow-overlap="true" fill="[color]" width="5" height="5" />
+      <MarkersSymbolizer comp-op="dst-over" file="/srv/tiler/styles/images/tree.svg" allow-overlap="true" fill="[color]" width="5" height="5" />
     </Rule>
 
     <Rule>
@@ -35,12 +39,12 @@
       </Filter>
       <MaxScaleDenominator>14999</MaxScaleDenominator>
       <MinScaleDenominator>5000</MinScaleDenominator>
-      <MarkersSymbolizer file="/srv/tiler/styles/images/tree.svg" allow-overlap="true" fill="[color]" width="1.5" height="1.5" />
+      <MarkersSymbolizer comp-op="dst-over" file="/srv/tiler/styles/images/tree.svg" allow-overlap="true" fill="[color]" width="1.5" height="1.5" />
     </Rule>
     <Rule>
       <MaxScaleDenominator>14999</MaxScaleDenominator>
       <MinScaleDenominator>5000</MinScaleDenominator>
-      <MarkersSymbolizer file="/srv/tiler/styles/images/tree.svg" allow-overlap="true" fill="[color]" width="3" height="3" />
+      <MarkersSymbolizer comp-op="dst-over" file="/srv/tiler/styles/images/tree.svg" allow-overlap="true" fill="[color]" width="3" height="3" />
     </Rule>
 
     <Rule>
@@ -50,12 +54,12 @@
       </Filter>
       <MaxScaleDenominator>49999</MaxScaleDenominator>
       <MinScaleDenominator>15000</MinScaleDenominator>
-      <MarkersSymbolizer file="/srv/tiler/styles/images/tree.svg" allow-overlap="true" fill="[color]" width="0.75" height="0.75" />
+      <MarkersSymbolizer comp-op="dst-over" file="/srv/tiler/styles/images/tree.svg" allow-overlap="true" fill="[color]" width="0.75" height="0.75" />
     </Rule>
     <Rule>
       <MaxScaleDenominator>49999</MaxScaleDenominator>
       <MinScaleDenominator>15000</MinScaleDenominator>
-      <MarkersSymbolizer file="/srv/tiler/styles/images/tree.svg" allow-overlap="true" fill="[color]" width="1.5" height="1.5" />
+      <MarkersSymbolizer comp-op="dst-over" file="/srv/tiler/styles/images/tree.svg" allow-overlap="true" fill="[color]" width="1.5" height="1.5" />
     </Rule>
 
     <Rule>
@@ -65,12 +69,12 @@
       </Filter>
       <MaxScaleDenominator>99999</MaxScaleDenominator>
       <MinScaleDenominator>50000</MinScaleDenominator>
-      <MarkersSymbolizer file="/srv/tiler/styles/images/tree.svg" allow-overlap="true" fill="[color]" width="0.5" height="0.5" />
+      <MarkersSymbolizer comp-op="dst-over" file="/srv/tiler/styles/images/tree.svg" allow-overlap="true" fill="[color]" width="0.5" height="0.5" />
     </Rule>
     <Rule>
       <MaxScaleDenominator>99999</MaxScaleDenominator>
       <MinScaleDenominator>50000</MinScaleDenominator>
-      <MarkersSymbolizer file="/srv/tiler/styles/images/tree.svg" allow-overlap="true" fill="[color]" width="0.75" height="0.75" />
+      <MarkersSymbolizer comp-op="dst-over" file="/srv/tiler/styles/images/tree.svg" allow-overlap="true" fill="[color]" width="0.75" height="0.75" />
     </Rule>
 
     <Rule>
@@ -80,12 +84,12 @@
       </Filter>
       <MaxScaleDenominator>149999</MaxScaleDenominator>
       <MinScaleDenominator>100000</MinScaleDenominator>
-      <MarkersSymbolizer file="/srv/tiler/styles/images/tree.svg" allow-overlap="true" fill="[color]" width="0.25" height="0.25" />
+      <MarkersSymbolizer comp-op="dst-over" file="/srv/tiler/styles/images/tree.svg" allow-overlap="true" fill="[color]" width="0.25" height="0.25" />
     </Rule>
     <Rule>
       <MaxScaleDenominator>149999</MaxScaleDenominator>
       <MinScaleDenominator>100000</MinScaleDenominator>
-      <MarkersSymbolizer file="/srv/tiler/styles/images/tree.svg" allow-overlap="true" fill="[color]" width="0.5" height="0.5" />
+      <MarkersSymbolizer comp-op="dst-over" file="/srv/tiler/styles/images/tree.svg" allow-overlap="true" fill="[color]" width="0.5" height="0.5" />
     </Rule>
 
     <Rule>
@@ -94,11 +98,11 @@
         ([crop_name] = 'Christmas Tree' and [crop_group] = 'Trees')
       </Filter>
       <MinScaleDenominator>150000</MinScaleDenominator>
-      <MarkersSymbolizer file="/srv/tiler/styles/images/tree.svg" allow-overlap="true" fill="[color]" width="0.125" height="0.125" />
+      <MarkersSymbolizer comp-op="dst-over" file="/srv/tiler/styles/images/tree.svg" allow-overlap="true" fill="[color]" width="0.125" height="0.125" />
     </Rule>
     <Rule>
       <MinScaleDenominator>150000</MinScaleDenominator>
-      <MarkersSymbolizer file="/srv/tiler/styles/images/tree.svg" allow-overlap="true" fill="[color]" width="0.25" height="0.25" />
+      <MarkersSymbolizer comp-op="dst-over" file="/srv/tiler/styles/images/tree.svg" allow-overlap="true" fill="[color]" width="0.25" height="0.25" />
     </Rule>
   </Style>
 </Map>

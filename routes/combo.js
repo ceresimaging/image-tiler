@@ -156,8 +156,26 @@ router
     markerLayer,
     setExtent,
     imageryLayer,
-    setExtent,
     rasterResponse,
+    respond
+  )
+  .get(
+    "/marker/tree/data/:overlay/:marker.png",
+    setDefaultSize(256),
+    setDefaultRatio(0.65),
+    setDefaultBuffer([0, 0.15, 0, 0.5], [50, 50, 50, 90]),
+    validateMarker,
+    validateOverlay,
+    validateSize,
+    validateBuffer,
+    validateColor,
+    validateVarietal,
+    createMap,
+    markerLayer,
+    setExtent,
+    treeDataLayer,
+    rasterResponse,
+    noCache,
     respond
   );
 
