@@ -75,8 +75,8 @@ export const invalidate = (req, res, next) => {
     InvalidationBatch: {
       CallerReference: `${Date.now()}`,
       Paths: {
-        Quantity: 1,
-        Items: [path],
+        Quantity: path.length,
+        Items: path,
       },
     },
   };
@@ -105,7 +105,12 @@ export const invalidate = (req, res, next) => {
 export const removeTiff = (req, res, next) => {
   res.locals.filename = `${req.params.imagery}.tif`;
   res.locals.dir = "imagery";
-  req.query.path = `/imagery/${req.params.imagery}/*`;
+  req.query.path = [
+    `/imagery/${req.params.imagery}/*`,
+    `/combo/${req.params.imagery}/*`,
+    `/combo/issues/${req.params.imagery}/*`,
+    `/combo/marker/${req.params.imagery}/*`,
+  ];
 
   removeFile(req, res, next);
 };
@@ -114,7 +119,7 @@ export const removeTiff = (req, res, next) => {
 export const removeShape = (req, res, next) => {
   res.locals.filename = `${req.params.custom}.zip`;
   res.locals.dir = "custom";
-  req.query.path = `/custom/${req.params.custom}/*`;
+  req.query.path = [`/custom/${req.params.custom}/*`];
 
   removeFile(req, res, next);
 };

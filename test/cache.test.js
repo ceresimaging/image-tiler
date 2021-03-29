@@ -16,7 +16,7 @@ describe("cache", () => {
 
     const res = await request.get(`/${base}/imagery/${imagery}`);
 
-    expect(res.body).toEqual({ files: 1, invalidations: 1 });
+    expect(res.body).toEqual({ files: 1, invalidations: 4 });
   });
 
   test("should remove an imagery cached file and wait for invalidation", async () => {
@@ -24,7 +24,7 @@ describe("cache", () => {
 
     const res = await request.get(`/${base}/imagery/${imagery}?wait=true`);
 
-    expect(res.body).toEqual({ files: 1, invalidations: 1 });
+    expect(res.body).toEqual({ files: 1, invalidations: 4 });
   });
 
   test("should remove a custom layer cached file", async () => {
