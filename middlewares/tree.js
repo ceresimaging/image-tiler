@@ -73,8 +73,8 @@ const buildDataSource = (queryBuilder, filters) => {
     extent_from_subquery: true,
     geometry_field: "geom",
     srid: 4326,
-    max_size: 10,
-    connect_timeout: 30,
+    max_size: 50,
+    connect_timeout: 60,
   });
 };
 
@@ -157,6 +157,7 @@ export const treeDataPGLayer = (req, res, next) => {
         v.name varietal,
         cd.name crop_name,
         cd.group crop_group,
+        td.color
       FROM trees_data td
       JOIN trees t ON t.id = td.tree_id
       JOIN customers_cropvarietal v ON v.id = t.varietal_id
