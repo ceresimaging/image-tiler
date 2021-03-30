@@ -18,15 +18,38 @@ import {
   validateBucket,
   validateMarker,
   validateVisit,
+  validateOverlay,
+  validateColor,
+  validateVarietal,
 } from "../middlewares/validators";
 import { satelliteLayer } from "../middlewares/satellite";
 import { imageryLayer } from "../middlewares/imagery";
+import { treeDataLayer } from "../middlewares/tree";
 import { markerLayer } from "../middlewares/marker";
 import { downloadTiff } from "../middlewares/download";
 
 const router = express.Router();
 
 router
+  .get(
+    "/tree/data/:overlay/:visit.png",
+    setDefaultSize(1024),
+    setDefaultBuffer(0.1, 100),
+    validateOverlay,
+    validateVisit,
+    validateSize,
+    validateBuffer,
+    validateColor,
+    validateVarietal,
+    createMap,
+    treeDataLayer,
+    setExtent,
+    satelliteLayer,
+    markerLayer,
+    rasterResponseExt,
+    noCache,
+    respond
+  )
   .get(
     "/:imagery/:z/:x/:y.png",
     validateTile,
@@ -98,6 +121,27 @@ router
     respond
   )
   .get(
+    "/issues/tree/data/:overlay/:visit.png",
+    setDefaultSize(256),
+    setDefaultRatio(0.5),
+    setDefaultBuffer([0, 0.15, 0, 0.5], [50, 50, 50, 90]),
+    setDefaultUser(process.env.SUPPORT_USER),
+    validateOverlay,
+    validateVisit,
+    validateSize,
+    validateBuffer,
+    validateColor,
+    validateVarietal,
+    createMap,
+    treeDataLayer,
+    setExtent,
+    satelliteLayer,
+    markerLayer,
+    rasterResponse,
+    noCache,
+    respond
+  )
+  .get(
     "/marker/:imagery/:marker.png",
     setDefaultSize(256),
     setDefaultRatio(0.65),
@@ -112,8 +156,26 @@ router
     markerLayer,
     setExtent,
     imageryLayer,
-    setExtent,
     rasterResponse,
+    respond
+  )
+  .get(
+    "/marker/tree/data/:overlay/:marker.png",
+    setDefaultSize(256),
+    setDefaultRatio(0.65),
+    setDefaultBuffer([0, 0.15, 0, 0.5], [50, 50, 50, 90]),
+    validateMarker,
+    validateOverlay,
+    validateSize,
+    validateBuffer,
+    validateColor,
+    validateVarietal,
+    createMap,
+    markerLayer,
+    setExtent,
+    treeDataLayer,
+    rasterResponse,
+    noCache,
     respond
   );
 

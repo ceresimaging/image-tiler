@@ -45,7 +45,7 @@ const buildTreeDataQuery = ({ overlay, color, varietal }) => {
     WHERE td.overlay_id = '${overlay}'
       ${color.length ? `AND td.color IN ('${color.join("','")}')` : ""}
       ${varietal.length ? `AND v.name IN ('${varietal.join("','")}')` : ""}
-    ORDER BY td.value, t.id
+    ORDER BY td.value desc, t.id
   ) AS trees`;
 };
 
