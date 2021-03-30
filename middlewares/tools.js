@@ -39,6 +39,12 @@ export const zoomBox = (req, res, next) => {
   next();
 };
 
+// Generate Vector Tile from PostGIS
+export const vectorPGResponse = (req, res, next) => {
+  res.set("Content-Type", "application/x-protobuf");
+  next();
+};
+
 // Set image size
 export const setDefaultSize = (size) => {
   return (req, res, next) => {
