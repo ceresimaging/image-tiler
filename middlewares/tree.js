@@ -73,8 +73,8 @@ const buildDataSource = (queryBuilder, filters) => {
     extent_from_subquery: true,
     geometry_field: "geom",
     srid: 4326,
-    max_size: 50,
-    connect_timeout: 60,
+    max_size: process.env.CORE_DB_MAX || 50,
+    connect_timeout: process.env.CORE_DB_TIMEOUT || 60,
   });
 };
 
