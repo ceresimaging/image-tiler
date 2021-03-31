@@ -15,18 +15,6 @@ import { respond, vectorPGResponse, setDefaultSize, zoomBox } from "../middlewar
 const router = express.Router();
 
 router
-  // .get(
-  //   "/count/:overlay/:z/:x/:y.mvt",
-  //   validateTile,
-  //   validateSize,
-  //   validateOverlay,
-  //   validateMissing,
-  //   validateVarietal,
-  //   createMap,
-  //   treeCountLayer,
-  //   vectorResponse,
-  //   respond
-  // )
   .get(
     "/count/:overlay/:z/:x/:y.mvt",
     validateTile,
@@ -64,18 +52,6 @@ router
     rasterResponseExt,
     respond
   )
-  // .get(
-  //   "/data/:overlay/:z/:x/:y.mvt",
-  //   validateTile,
-  //   validateSize,
-  //   validateOverlay,
-  //   validateColor,
-  //   validateVarietal,
-  //   createMap,
-  //   treeDataLayer,
-  //   vectorResponse,
-  //   respond
-  // )
   .get(
     "/data/:overlay/:z/:x/:y.mvt",
     validateTile,
