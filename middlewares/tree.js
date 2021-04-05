@@ -61,7 +61,23 @@ const buildTreeDataQuery = ({ overlay, color, varietal }) => {
   ) AS trees`;
 };
 
-const buildDataSource = (queryBuilder, filters) => {
+const calculateExtent = async (overlay) => {
+  const query = `
+    SELECT (ST_XMin(ext) || ',' || ST_YMin(ext) || ',' || ST_XMax(ext) || ',' || ST_YMax(ext)) AS extent
+    FROM (
+      SELECT ST_Extent(cg.geometry) AS ext
+      FROM customers_geo cg
+      JOIN customers_farm f ON f.id = cg.farm_id
+      JOIN visits v ON v.field_id = f.id
+      JOIN published_imagery_overlay o ON o.visit_id = v.id
+      WHERE o.id = '${overlay}'
+    ) AS tmp;
+  `;
+
+  return (await pool.query(query)).rows[0].extent;
+};
+
+const buildDataSource = async (queryBuilder, filters) => {
   return new mapnik.Datasource({
     type: "postgis",
     host: process.env.CORE_DB_HOST,
@@ -70,7 +86,7 @@ const buildDataSource = (queryBuilder, filters) => {
     password: process.env.CORE_DB_PASS,
     dbname: process.env.CORE_DB_NAME,
     table: queryBuilder(filters),
-    extent_from_subquery: true,
+    extent: await calculateExtent(filters.overlay),
     geometry_field: "geom",
     srid: 4326,
     max_size: process.env.CORE_DB_MAX || 50,
@@ -78,7 +94,7 @@ const buildDataSource = (queryBuilder, filters) => {
   });
 };
 
-export const treeCountLayer = (req, res, next) => {
+export const treeCountLayer = async (req, res, next) => {
   const { overlay } = req.params;
   const { missing, varietal } = req.query;
   const { map } = res.locals;
@@ -86,7 +102,7 @@ export const treeCountLayer = (req, res, next) => {
   map.fromStringSync(dataStyle);
 
   const trees = new mapnik.Layer("trees");
-  trees.datasource = buildDataSource(buildTreeCountQuery, {
+  trees.datasource = await buildDataSource(buildTreeCountQuery, {
     overlay,
     missing,
     varietal,
@@ -97,7 +113,7 @@ export const treeCountLayer = (req, res, next) => {
   next();
 };
 
-export const treeDataLayer = (req, res, next) => {
+export const treeDataLayer = async (req, res, next) => {
   const { overlay } = req.params;
   const { color, varietal } = req.query;
   const { map } = res.locals;
@@ -105,7 +121,7 @@ export const treeDataLayer = (req, res, next) => {
   map.fromStringSync(dataStyle);
 
   const trees = new mapnik.Layer("trees");
-  trees.datasource = buildDataSource(buildTreeDataQuery, {
+  trees.datasource = await buildDataSource(buildTreeDataQuery, {
     overlay,
     color,
     varietal,
