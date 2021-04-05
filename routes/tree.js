@@ -22,10 +22,22 @@ router
     validateOverlay,
     validateMissing,
     validateVarietal,
-    treeCountPGLayer,
-    vectorPGResponse,
+    createMap,
+    treeCountLayer,
+    vectorResponse,
     respond
   )
+  // .get(
+  //   "/count/:overlay/:z/:x/:y.mvt",
+  //   validateTile,
+  //   validateSize,
+  //   validateOverlay,
+  //   validateMissing,
+  //   validateVarietal,
+  //   treeCountPGLayer,
+  //   vectorPGResponse,
+  //   respond
+  // )
   .get(
     "/count/:overlay/:z/:x/:y.png",
     validateTile,
@@ -59,10 +71,22 @@ router
     validateOverlay,
     validateColor,
     validateVarietal,
-    treeDataPGLayer,
-    vectorPGResponse,
+    createMap,
+    treeDataLayer,
+    vectorResponse,
     respond
   )
+  // .get(
+  //   "/data/:overlay/:z/:x/:y.mvt",
+  //   validateTile,
+  //   validateSize,
+  //   validateOverlay,
+  //   validateColor,
+  //   validateVarietal,
+  //   treeDataPGLayer,
+  //   vectorPGResponse,
+  //   respond
+  // )
   .get(
     "/data/:overlay/:z/:x/:y.png",
     validateTile,
