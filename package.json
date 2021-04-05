@@ -1,6 +1,6 @@
 {
   "name": "image-tiler",
-  "version": "3.40.1",
+  "version": "3.41.3",
   "description": "Ceres Imaging Tile Server",
   "type": "module",
   "scripts": {
@@ -39,7 +39,8 @@
     "express": "^4.17.1",
     "ioredis": "^4.19.2",
     "morgan": "^1.10.0",
-    "pm2": "^4.5.0",
+    "pg": "^8.5.1",
+    "pm2": "^4.5.5",
     "redlock": "^4.2.0",
     "sharp": "^0.26.2",
     "validator": "^13.1.17"
