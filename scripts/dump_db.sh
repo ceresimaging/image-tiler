@@ -22,9 +22,10 @@ extra_lines="^\(GRANT\|REVOKE\|SET\|--\|^$\)"
 
 echo "Dumping database structure..."
 pg_dump $url -O -s --section=pre-data $list | grep -v $extra_lines > test/fixtures/dump.sql
-# 55994
-# 56481
 echo "Creating temporal tables with sample data..."
+
+# Fields to transplant before running this script: 55994, 56481
+
 psql $url \
   -c "
     CREATE TABLE tmp_trees AS (
@@ -55,11 +56,19 @@ psql $url \
       SELECT *
       FROM published_imagery_overlay
       WHERE id IN (SELECT DISTINCT overlay_id FROM tmp_trees_data)
+        OR id IN (SELECT DISTINCT overlay_id FROM tmp_trees)
     );
     CREATE TABLE tmp_published_imagery_overlaytype AS (
       SELECT *
       FROM published_imagery_overlaytype
       WHERE id IN (SELECT DISTINCT overlay_type_id FROM tmp_published_imagery_overlay)
+    );
+    CREATE TABLE tmp_visits AS (
+      SELECT *
+      FROM visits
+      WHERE id IN (122950, 191225, 210560, 210555, 122948, 128587)
+        OR id IN (SELECT DISTINCT visit_id FROM tmp_published_imagery_overlay
+      )
     );
     CREATE TABLE tmp_customers_oldfarm AS (
       SELECT *
@@ -70,6 +79,7 @@ psql $url \
       SELECT *
       FROM customers_farm
       WHERE farm_id = (SELECT id FROM tmp_customers_oldfarm)
+        OR id IN (SELECT DISTINCT field_id FROM tmp_visits)
     );
     CREATE TABLE tmp_published_imagery_displayfield AS (
       SELECT *
@@ -81,13 +91,7 @@ psql $url \
       SELECT *
       FROM customers_geo
       WHERE farm_id IN (SELECT DISTINCT source_field_id FROM tmp_published_imagery_displayfield)
-    );
-    CREATE TABLE tmp_visits AS (
-      SELECT *
-      FROM visits
-      WHERE id IN (122950, 191225, 210560, 210555, 122948, 128587)
-        OR id IN (SELECT DISTINCT visit_id FROM tmp_published_imagery_overlay
-      )
+        OR farm_id IN (SELECT id FROM tmp_customers_farm)
     );
     CREATE TABLE tmp_markers AS (
       SELECT *
