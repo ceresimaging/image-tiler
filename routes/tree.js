@@ -9,8 +9,8 @@ import {
   validateVarietal,
   validateMissing,
 } from "../middlewares/validators";
-import { treeDataLayer, treeCountLayer, treeDataPGLayer, treeCountPGLayer } from "../middlewares/tree";
-import { respond, vectorPGResponse, setDefaultSize, zoomBox } from "../middlewares/tools";
+import { treeDataLayer, treeCountLayer } from "../middlewares/tree";
+import { respond, setDefaultSize, zoomBox } from "../middlewares/tools";
 
 const router = express.Router();
 
@@ -27,17 +27,6 @@ router
     vectorResponse,
     respond
   )
-  // .get(
-  //   "/count/:overlay/:z/:x/:y.mvt",
-  //   validateTile,
-  //   validateSize,
-  //   validateOverlay,
-  //   validateMissing,
-  //   validateVarietal,
-  //   treeCountPGLayer,
-  //   vectorPGResponse,
-  //   respond
-  // )
   .get(
     "/count/:overlay/:z/:x/:y.png",
     validateTile,
@@ -76,17 +65,6 @@ router
     vectorResponse,
     respond
   )
-  // .get(
-  //   "/data/:overlay/:z/:x/:y.mvt",
-  //   validateTile,
-  //   validateSize,
-  //   validateOverlay,
-  //   validateColor,
-  //   validateVarietal,
-  //   treeDataPGLayer,
-  //   vectorPGResponse,
-  //   respond
-  // )
   .get(
     "/data/:overlay/:z/:x/:y.png",
     validateTile,
