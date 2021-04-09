@@ -34,7 +34,7 @@ const buildTreeCountQuery = ({ overlay, missing, varietal }) => {
     JOIN customers_cropvarietal v ON v.id = t.varietal_id
     JOIN customers_cropdetail cd ON cd.id = v.crop_detail_id
     WHERE t.overlay_id = '${overlay}'
-      ${missing ? `AND t.is_present <> ${missing}` : ""}
+      AND t.is_present = ${!missing}
       ${varietal.length ? `AND v.name IN ('${varietal.join("','")}')` : ""}
     ORDER BY t.id
   ) AS trees`;
@@ -148,7 +148,7 @@ export const treeCountPGLayer = (req, res, next) => {
       JOIN customers_cropvarietal v ON v.id = t.varietal_id
       JOIN customers_cropdetail cd ON cd.id = v.crop_detail_id
       WHERE t.overlay_id = '${overlay}'
-        ${missing ? `AND t.is_present <> ${missing}` : ""}
+        AND t.is_present = ${!missing}
         ${varietal.length ? `AND v.name IN ('${varietal.join("','")}')` : ""}
     ) AS tile
   `;
