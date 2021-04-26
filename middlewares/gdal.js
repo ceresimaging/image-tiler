@@ -17,34 +17,39 @@ const pool = new Pool({
 export const tifResponse = (req, res, next) => {
   const { overlay } = req.params;
 
-  const bufferQuery = `
+  const query = `
     SELECT avg(distance) AS distance
     FROM (
-      SELECT ST_Distance(t1.geometry, t2.geometry) AS distance
-      FROM trees t1
-      JOIN trees t2 ON ST_DWithin(t1.geometry, t2.geometry, 0.0001)
-      JOIN trees_data td ON td.tree_id = t1.id
-      WHERE td.overlay_id = '${overlay}'
-    ) AS query
-    WHERE distance > 0;
+      SELECT min(ST_Distance(t1.geometry, t2.geometry)) AS distance
+      FROM (
+        SELECT t.id, t.overlay_id, t.geometry
+        FROM trees t
+        JOIN trees_data td ON td.tree_id = t.id
+        WHERE td.overlay_id = '${overlay}'
+        ORDER BY t.id
+        LIMIT 10
+      ) t1, trees t2
+      WHERE t1.id <> t2.id 
+        AND t1.overlay_id = t2.overlay_id
+        AND ST_DWithin(t1.geometry, t2.geometry, 0.0001)
+      GROUP BY t1.id
+    ) subquery
   `;
 
   pool
-    .query(bufferQuery)
+    .query(query)
     .then((result) => {
       const conn = `dbname='${process.env.CORE_DB_NAME}' host='${process.env.CORE_DB_HOST}' port='${process.env.CORE_DB_PORT}' user='${process.env.CORE_DB_USER}' password='${process.env.CORE_DB_PASS}'`;
 
-      const resX = 0.000005;
-      const resY = -0.000004;
-      const buffer = result.rows[0].distance * 0.25;
+      const resX = 0.0000056;
+      const resY = -0.0000045;
+      const buffer = result.rows[0].distance * 0.5;
 
-      const queryR = `SELECT ST_Buffer(t.geometry, ${buffer}), ('x'||substr(td.color,2,2))::bit(8)::int r FROM trees_data td JOIN trees t ON t.id = td.tree_id WHERE td.overlay_id = '${overlay}'`;
-      const queryG = `SELECT ST_Buffer(t.geometry, ${buffer}), ('x'||substr(td.color,4,2))::bit(8)::int g FROM trees_data td JOIN trees t ON t.id = td.tree_id WHERE td.overlay_id = '${overlay}'`;
-      const queryB = `SELECT ST_Buffer(t.geometry, ${buffer}), ('x'||substr(td.color,6,2))::bit(8)::int b FROM trees_data td JOIN trees t ON t.id = td.tree_id WHERE td.overlay_id = '${overlay}'`;
+      const query = `SELECT ST_Buffer(t.geometry, ${buffer}), ('x'||substr(td.color,2,2))::bit(8)::int r, ('x'||substr(td.color,4,2))::bit(8)::int g, ('x'||substr(td.color,6,2))::bit(8)::int b FROM trees_data td JOIN trees t ON t.id = td.tree_id WHERE td.overlay_id = '${overlay}'`;
 
       const name = `/tmp/${Date.now()}${Math.random()}`;
 
-      const cmd = `${process.cwd()}/render/pli2tif ${name} ${overlay} ${resX} ${resY} "${queryR}" "${queryG}" "${queryB}" "${conn}"`;
+      const cmd = `${process.cwd()}/render/pli2tif ${name} ${overlay} ${resX} ${resY} "${query}" "${conn}"`;
 
       exec(cmd, (error) => {
         if (error) return next(error);
