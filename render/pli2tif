@@ -1,0 +1,11 @@
+#!/bin/bash
+
+gdal_rasterize -a r -of gtiff -a_nodata 0 -tr $3 $4 PG:"$8" -sql "$5" $1.r.tif
+gdal_rasterize -a g -of gtiff -a_nodata 0 -tr $3 $4 PG:"$8" -sql "$6" $1.g.tif
+gdal_rasterize -a b -of gtiff -a_nodata 0 -tr $3 $4 PG:"$8" -sql "$7" $1.b.tif
+
+gdalbuildvrt -separate $1.vrt $1.r.tif $1.g.tif $1.b.tif
+
+gdal_translate -ot Byte -r bilinear -colorinterp red,green,blue -co TILED=YES -co COMPRESS=LZW -co BIGTIFF=IF_SAFER $1.vrt $1
+
+rm $1.vrt $1.r.tif $1.g.tif $1.b.tif
