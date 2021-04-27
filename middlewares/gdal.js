@@ -45,7 +45,15 @@ export const tifResponse = (req, res, next) => {
       const resY = -0.0000045;
       const buffer = result.rows[0].distance * 0.5;
 
-      const query = `SELECT ST_Buffer(t.geometry, ${buffer}), ('x'||substr(td.color,2,2))::bit(8)::int r, ('x'||substr(td.color,4,2))::bit(8)::int g, ('x'||substr(td.color,6,2))::bit(8)::int b FROM trees_data td JOIN trees t ON t.id = td.tree_id WHERE td.overlay_id = '${overlay}'`;
+      const query = `
+        SELECT ST_Buffer(t.geometry, ${buffer}), 
+          ('x'||substr(td.color,2,2))::bit(8)::int r, 
+          ('x'||substr(td.color,4,2))::bit(8)::int g, 
+          ('x'||substr(td.color,6,2))::bit(8)::int b 
+        FROM trees_data td 
+        JOIN trees t ON t.id = td.tree_id 
+        WHERE td.overlay_id = '${overlay}'
+      `;
 
       const name = `/tmp/${Date.now()}${Math.random()}`;
 
