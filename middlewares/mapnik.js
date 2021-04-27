@@ -30,6 +30,25 @@ export const rasterResponse = (req, res, next) => {
   });
 };
 
+// Generate TIF
+export const rasterTifResponse = (req, res, next) => {
+  const { map } = res.locals;
+
+  map.render(new mapnik.Image(map.width, map.height), (renderError, tile) => {
+    if (renderError) return next(renderError);
+
+    tile.encode("tiff", (dataError, data) => {
+      if (dataError) return next(dataError);
+
+      res.locals.data = data;
+
+      res.set("Content-Type", "image/tiff");
+
+      next();
+    });
+  });
+};
+
 // Generate PNG with external renderer
 export const rasterResponseExt = (req, res, next) => {
   const { map } = res.locals;
@@ -43,7 +62,7 @@ export const rasterResponseExt = (req, res, next) => {
 
   fs.writeFileSync(xml, map.toXML());
 
-  const cmd = `render ${xml} ${png} ${map.width} ${map.height}`;
+  const cmd = `${process.cwd()}/render/render ${xml} ${png} ${map.width} ${map.height}`;
 
   exec(cmd, (error) => {
     if (error) return next(error);

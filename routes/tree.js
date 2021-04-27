@@ -11,6 +11,7 @@ import {
 } from "../middlewares/validators";
 import { treeDataLayer, treeCountLayer } from "../middlewares/tree";
 import { respond, setDefaultSize, zoomBox } from "../middlewares/tools";
+import { tifResponse } from "../middlewares/gdal";
 
 const router = express.Router();
 
@@ -90,6 +91,7 @@ router
     setExtent,
     rasterResponseExt,
     respond
-  );
+  )
+  .get("/data/:overlay.tif", validateOverlay, tifResponse, respond);
 
 export default router;

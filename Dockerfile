@@ -4,10 +4,10 @@ FROM maurimiranda/node-mapnik-gdal:latest
 RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7
 
 # Install dependencies
-RUN apt install -y gnupg2 wget lsb-release
+RUN apt update -y && apt install -y gnupg2 wget lsb-release
 RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
 RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" | tee  /etc/apt/sources.list.d/pgdg.list
-RUN apt update -y && apt install -y postgresql-client-12
+RUN apt update -y && apt install -y postgresql-client-12 gdal-bin
 
 # Install Node packages
 WORKDIR /srv/tiler
@@ -18,7 +18,6 @@ RUN npm install && npm link /src/node-mapnik
 
 # Copy code
 COPY . .
-COPY render/render /usr/local/bin
 
 # Run server
 CMD [ "npm", "run", "start" ]

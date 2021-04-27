@@ -1,6 +1,6 @@
 {
   "name": "image-tiler",
-  "version": "3.43.0",
+  "version": "3.44.0",
   "description": "Ceres Imaging Tile Server",
   "type": "module",
   "scripts": {
@@ -37,6 +37,7 @@
     "aws-sdk": "^2.789.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "gdal": "^0.10.1",
     "ioredis": "^4.19.2",
     "morgan": "^1.10.0",
     "pg": "^8.5.1",
