@@ -7,7 +7,7 @@ tables=(
   published_imagery_displayfield published_imagery_overlay published_imagery_overlaytype
   trees trees_data
   visits flights markers
-  auth_user platform_auth_ceresuserprofile
+  auth_user
 )
 
 sequences=(
@@ -107,11 +107,6 @@ psql $url \
       SELECT *
       FROM auth_user
       WHERE id IN (SELECT DISTINCT created_by_id FROM tmp_markers)
-    );
-    CREATE TABLE tmp_platform_auth_ceresuserprofile AS (
-      SELECT *
-      FROM platform_auth_ceresuserprofile
-      WHERE user_id IN (SELECT DISTINCT id FROM tmp_auth_user)
     );
   "
 
