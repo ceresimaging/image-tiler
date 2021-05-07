@@ -12,18 +12,11 @@ const markerIssueStyle = fs.readFileSync("styles/marker-issue.xml", "utf8");
 // Load Mapnik datasource
 mapnik.registerDatasource(`${mapnik.settings.paths.input_plugins}/postgis.input`);
 
-const buildVisitQuery = (visit, user, exclusive) => {
+const buildVisitQuery = (visit, user) => {
   let userFilter = "";
 
   if (user) {
-    if (exclusive) {
-      userFilter = `AND cup.id = '${user}'`;
-    } else {
-      userFilter = `
-        AND m.staff_only = false
-        AND cup.id = '${user}'
-      `;
-    }
+    userFilter = `AND m.staff_only = false`;
   }
 
   return `(
@@ -34,8 +27,6 @@ const buildVisitQuery = (visit, user, exclusive) => {
     FROM markers m
     JOIN auth_user as u
       ON m.created_by_id = u.id
-    JOIN platform_auth_ceresuserprofile cup
-      ON u.id = cup.user_id
     JOIN visits v
       ON m.visit_id = v.id
     WHERE m.deleted is null
@@ -105,7 +96,6 @@ export const markerLayer = (req, res, next) => {
   const { marker, visit } = req.params;
   const { user } = req.query;
   const { map } = res.locals;
-  const { exclusive = false } = req.query;
 
   if (user === process.env.SUPPORT_USER) {
     map.fromStringSync(markerIssueStyle);
@@ -120,7 +110,7 @@ export const markerLayer = (req, res, next) => {
   const layer = new mapnik.Layer("markers");
 
   if (visit) {
-    layer.datasource = buildDataSource(buildVisitQuery(visit, user, exclusive));
+    layer.datasource = buildDataSource(buildVisitQuery(visit, user));
   } else {
     layer.datasource = buildDataSource(buildMarkerQuery(marker));
   }
