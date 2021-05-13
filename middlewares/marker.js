@@ -12,13 +12,7 @@ const markerIssueStyle = fs.readFileSync("styles/marker-issue.xml", "utf8");
 // Load Mapnik datasource
 mapnik.registerDatasource(`${mapnik.settings.paths.input_plugins}/postgis.input`);
 
-const buildVisitQuery = (visit, user) => {
-  let userFilter = "";
-
-  if (user) {
-    userFilter = `AND m.staff_only = false`;
-  }
-
+const buildVisitQuery = (visit, user = null, onlyInternal = false) => {
   return `(
     SELECT m.id AS id,
       m.geometry AS geom,
@@ -60,7 +54,8 @@ const buildVisitQuery = (visit, user) => {
           )
         )
       )
-      ${userFilter}
+      ${user ? "AND m.staff_only = false" : ""}
+      ${onlyInternal ? "AND extra_data->>('marker_template') IS NOT NULL" : ""}
     ORDER BY m.created_at
   ) AS markers`;
 };
@@ -92,28 +87,15 @@ const buildDataSource = (query) => {
   });
 };
 
-export const markerLayer = (req, res, next) => {
-  const { marker, visit } = req.params;
-  const { user } = req.query;
+const markerLayer = (res, next, style, query) => {
   const { map } = res.locals;
 
-  if (user === process.env.SUPPORT_USER) {
-    map.fromStringSync(markerIssueStyle);
-  } else {
-    if (visit) {
-      map.fromStringSync(markerNumberStyle);
-    } else {
-      map.fromStringSync(markerHoleStyle);
-    }
-  }
+  map.fromStringSync(style);
 
   const layer = new mapnik.Layer("markers");
 
-  if (visit) {
-    layer.datasource = buildDataSource(buildVisitQuery(visit, user));
-  } else {
-    layer.datasource = buildDataSource(buildMarkerQuery(marker));
-  }
+  layer.datasource = buildDataSource(query);
+
   layer.styles = ["marker-icon"];
 
   // Add layer if contains at least 1 feature
@@ -122,4 +104,16 @@ export const markerLayer = (req, res, next) => {
   }
 
   next();
+};
+
+export const issueMarkersLayer = (req, res, next) => {
+  markerLayer(res, next, markerIssueStyle, buildVisitQuery(req.params.visit, null, true));
+};
+
+export const visitMarkersLayer = (req, res, next) => {
+  markerLayer(res, next, markerNumberStyle, buildVisitQuery(req.params.visit, req.query.user));
+};
+
+export const singleMarkerLayer = (req, res, next) => {
+  markerLayer(res, next, markerHoleStyle, buildMarkerQuery(req.params.marker));
 };
