@@ -122,8 +122,8 @@ export const validateBuffer = (req, res, next) => {
 
 // Validate cache limit age
 export const validateAge = (req, res, next) => {
-  if (!req.query.age || validator.isFloat(req.query.age)) {
-    req.query.age = parseFloat(req.query.age || 10);
+  if (!req.query.age || validator.isInt(req.query.age)) {
+    req.query.age = parseInt(req.query.age || 10);
     return next();
   }
 

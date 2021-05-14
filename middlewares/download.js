@@ -40,7 +40,7 @@ const downloadFile = (req, res, next) => {
 
     // If something fails, remove partial file, unlock the queue and respond with error
     const onError = (error) => {
-      fs.unlinkSync(path);
+      if (fs.existsSync(path)) fs.unlinkSync(path);
       lock.unlock().catch((e) => {});
       error.message = `Error downloading source file (${error.message})`;
       error.code = 500;
@@ -49,9 +49,7 @@ const downloadFile = (req, res, next) => {
 
     // This is about milliseconds and it does not happen often
     // but sometimes the file gets downloaded just after the function gets the lock
-    if (fs.existsSync(path)) {
-      return retry();
-    }
+    if (fs.existsSync(path)) return retry();
 
     // Download file from S3 to local cache
     s3.getObject({ Bucket: bucket, Key: key })
