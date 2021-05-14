@@ -82,4 +82,12 @@ describe("tree routes", () => {
 
     expect(res.body).matchFixture("tree-data-color-image.png");
   });
+
+  test("should return a raster geotiff image with tree data", async () => {
+    const overlay = "98e1c50d-1d6e-40ac-b955-2c8ab5df07cb";
+
+    const res = await request.get(`/${base}/data/${overlay}.tif`);
+
+    expect(res.body).matchFixture("tree-data-image.tif");
+  });
 });

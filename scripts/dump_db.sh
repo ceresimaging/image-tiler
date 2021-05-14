@@ -7,7 +7,7 @@ tables=(
   published_imagery_displayfield published_imagery_overlay published_imagery_overlaytype
   trees trees_data
   visits flights markers
-  auth_user platform_auth_ceresuserprofile
+  auth_user
 )
 
 sequences=(
@@ -66,7 +66,7 @@ psql $url \
     CREATE TABLE tmp_visits AS (
       SELECT *
       FROM visits
-      WHERE id IN (122950, 191225, 210560, 210555, 122948, 128587)
+      WHERE id IN (122950, 191225, 210560, 210555, 122948, 128587, 237721)
         OR id IN (SELECT DISTINCT visit_id FROM tmp_published_imagery_overlay
       )
     );
@@ -107,11 +107,6 @@ psql $url \
       SELECT *
       FROM auth_user
       WHERE id IN (SELECT DISTINCT created_by_id FROM tmp_markers)
-    );
-    CREATE TABLE tmp_platform_auth_ceresuserprofile AS (
-      SELECT *
-      FROM platform_auth_ceresuserprofile
-      WHERE user_id IN (SELECT DISTINCT id FROM tmp_auth_user)
     );
   "
 
