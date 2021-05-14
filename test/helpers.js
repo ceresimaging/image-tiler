@@ -69,6 +69,5 @@ export const uploadSatellite = () => {
 };
 
 export const wipeCache = () => {
-  fs.emptyDirSync(`${process.env.CACHE_PATH}/imagery`, { recursive: true });
-  fs.emptyDirSync(`${process.env.CACHE_PATH}/custom`, { recursive: true });
+  fs.emptyDirSync(process.env.CACHE_PATH, { recursive: true });
 };

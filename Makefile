@@ -43,3 +43,6 @@ dbshell: restore_test_db
 
 compile_render:
 	@$(DOCKER_RUN) g++ -I /usr/local/include/mapnik/deps render/render.cpp -std=c++11 -lmapnik -o render/render
+
+lint:
+	@$(DOCKER_RUN) npm run lint

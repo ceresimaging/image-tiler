@@ -43,8 +43,7 @@ export const flush = (req, res, next) => {
     });
   };
 
-  flushDir(`${process.env.CACHE_PATH}/imagery`);
-  flushDir(`${process.env.CACHE_PATH}/custom`);
+  flushDir(process.env.CACHE_PATH);
 
   res.locals.files = files;
 

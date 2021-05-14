@@ -4,8 +4,6 @@ import Redis from "ioredis";
 import Redlock from "redlock";
 import AWS from "aws-sdk";
 
-import { flush } from "./cache";
-
 const redis = new Redis({ host: process.env.REDIS_HOST });
 const redlock = new Redlock([redis], {
   retryCount: -1,
@@ -33,12 +31,6 @@ const downloadFile = (req, res, next) => {
     // Get the lock to avoid multiple downloads for the same file
     const lock = await redlock.lock(filename, 10000);
 
-    // If something fails, unlock the queue and respond with error
-    const fail = () => {
-      lock.unlock().catch(next);
-      res.status(404).send("Error downloading source data file, please check params");
-    };
-
     // Before calling download recursively, we have to unlock the queue
     // If the unlock fails is because the lock was lost so we can ignore the error
     const retry = () => {
@@ -46,27 +38,18 @@ const downloadFile = (req, res, next) => {
       download();
     };
 
-    // Download error handler
+    // If something fails, remove partial file, unlock the queue and respond with error
     const onError = (error) => {
-      // If file not found, trigger error!
-      if (error.code === "NoSuchKey") {
-        return fail();
-      }
-
-      // If cache dir is full, remove files older than 10 days and retry
-      if (error.code === "ENOSPC") {
-        req.query.age = 10;
-        return flush(req, res, retry);
-      }
-
-      retry();
+      if (fs.existsSync(path)) fs.unlinkSync(path);
+      lock.unlock().catch((e) => {});
+      error.message = `Error downloading source file (${error.message})`;
+      error.code = 500;
+      return next(error);
     };
 
     // This is about milliseconds and it does not happen often
     // but sometimes the file gets downloaded just after the function gets the lock
-    if (fs.existsSync(path)) {
-      return retry();
-    }
+    if (fs.existsSync(path)) return retry();
 
     // Download file from S3 to local cache
     s3.getObject({ Bucket: bucket, Key: key })
