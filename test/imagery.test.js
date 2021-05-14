@@ -27,7 +27,7 @@ describe("imagery routes", () => {
   test("should return error if file is not found", async () => {
     const res = await request.get(`/${base}/${imagery}.png?bucket=no-bucket`);
 
-    expect(res.status).toBe(404);
+    expect(res.status).toBe(500);
   });
 
   test("should return a single image with specific size", async () => {
