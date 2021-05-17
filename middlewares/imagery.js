@@ -19,7 +19,10 @@ export const imageryLayer = (req, res, next) => {
   const layer = new mapnik.Layer("imagery");
   layer.datasource = new mapnik.Datasource({
     type: "gdal",
-    file: `/vsis3_streaming/${bucket}/${imagery}.tif`,
+    file:
+      process.env.NODE_ENV !== "test"
+        ? `/vsis3_streaming/${bucket}/${imagery}.tif`
+        : `${process.cwd()}/test/fixtures/${bucket}/${imagery}.tif`,
   });
   layer.styles = ["imagery"];
 

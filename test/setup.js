@@ -1,7 +1,7 @@
 import fs from "fs-extra";
 
 // Jest global config
-jest.setTimeout(60000);
+jest.setTimeout(30000);
 
 const logDir = `${process.cwd()}/test/log`;
 

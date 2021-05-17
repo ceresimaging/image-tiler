@@ -51,8 +51,8 @@ export const invalidate = (req, res, next) => {
     .catch(next);
 };
 
-// Remove GeoTiff
-export const removeTiff = (req, res, next) => {
+// Invalidate Imagery
+export const invalidateImagery = (req, res, next) => {
   req.query.path = [
     `/imagery/${req.params.imagery}/*`,
     `/combo/${req.params.imagery}/*`,
@@ -60,12 +60,12 @@ export const removeTiff = (req, res, next) => {
     `/combo/marker/${req.params.imagery}/*`,
   ];
 
-  removeFile(req, res, next);
+  invalidate(req, res, next);
 };
 
-// Remove Shapefile
-export const removeShape = (req, res, next) => {
+// Invalidate Custom
+export const invalidateCustom = (req, res, next) => {
   req.query.path = [`/custom/${req.params.custom}/*`];
 
-  removeFile(req, res, next);
+  invalidate(req, res, next);
 };
