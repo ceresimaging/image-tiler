@@ -4,7 +4,6 @@ import { setDefaultBucket, respond } from "../middlewares/tools";
 import { createMap, vectorResponse } from "../middlewares/mapnik";
 import { validateTile, validateSize, validateCustom, validateBucket } from "../middlewares/validators";
 import { customLayer } from "../middlewares/custom";
-import { downloadShape } from "../middlewares/download";
 
 const router = express.Router();
 
@@ -15,7 +14,6 @@ router.get(
   validateSize,
   validateCustom,
   validateBucket,
-  downloadShape,
   createMap,
   customLayer,
   vectorResponse,

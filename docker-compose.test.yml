@@ -20,6 +20,10 @@ services:
     depends_on:
       - postgres-tiler
       - redis-tiler
+    environment:
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}
 
   postgres-tiler:
     image: postgis/postgis:12-3.1-alpine

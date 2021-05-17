@@ -1,14 +1,6 @@
 import express from "express";
 
-import {
-  zoomBox,
-  setDefaultSize,
-  setDefaultRatio,
-  setDefaultBuffer,
-  setDefaultUser,
-  respond,
-  noCache,
-} from "../middlewares/tools";
+import { zoomBox, setDefaultSize, setDefaultRatio, setDefaultBuffer, respond, noCache } from "../middlewares/tools";
 import { createMap, rasterResponse, rasterResponseExt, setExtent } from "../middlewares/mapnik";
 import {
   validateTile,
@@ -26,7 +18,6 @@ import { satelliteLayer } from "../middlewares/satellite";
 import { imageryLayer } from "../middlewares/imagery";
 import { treeDataLayer } from "../middlewares/tree";
 import { visitMarkersLayer, issueMarkersLayer, singleMarkerLayer } from "../middlewares/marker";
-import { downloadTiff } from "../middlewares/download";
 
 const router = express.Router();
 
@@ -56,7 +47,6 @@ router
     validateSize,
     validateImagery,
     validateBucket,
-    downloadTiff,
     createMap,
     imageryLayer,
     satelliteLayer,
@@ -72,7 +62,6 @@ router
     validateSize,
     validateBuffer,
     validateBucket,
-    downloadTiff,
     createMap,
     imageryLayer,
     setExtent,
@@ -89,7 +78,6 @@ router
     validateSize,
     validateBuffer,
     validateBucket,
-    downloadTiff,
     createMap,
     imageryLayer,
     setExtent,
@@ -109,7 +97,6 @@ router
     validateSize,
     validateBuffer,
     validateBucket,
-    downloadTiff,
     createMap,
     issueMarkersLayer,
     setExtent,
@@ -149,7 +136,6 @@ router
     validateBuffer,
     validateSize,
     validateBucket,
-    downloadTiff,
     createMap,
     singleMarkerLayer,
     setExtent,

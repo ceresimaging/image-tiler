@@ -9,7 +9,9 @@ const style = fs.readFileSync("styles/imagery.xml", "utf8");
 
 // Add imagery raster layer to map
 export const imageryLayer = (req, res, next) => {
-  const { map, path } = res.locals;
+  const { map } = res.locals;
+  const { bucket } = req.query;
+  const { imagery } = req.params;
 
   map.fromStringSync(style);
 
@@ -17,7 +19,7 @@ export const imageryLayer = (req, res, next) => {
   const layer = new mapnik.Layer("imagery");
   layer.datasource = new mapnik.Datasource({
     type: "gdal",
-    file: path,
+    file: `/vsis3_streaming/${bucket}/${imagery}.tif`,
   });
   layer.styles = ["imagery"];
 
