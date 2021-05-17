@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.get(
   "/:custom/:z/:x/:y.mvt",
-  setDefaultBucket(process.env.CUSTOM_LAYERS_REGION, process.env.CUSTOM_LAYERS_BUCKET),
+  setDefaultBucket(process.env.CUSTOM_LAYERS_BUCKET),
   validateTile,
   validateSize,
   validateCustom,

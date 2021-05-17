@@ -5,10 +5,9 @@ const cloudFront = new AWS.CloudFront();
 
 // Set response data
 export const cacheResponse = (req, res, next) => {
-  const { files = [], invalidations = [] } = res.locals;
+  const { invalidations = [] } = res.locals;
 
   res.locals.data = {
-    files: files.length,
     invalidations: invalidations.length,
   };
 
@@ -54,8 +53,6 @@ export const invalidate = (req, res, next) => {
 
 // Remove GeoTiff
 export const removeTiff = (req, res, next) => {
-  res.locals.filename = `${req.params.imagery}.tif`;
-  res.locals.dir = "imagery";
   req.query.path = [
     `/imagery/${req.params.imagery}/*`,
     `/combo/${req.params.imagery}/*`,
@@ -68,8 +65,6 @@ export const removeTiff = (req, res, next) => {
 
 // Remove Shapefile
 export const removeShape = (req, res, next) => {
-  res.locals.filename = `${req.params.custom}.zip`;
-  res.locals.dir = "custom";
   req.query.path = [`/custom/${req.params.custom}/*`];
 
   removeFile(req, res, next);

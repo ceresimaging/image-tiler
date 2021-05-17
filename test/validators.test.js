@@ -120,7 +120,7 @@ describe("validators", () => {
   test("should return an error if bucket format is wrong", async () => {
     const base = "/imagery/0e220754-e251-41c2-ab8b-0f05962ab7e9.png";
 
-    res = await request.get(`${base}?bucket[]=aaa`);
+    let res = await request.get(`${base}?bucket[]=aaa`);
 
     expect(res.status).toBe(400);
   });
