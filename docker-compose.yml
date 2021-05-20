@@ -27,6 +27,7 @@ services:
       - AWS_VIRTUAL_HOSTING=FALSE
       - AWS_HTTPS=NO
       - GDAL_DISABLE_READDIR_ON_OPEN=YES
+      - LOG_REQUESTS=TRUE
     links:
       - minio-tiler
     networks:
@@ -35,10 +36,8 @@ services:
 
   minio-tiler:
     image: minio/minio
-    tmpfs: /minio/cache
+    tmpfs: /minio/cache:size=1G
     environment:
-      - MINIO_ACCESS_KEY=${AWS_ACCESS_KEY_ID}
-      - MINIO_SECRET_KEY=${AWS_SECRET_ACCESS_KEY}
       - MINIO_ROOT_USER=${AWS_ACCESS_KEY_ID}
       - MINIO_ROOT_PASSWORD=${AWS_SECRET_ACCESS_KEY}
       - MINIO_CACHE=on
