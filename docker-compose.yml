@@ -6,9 +6,7 @@ networks:
 
 volumes:
   minio-storage:
-    driver_opts:
-      type: tmpfs
-      device: tmpfs
+    driver: local
 
 services:
   tiler:
@@ -40,10 +38,12 @@ services:
       - ceres-dev
 
   minio-tiler:
-    image: minio/minio
+    image: minio/minio:RELEASE.2019-06-04T01-15-58Z
     volumes:
       - minio-storage:/minio/cache
     environment:
+      - MINIO_ACCESS_KEY=${AWS_ACCESS_KEY_ID}
+      - MINIO_SECRET_KEY=${AWS_SECRET_ACCESS_KEY}
       - MINIO_ROOT_USER=${AWS_ACCESS_KEY_ID}
       - MINIO_ROOT_PASSWORD=${AWS_SECRET_ACCESS_KEY}
       - MINIO_CACHE=on
