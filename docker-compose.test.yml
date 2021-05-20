@@ -16,10 +16,8 @@ services:
     env_file: .env.test
     links:
       - postgres-tiler
-      - redis-tiler
     depends_on:
       - postgres-tiler
-      - redis-tiler
     environment:
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
@@ -32,6 +30,3 @@ services:
       - POSTGRES_USER=tiler
       - POSTGRES_PASSWORD=tiler
       - POSTGRES_DBNAME=tiler
-
-  redis-tiler:
-    image: redis:6-alpine

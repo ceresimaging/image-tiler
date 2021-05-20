@@ -34,14 +34,10 @@ services:
       - AWS_HTTPS=NO
       - GDAL_DISABLE_READDIR_ON_OPEN=YES
     links:
-      - redis-tiler
       - minio-tiler
     networks:
       - default
       - ceres-dev
-
-  redis-tiler:
-    image: redis:latest
 
   minio-tiler:
     image: minio/minio
