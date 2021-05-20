@@ -4,10 +4,6 @@ networks:
   ceres-dev:
     external: true
 
-volumes:
-  minio-storage:
-    driver: local
-
 services:
   tiler:
     build:
@@ -38,9 +34,8 @@ services:
       - ceres-dev
 
   minio-tiler:
-    image: minio/minio:RELEASE.2019-06-04T01-15-58Z
-    volumes:
-      - minio-storage:/minio/cache
+    image: minio/minio
+    tmpfs: /minio/cache
     environment:
       - MINIO_ACCESS_KEY=${AWS_ACCESS_KEY_ID}
       - MINIO_SECRET_KEY=${AWS_SECRET_ACCESS_KEY}
