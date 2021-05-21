@@ -120,24 +120,8 @@ export const validateBuffer = (req, res, next) => {
   next();
 };
 
-// Validate cache limit age
-export const validateAge = (req, res, next) => {
-  if (!req.query.age || validator.isInt(req.query.age)) {
-    req.query.age = parseInt(req.query.age || 10);
-    return next();
-  }
-
-  throw new ValidationError(`Cache Limit Age: ${req.query.age}`, "Int");
-};
-
-// Validate S3 Region and Bucket
+// Validate S3 Bucket
 export const validateBucket = (req, res, next) => {
-  if (!req.query.region || typeof req.query.region == "string") {
-    req.query.region = req.query.region || process.env.IMAGERY_REGION;
-  } else {
-    throw new ValidationError(`Region: ${req.query.region}`, "String");
-  }
-
   if (!req.query.bucket || typeof req.query.bucket == "string") {
     req.query.bucket = req.query.bucket || process.env.IMAGERY_BUCKET;
     return next();
