@@ -65,7 +65,6 @@ export const tifResponse = (req, res, next) => {
         res.locals.data = fs.readFileSync(name);
 
         res.set("Content-Type", "image/tiff");
-        res.set("Content-disposition", `attachment; filename=${overlay}.tif`);
 
         next();
 
