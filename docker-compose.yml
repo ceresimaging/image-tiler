@@ -26,7 +26,7 @@ services:
       - AWS_S3_ENDPOINT=minio-tiler:9000
       - AWS_VIRTUAL_HOSTING=FALSE
       - AWS_HTTPS=NO
-      - GDAL_DISABLE_READDIR_ON_OPEN=YES
+      - GDAL_DISABLE_READDIR_ON_OPEN=EMPTY_DIR
       - LOG_REQUESTS=TRUE
     links:
       - minio-tiler
