@@ -202,3 +202,34 @@ export const treeDataPGLayer = (req, res, next) => {
     })
     .catch(next);
 };
+
+export const calculateTreeBuffer = (req, res, next) => {
+  const { overlay } = req.params;
+
+  const query = `
+    SELECT avg(distance) AS distance
+    FROM (
+      SELECT min(ST_Distance(t1.geometry, t2.geometry)) AS distance
+      FROM (
+        SELECT t.id, t.overlay_id, t.geometry
+        FROM trees t
+        JOIN trees_data td ON td.tree_id = t.id
+        WHERE td.overlay_id = '${overlay}'
+        ORDER BY t.id
+        LIMIT 10
+      ) t1, trees t2
+      WHERE t1.id <> t2.id 
+        AND t1.overlay_id = t2.overlay_id
+        AND ST_DWithin(t1.geometry, t2.geometry, 0.0001)
+      GROUP BY t1.id
+    ) subquery
+  `;
+
+  pool
+    .query(query)
+    .then((result) => {
+      res.locals.treeBuffer = result.rows[0].distance * 0.5;
+      next();
+    })
+    .catch(next);
+};
