@@ -78,6 +78,10 @@ const calculateExtent = async (overlay) => {
 };
 
 const buildDataSource = async (queryBuilder, filters) => {
+  const extent = await calculateExtent(filters.overlay);
+
+  if (!extent) return;
+
   return new mapnik.Datasource({
     type: "postgis",
     host: process.env.CORE_DB_HOST,
@@ -86,7 +90,7 @@ const buildDataSource = async (queryBuilder, filters) => {
     password: process.env.CORE_DB_PASS,
     dbname: process.env.CORE_DB_NAME,
     table: queryBuilder(filters),
-    extent: await calculateExtent(filters.overlay),
+    extent: extent,
     geometry_field: "geom",
     srid: 4326,
     max_size: process.env.CORE_DB_MAX || 50,
@@ -99,16 +103,19 @@ export const treeCountLayer = async (req, res, next) => {
   const { missing, varietal } = req.query;
   const { map } = res.locals;
 
-  map.fromStringSync(dataStyle);
-
-  const trees = new mapnik.Layer("trees");
-  trees.datasource = await buildDataSource(buildTreeCountQuery, {
+  const datasource = await buildDataSource(buildTreeCountQuery, {
     overlay,
     missing,
     varietal,
   });
-  trees.styles = ["tree"];
-  map.add_layer(trees);
+
+  if (datasource) {
+    map.fromStringSync(dataStyle);
+    const trees = new mapnik.Layer("trees");
+    trees.datasource = datasource;
+    trees.styles = ["tree"];
+    map.add_layer(trees);
+  }
 
   next();
 };
@@ -118,16 +125,19 @@ export const treeDataLayer = async (req, res, next) => {
   const { color, varietal } = req.query;
   const { map } = res.locals;
 
-  map.fromStringSync(dataStyle);
-
-  const trees = new mapnik.Layer("trees");
-  trees.datasource = await buildDataSource(buildTreeDataQuery, {
+  const datasource = await buildDataSource(buildTreeDataQuery, {
     overlay,
     color,
     varietal,
   });
-  trees.styles = ["tree"];
-  map.add_layer(trees);
+
+  if (datasource) {
+    map.fromStringSync(dataStyle);
+    const trees = new mapnik.Layer("trees");
+    trees.datasource = datasource;
+    trees.styles = ["tree"];
+    map.add_layer(trees);
+  }
 
   next();
 };
