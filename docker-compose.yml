@@ -28,6 +28,7 @@ services:
       - AWS_HTTPS=NO
       - GDAL_DISABLE_READDIR_ON_OPEN=EMPTY_DIR
       - LOG_REQUESTS=TRUE
+      - GDAL_VSI_DRIVER=vsis3
     links:
       - minio-tiler
     networks:

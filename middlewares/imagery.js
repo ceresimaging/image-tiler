@@ -21,7 +21,7 @@ export const imageryLayer = (req, res, next) => {
     type: "gdal",
     file:
       process.env.NODE_ENV !== "test"
-        ? `/vsis3_streaming/${bucket}/${imagery}.tif`
+        ? `/${process.env.GDAL_VSI_DRIVER || "vsis3_streaming"}/${bucket}/${imagery}.tif`
         : `${process.cwd()}/test/fixtures/${bucket}/${imagery}.tif`,
   });
   layer.styles = ["imagery"];
