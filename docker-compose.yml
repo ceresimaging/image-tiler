@@ -43,9 +43,8 @@ services:
       - MINIO_CACHE=on
       - MINIO_CACHE_AFTER=1
       - MINIO_CACHE_DRIVES=/minio/cache
+      - MINIO_BROWSER=off
     command: gateway s3
-    ports:
-      - 9999:9000
     networks:
       - default
       - ceres-dev
