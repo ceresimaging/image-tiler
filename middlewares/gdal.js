@@ -6,7 +6,13 @@ export const generateTif = (req, res, next) => {
   const { overlay } = req.params;
   const { treeBuffer } = res.locals;
 
-  const conn = `dbname='${process.env.CORE_DB_NAME}' host='${process.env.CORE_DB_HOST}' port='${process.env.CORE_DB_PORT}' user='${process.env.CORE_DB_USER}' password='${process.env.CORE_DB_PASS}'`;
+  const conn = `
+    dbname='${process.env.CORE_DB_NAME}' \
+    host='${process.env.CORE_DB_HOST}' \
+    port='${process.env.CORE_DB_PORT}' \
+    user='${process.env.CORE_DB_USER}' \
+    password='${process.env.CORE_DB_PASS}' \
+  `;
 
   const resX = 0.0000056;
   const resY = -0.0000045;
