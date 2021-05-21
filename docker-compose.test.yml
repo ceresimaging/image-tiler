@@ -22,7 +22,7 @@ services:
       - redis-tiler
 
   postgres-tiler:
-    image: postgis/postgis
+    image: postgis/postgis:12-3.1-alpine
     restart: always
     environment:
       - POSTGRES_USER=tiler
@@ -30,4 +30,4 @@ services:
       - POSTGRES_DBNAME=tiler
 
   redis-tiler:
-    image: redis:latest
+    image: redis:6-alpine

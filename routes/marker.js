@@ -3,7 +3,7 @@ import express from "express";
 import { createMap, vectorResponse, rasterResponse } from "../middlewares/mapnik";
 import { validateTile, validateSize, validateVisit } from "../middlewares/validators";
 import { zoomBox, respond } from "../middlewares/tools";
-import { markerLayer } from "../middlewares/marker";
+import { visitMarkersLayer } from "../middlewares/marker";
 
 const router = express.Router();
 
@@ -14,7 +14,7 @@ router
     validateSize,
     validateVisit,
     createMap,
-    markerLayer,
+    visitMarkersLayer,
     vectorResponse,
     respond
   )
@@ -24,7 +24,7 @@ router
     validateSize,
     validateVisit,
     createMap,
-    markerLayer,
+    visitMarkersLayer,
     zoomBox,
     rasterResponse,
     respond
