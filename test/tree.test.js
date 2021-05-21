@@ -90,4 +90,12 @@ describe("tree routes", () => {
 
     expect(res.body).matchFixture("tree-data-image.tif");
   });
+
+  test("should return an empty tile when overlay does not exist", async () => {
+    const overlay = "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa";
+
+    const res = await request.get(`/${base}/data/${overlay}.png`);
+
+    expect(res.body).matchFixture("empty.png");
+  });
 });
