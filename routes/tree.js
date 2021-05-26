@@ -9,9 +9,9 @@ import {
   validateVarietal,
   validateMissing,
 } from "../middlewares/validators";
-import { treeDataLayer, treeCountLayer, calculateTreeBuffer } from "../middlewares/tree";
+import { treeDataLayer, treeCountLayer } from "../middlewares/tree";
 import { respond, setDefaultSize, zoomBox } from "../middlewares/tools";
-import { generateTif, tifResponse } from "../middlewares/gdal";
+import { tifResponse } from "../middlewares/gdal";
 
 const router = express.Router();
 
@@ -92,6 +92,6 @@ router
     rasterResponseExt,
     respond
   )
-  .get("/data/:overlay.tif", validateOverlay, calculateTreeBuffer, generateTif, tifResponse, respond);
+  .get("/data/:overlay.tif", validateOverlay, tifResponse, respond);
 
 export default router;

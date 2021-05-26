@@ -4,6 +4,7 @@ import { zoomBox, autocropImage, setDefaultSize, respond } from "../middlewares/
 import { createMap, rasterResponse, setExtent } from "../middlewares/mapnik";
 import { validateTile, validateImagery, validateSize, validateBucket } from "../middlewares/validators";
 import { imageryLayer } from "../middlewares/imagery";
+import { downloadTiff } from "../middlewares/download";
 
 const router = express.Router();
 
@@ -14,6 +15,7 @@ router
     validateImagery,
     validateSize,
     validateBucket,
+    downloadTiff,
     createMap,
     imageryLayer,
     zoomBox,
@@ -26,6 +28,7 @@ router
     validateImagery,
     validateSize,
     validateBucket,
+    downloadTiff,
     createMap,
     imageryLayer,
     setExtent,

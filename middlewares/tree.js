@@ -78,10 +78,6 @@ const calculateExtent = async (overlay) => {
 };
 
 const buildDataSource = async (queryBuilder, filters) => {
-  const extent = await calculateExtent(filters.overlay);
-
-  if (!extent) return;
-
   return new mapnik.Datasource({
     type: "postgis",
     host: process.env.CORE_DB_HOST,
@@ -90,7 +86,7 @@ const buildDataSource = async (queryBuilder, filters) => {
     password: process.env.CORE_DB_PASS,
     dbname: process.env.CORE_DB_NAME,
     table: queryBuilder(filters),
-    extent: extent,
+    extent: await calculateExtent(filters.overlay),
     geometry_field: "geom",
     srid: 4326,
     max_size: process.env.CORE_DB_MAX || 50,
@@ -103,19 +99,16 @@ export const treeCountLayer = async (req, res, next) => {
   const { missing, varietal } = req.query;
   const { map } = res.locals;
 
-  const datasource = await buildDataSource(buildTreeCountQuery, {
+  map.fromStringSync(dataStyle);
+
+  const trees = new mapnik.Layer("trees");
+  trees.datasource = await buildDataSource(buildTreeCountQuery, {
     overlay,
     missing,
     varietal,
   });
-
-  if (datasource) {
-    map.fromStringSync(dataStyle);
-    const trees = new mapnik.Layer("trees");
-    trees.datasource = datasource;
-    trees.styles = ["tree"];
-    map.add_layer(trees);
-  }
+  trees.styles = ["tree"];
+  map.add_layer(trees);
 
   next();
 };
@@ -125,19 +118,16 @@ export const treeDataLayer = async (req, res, next) => {
   const { color, varietal } = req.query;
   const { map } = res.locals;
 
-  const datasource = await buildDataSource(buildTreeDataQuery, {
+  map.fromStringSync(dataStyle);
+
+  const trees = new mapnik.Layer("trees");
+  trees.datasource = await buildDataSource(buildTreeDataQuery, {
     overlay,
     color,
     varietal,
   });
-
-  if (datasource) {
-    map.fromStringSync(dataStyle);
-    const trees = new mapnik.Layer("trees");
-    trees.datasource = datasource;
-    trees.styles = ["tree"];
-    map.add_layer(trees);
-  }
+  trees.styles = ["tree"];
+  map.add_layer(trees);
 
   next();
 };
@@ -198,37 +188,6 @@ export const treeDataPGLayer = (req, res, next) => {
     .query(query)
     .then((result) => {
       res.locals.data = result.rows[0].mvt;
-      next();
-    })
-    .catch(next);
-};
-
-export const calculateTreeBuffer = (req, res, next) => {
-  const { overlay } = req.params;
-
-  const query = `
-    SELECT avg(distance) AS distance
-    FROM (
-      SELECT min(ST_Distance(t1.geometry, t2.geometry)) AS distance
-      FROM (
-        SELECT t.id, t.overlay_id, t.geometry
-        FROM trees t
-        JOIN trees_data td ON td.tree_id = t.id
-        WHERE td.overlay_id = '${overlay}'
-        ORDER BY t.id
-        LIMIT 10
-      ) t1, trees t2
-      WHERE t1.id <> t2.id 
-        AND t1.overlay_id = t2.overlay_id
-        AND ST_DWithin(t1.geometry, t2.geometry, 0.0001)
-      GROUP BY t1.id
-    ) subquery
-  `;
-
-  pool
-    .query(query)
-    .then((result) => {
-      res.locals.treeBuffer = result.rows[0].distance * 0.5;
       next();
     })
     .catch(next);
