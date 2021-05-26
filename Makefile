@@ -29,7 +29,6 @@ refresh_fixtures:
 npm_install:
 	@echo "Installing dependencies"
 	@$(DOCKER_RUN) npm install
-	@$(DOCKER_RUN) npm link mapnik
 
 dump_test_db:
 	@echo "Dumping DB structure and sample data to file"

@@ -9,6 +9,7 @@ jobs:
           POSTGRES_DB: tiler
           POSTGRES_USER: tiler
           POSTGRES_PASSWORD: tiler
+      - image: redis
 
     working_directory: /srv/tiler
 

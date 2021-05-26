@@ -109,6 +109,14 @@ describe("validators", () => {
     expect(res.status).toBe(400);
   });
 
+  test("should return an error if age format is wrong", async () => {
+    const base = "/cache";
+
+    const res = await request.get(`${base}?age=AAA`);
+
+    expect(res.status).toBe(400);
+  });
+
   test("should return an error if wait format is wrong", async () => {
     const base = "/cache/invalidate";
 
@@ -117,10 +125,14 @@ describe("validators", () => {
     expect(res.status).toBe(400);
   });
 
-  test("should return an error if bucket format is wrong", async () => {
+  test("should return an error if region/bucket format are wrong", async () => {
     const base = "/imagery/0e220754-e251-41c2-ab8b-0f05962ab7e9.png";
 
-    let res = await request.get(`${base}?bucket[]=aaa`);
+    let res = await request.get(`${base}?region[]=aaa`);
+
+    expect(res.status).toBe(400);
+
+    res = await request.get(`${base}?bucket[]=aaa`);
 
     expect(res.status).toBe(400);
   });
