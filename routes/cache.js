@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  validateAge,
   validateImagery,
   validateCustom,
   validateBucket,
@@ -7,29 +8,32 @@ import {
   validatePath,
   validateKey,
 } from "../middlewares/validators";
-import { cacheResponse, invalidate, invalidateCustom, invalidateImagery } from "../middlewares/cache";
+import { flush, removeTiff, removeShape, cacheResponse, invalidate } from "../middlewares/cache";
 import { setDefaultBucket, respond, noCache } from "../middlewares/tools";
 
 const router = express.Router();
 
 router
+  .get("/", validateKey, validateAge, flush, noCache, cacheResponse, respond)
   .get(
     "/imagery/:imagery",
     validateBucket,
     validateImagery,
     validateWait,
-    invalidateImagery,
+    removeTiff,
+    invalidate,
     cacheResponse,
     noCache,
     respond
   )
   .get(
     "/custom/:custom",
-    setDefaultBucket(process.env.CUSTOM_LAYERS_BUCKET),
+    setDefaultBucket(process.env.CUSTOM_LAYERS_REGION, process.env.CUSTOM_LAYERS_BUCKET),
     validateBucket,
     validateCustom,
     validateWait,
-    invalidateCustom,
+    removeShape,
+    invalidate,
     cacheResponse,
     noCache,
     respond

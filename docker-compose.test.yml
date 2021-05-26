@@ -16,12 +16,10 @@ services:
     env_file: .env.test
     links:
       - postgres-tiler
+      - redis-tiler
     depends_on:
       - postgres-tiler
-    environment:
-      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
-      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
-      - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}
+      - redis-tiler
 
   postgres-tiler:
     image: postgis/postgis:12-3.1-alpine
@@ -30,3 +28,6 @@ services:
       - POSTGRES_USER=tiler
       - POSTGRES_PASSWORD=tiler
       - POSTGRES_DBNAME=tiler
+
+  redis-tiler:
+    image: redis:6-alpine
