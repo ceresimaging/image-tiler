@@ -22,11 +22,30 @@ services:
     environment:
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}
+      - AWS_S3_ENDPOINT=minio-tiler:9000
+      - AWS_VIRTUAL_HOSTING=FALSE
+      - AWS_HTTPS=NO
+      - GDAL_DISABLE_READDIR_ON_OPEN=EMPTY_DIR
+      - LOG_REQUESTS=TRUE
+      - GDAL_VSI_DRIVER=vsis3
     links:
-      - redis-tiler
+      - minio-tiler
     networks:
       - default
       - ceres-dev
 
-  redis-tiler:
-    image: redis:latest
+  minio-tiler:
+    image: minio/minio
+    tmpfs: /minio/cache:size=1G
+    environment:
+      - MINIO_ROOT_USER=${AWS_ACCESS_KEY_ID}
+      - MINIO_ROOT_PASSWORD=${AWS_SECRET_ACCESS_KEY}
+      - MINIO_CACHE=on
+      - MINIO_CACHE_AFTER=1
+      - MINIO_CACHE_DRIVES=/minio/cache
+      - MINIO_BROWSER=off
+    command: gateway s3
+    networks:
+      - default
+      - ceres-dev

@@ -26,7 +26,11 @@ if (process.env.NODE_ENV !== "test") {
     return req.error;
   });
 
-  app.use(morgan(":date[iso] :remote-addr :url :status :response-time :error"));
+  if (process.env.LOG_REQUESTS === "TRUE") {
+    app.use(morgan(":date[iso] :remote-addr :referrer :url", { immediate: true }));
+  }
+
+  app.use(morgan(":date[iso] :remote-addr :referrer :url :status :response-time :error"));
 }
 
 // Debugging for tests

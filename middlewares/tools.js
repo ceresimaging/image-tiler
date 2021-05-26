@@ -78,10 +78,9 @@ export const setDefaultUser = (user) => {
   };
 };
 
-// Set S3 region and bucket
-export const setDefaultBucket = (region, bucket) => {
+// Set S3 bucket
+export const setDefaultBucket = (bucket) => {
   return (req, res, next) => {
-    req.query.region = req.query.region || `${region}`;
     req.query.bucket = req.query.bucket || `${bucket}`;
     next();
   };
