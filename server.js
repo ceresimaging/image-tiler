@@ -1,3 +1,5 @@
+import newrelic from "newrelic";
+
 import app from "./app";
 
 // Start Server
