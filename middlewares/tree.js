@@ -22,42 +22,37 @@ const pool = new Pool({
 const buildTreeCountQuery = ({ overlay, missing, varietal }) => {
   return `(
     SELECT
-      t.id::text tree_id,
-      t.geometry geom,
-      v.name varietal,
-      cd.name crop_name,
-      cd.group crop_group,
-      v.is_pollinator pollinator,
-      NOT t.is_present missing,
-      v.color color
-    FROM trees t
-    JOIN customers_cropvarietal v ON v.id = t.varietal_id
-    JOIN customers_cropdetail cd ON cd.id = v.crop_detail_id
-    WHERE t.overlay_id = '${overlay}'
-      AND t.is_present = ${!missing}
-      ${varietal.length ? `AND v.name IN ('${varietal.join("','")}')` : ""}
-    ORDER BY t.id
+      id::text,
+      geom,
+      varietal_name varietal,
+      crop_name,
+      crop_group,
+      pollinator,
+      missing,
+      color
+    FROM pli_data
+    WHERE overlay_id = '${overlay}'
+      AND missing = ${missing}
+      ${varietal.length ? `AND varietal_name IN ('${varietal.join("','")}')` : ""}
+    ORDER BY id
   ) AS trees`;
 };
 
 const buildTreeDataQuery = ({ overlay, color, varietal }) => {
   return `(
     SELECT
-      t.id::text tree_id,
-      t.geometry geom,
-      v.name varietal,
-      cd.name crop_name,
-      cd.group crop_group,
-      td.value,
-      td.color
-    FROM trees_data td
-    JOIN trees t ON t.id = td.tree_id
-    JOIN customers_cropvarietal v ON v.id = t.varietal_id
-    JOIN customers_cropdetail cd ON cd.id = v.crop_detail_id
-    WHERE td.overlay_id = '${overlay}'
-      ${color.length ? `AND td.color IN ('${color.join("','")}')` : ""}
-      ${varietal.length ? `AND v.name IN ('${varietal.join("','")}')` : ""}
-    ORDER BY td.value desc, t.id
+      tree_id::text id,
+      geom,
+      varietal_name varietal,
+      crop_name,
+      crop_group,
+      value,
+      color
+    FROM pli_data
+    WHERE overlay_id = '${overlay}'
+      ${color.length ? `AND color IN ('${color.join("','")}')` : ""}
+      ${varietal.length ? `AND varietal_name IN ('${varietal.join("','")}')` : ""}
+    ORDER BY value desc, id
   ) AS trees`;
 };
 
