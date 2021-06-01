@@ -6,3 +6,6 @@ junit
 .vscode
 test/log
 .env.test
+terraform.tfvars
+*.tfstate*
+.terraform
