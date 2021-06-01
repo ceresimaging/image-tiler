@@ -6,6 +6,8 @@ junit
 .vscode
 test/log
 .env.test
+<<<<<<< HEAD
 terraform.tfvars
 *.tfstate*
 .terraform
+newrelic_agent.log

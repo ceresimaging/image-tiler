@@ -25,7 +25,7 @@ import {
 import { satelliteLayer } from "../middlewares/satellite";
 import { imageryLayer } from "../middlewares/imagery";
 import { treeDataLayer } from "../middlewares/tree";
-import { markerLayer } from "../middlewares/marker";
+import { visitMarkersLayer, issueMarkersLayer, singleMarkerLayer } from "../middlewares/marker";
 import { downloadTiff } from "../middlewares/download";
 
 const router = express.Router();
@@ -45,7 +45,7 @@ router
     treeDataLayer,
     setExtent,
     satelliteLayer,
-    markerLayer,
+    visitMarkersLayer,
     rasterResponseExt,
     noCache,
     respond
@@ -94,7 +94,7 @@ router
     imageryLayer,
     setExtent,
     satelliteLayer,
-    markerLayer,
+    visitMarkersLayer,
     rasterResponseExt,
     noCache,
     respond
@@ -104,7 +104,6 @@ router
     setDefaultSize(256),
     setDefaultRatio(0.5),
     setDefaultBuffer([0, 0.15, 0, 0.5], [50, 50, 50, 90]),
-    setDefaultUser(process.env.SUPPORT_USER),
     validateImagery,
     validateVisit,
     validateSize,
@@ -112,7 +111,7 @@ router
     validateBucket,
     downloadTiff,
     createMap,
-    markerLayer,
+    issueMarkersLayer,
     setExtent,
     imageryLayer,
     setExtent,
@@ -125,7 +124,6 @@ router
     setDefaultSize(256),
     setDefaultRatio(0.5),
     setDefaultBuffer([0, 0.15, 0, 0.5], [50, 50, 50, 90]),
-    setDefaultUser(process.env.SUPPORT_USER),
     validateOverlay,
     validateVisit,
     validateSize,
@@ -136,7 +134,7 @@ router
     treeDataLayer,
     setExtent,
     satelliteLayer,
-    markerLayer,
+    issueMarkersLayer,
     rasterResponse,
     noCache,
     respond
@@ -153,7 +151,7 @@ router
     validateBucket,
     downloadTiff,
     createMap,
-    markerLayer,
+    singleMarkerLayer,
     setExtent,
     imageryLayer,
     rasterResponse,
@@ -171,7 +169,7 @@ router
     validateColor,
     validateVarietal,
     createMap,
-    markerLayer,
+    singleMarkerLayer,
     setExtent,
     treeDataLayer,
     rasterResponse,
