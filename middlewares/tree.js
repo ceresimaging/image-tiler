@@ -1,6 +1,7 @@
 import mapnik from "mapnik";
 import fs from "fs";
 import pg from "pg";
+import { logTiming } from "./tools";
 
 // Load Mapnik datasource
 mapnik.registerDatasource(`${mapnik.settings.paths.input_plugins}/postgis.input`);
@@ -99,6 +100,8 @@ const buildDataSource = async (queryBuilder, filters) => {
 };
 
 export const treeCountLayer = async (req, res, next) => {
+  next = logTiming("treeCountLayer", res, next);
+
   const { overlay } = req.params;
   const { missing, varietal } = req.query;
   const { map } = res.locals;
@@ -121,6 +124,8 @@ export const treeCountLayer = async (req, res, next) => {
 };
 
 export const treeDataLayer = async (req, res, next) => {
+  next = logTiming("treeDataLayer", res, next);
+
   const { overlay } = req.params;
   const { color, varietal } = req.query;
   const { map } = res.locals;
@@ -204,6 +209,8 @@ export const treeDataPGLayer = (req, res, next) => {
 };
 
 export const calculateTreeBuffer = (req, res, next) => {
+  next = logTiming("calculateTreeBuffer", res, next);
+
   const { overlay } = req.params;
 
   const query = `
