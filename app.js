@@ -15,7 +15,7 @@ import tree from "./routes/tree";
 const app = express();
 
 // Add timing log
-if (process.env.CUSTOM_METRICS === "true") {
+if (process.env.CUSTOM_METRICS !== "false") {
   app.use((req, res, next) => {
     res.locals.timing = {};
     res.locals.metrics = {};
