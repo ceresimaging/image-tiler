@@ -1,7 +1,7 @@
 environment = "dev"
 name = "dev"
 image_repo = "292290781350.dkr.ecr.us-west-2.amazonaws.com/tile-server"
-image_tag = "production"
+image_tag = "dev"
 desired_instances = 1
 app_config = {
   CACHE_PATH = "/tiffs"
