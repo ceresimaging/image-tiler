@@ -99,7 +99,7 @@ export const setDefaultAge = (age) => {
 
 // Log timing
 export function logTiming(label, res, next) {
-  if (process.env.CUSTOM_METRICS === "false") return next;
+  if (process.env.CUSTOM_METRICS !== "true") return next;
 
   const start = process.hrtime.bigint();
   return () => {
@@ -110,7 +110,7 @@ export function logTiming(label, res, next) {
 
 // Log timing Sync
 export function logTimingSync(label, res) {
-  if (process.env.CUSTOM_METRICS === "false") return;
+  if (process.env.CUSTOM_METRICS !== "true") return next;
 
   if (res.locals.timing[label]) {
     res.locals.timing[label] = Number(process.hrtime.bigint() - res.locals.timing[label]) / 1000000;
@@ -121,6 +121,6 @@ export function logTimingSync(label, res) {
 
 // Log metric Sync
 export function logMetric(label, res, value) {
-  if (process.env.CUSTOM_METRICS === "false") return;
+  if (process.env.CUSTOM_METRICS !== "true") return next;
   res.locals.metrics[label] = value;
 }
