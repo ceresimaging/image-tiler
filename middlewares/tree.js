@@ -36,7 +36,6 @@ const buildTreeCountQuery = ({ overlay, missing, varietal }) => {
     WHERE t.overlay_id = '${overlay}'
       AND t.is_present = ${!missing}
       ${varietal.length ? `AND v.name IN ('${varietal.join("','")}')` : ""}
-    ORDER BY t.id
   ) AS trees`;
 };
 
@@ -57,7 +56,7 @@ const buildTreeDataQuery = ({ overlay, color, varietal }) => {
     WHERE td.overlay_id = '${overlay}'
       ${color.length ? `AND td.color IN ('${color.join("','")}')` : ""}
       ${varietal.length ? `AND v.name IN ('${varietal.join("','")}')` : ""}
-    ORDER BY td.value desc, t.id
+    ORDER BY td.value desc
   ) AS trees`;
 };
 

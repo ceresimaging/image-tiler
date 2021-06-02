@@ -16,6 +16,9 @@ shell:
 build:
 	docker-compose build
 
+build_test:
+	@$(DOCKER_TEST) build --no-cache
+
 tests:
 	@echo "Runnning tests"
 	@$(DOCKER_TEST_RUN) npm run test || true
