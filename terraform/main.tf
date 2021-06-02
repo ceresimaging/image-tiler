@@ -88,7 +88,7 @@ resource "aws_autoscaling_group" "tile_server" {
     }
   ]
 
-  health_check_type = "ELB"
+  health_check_type         = "ELB"
   health_check_grace_period = 240
 
   instance_refresh {
