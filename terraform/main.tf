@@ -35,7 +35,7 @@ resource "aws_elb" "tile_server" {
   health_check {
     interval            = 30
     timeout             = 5
-    healthy_threshold   = 10
+    healthy_threshold   = 2
     unhealthy_threshold = 2
     target              = "TCP:80"
   }
@@ -89,7 +89,7 @@ resource "aws_autoscaling_group" "tile_server" {
   ]
 
   health_check_type = "ELB"
-  health_check_grace_period = 300
+  health_check_grace_period = 240
 
   instance_refresh {
     strategy = "Rolling"
