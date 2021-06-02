@@ -6,6 +6,8 @@ Tile Server EC2 instances are designed to be immutable and safe to terminate/res
 
 In the case of needing to SSH directly into a tile-server instance, AWS SSM should be used. Make sure your AWS IAM user has the appropriate permissions to use SSM.
 
+This stack pulls information about the underlying Ceres infrastructure environment via the terraform remote state data source, see https://github.com/ceresimaging/infrastructure/tree/main/terraform/stacks/spoke_environment for underlying environment configuration. This data includes VPC & subnet information. The `environment` variable determines which ceres spoke environment to deploy onto.
+
 ## Usage
 
 Set up the initial Terraform workspace, providers, modules, etc:
