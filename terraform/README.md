@@ -1,5 +1,11 @@
 # Tile Server infrastructure/deployment configuration
 
+This stack manages basic infrastructure for running a deployment of the image-tiler (aka the "Tile Server"). This includes an AWS elastic load balancer, autoscaling group, launch configuration, and cloud-init user-data to automatically provision and run the tile-server container image and associated observability tools onto a new EC2 instance.
+
+Tile Server EC2 instances are designed to be immutable and safe to terminate/restart. Each instance will pull a tile-server container image from ECR on startup, based on the environment label (aka `dev`, `demo`, `production`, etc.)
+
+In the case of needing to SSH directly into a tile-server instance, AWS SSM should be used. Make sure your AWS IAM user has the appropriate permissions to use SSM.
+
 ## Usage
 
 Set up the initial Terraform workspace, providers, modules, etc:
