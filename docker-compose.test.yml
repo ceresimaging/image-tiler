@@ -20,6 +20,9 @@ services:
     depends_on:
       - postgres-tiler
       - redis-tiler
+    environment:
+      - NEW_RELIC_ENABLED=false
+      - CUSTOM_METRICS=false
 
   postgres-tiler:
     image: postgis/postgis:12-3.1-alpine

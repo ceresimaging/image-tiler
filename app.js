@@ -14,6 +14,27 @@ import tree from "./routes/tree";
 // Create Express App
 const app = express();
 
+// Add timing log
+if (process.env.CUSTOM_METRICS !== "false") {
+  app.use((req, res, next) => {
+    res.locals.timing = {};
+    res.locals.metrics = {};
+    req.on("end", function () {
+      console.debug("TIMING DEBUG:", res.locals.timing);
+      console.debug("METRICS DEBUG:", res.locals.metrics);
+      if (process.env.NEW_RELIC_ENABLED === "true") {
+        Object.keys(res.locals.timing).forEach((key) => {
+          app.newrelic.recordMetric(`Timing/${key}`, res.locals.timing[key]);
+        });
+        Object.keys(res.locals.metrics).forEach((key) => {
+          app.newrelic.recordMetric(key, res.locals.metrics[key]);
+        });
+      }
+    });
+    next();
+  });
+}
+
 // Add CORS
 app.use(cors({ origin: "*" }));
 

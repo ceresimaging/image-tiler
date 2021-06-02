@@ -3,6 +3,7 @@ import fs from "fs";
 import Redis from "ioredis";
 import Redlock from "redlock";
 import AWS from "aws-sdk";
+import { logTiming } from "./tools";
 
 const redis = new Redis({ host: process.env.REDIS_HOST });
 const redlock = new Redlock([redis], {
@@ -68,6 +69,7 @@ const downloadFile = (req, res, next) => {
 
 // Download GeoTiff
 export const downloadTiff = (req, res, next) => {
+  next = logTiming("downloadTiff", res, next);
   res.locals.filename = `${req.params.imagery}.tif`;
   res.locals.key = `${req.params.imagery}.tif`;
   res.locals.dir = "imagery";
@@ -76,6 +78,7 @@ export const downloadTiff = (req, res, next) => {
 
 // Download Shapefile
 export const downloadShape = (req, res, next) => {
+  next = logTiming("downloadShape", res, next);
   res.locals.filename = `${req.params.custom}.zip`;
   res.locals.key = req.params.custom;
   res.locals.dir = "custom";
