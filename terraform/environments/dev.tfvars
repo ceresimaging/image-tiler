@@ -28,5 +28,6 @@ app_config = {
   NEW_RELIC_ENABLED="true"
   NEW_RELIC_NO_CONFIG_FILE="true"
   NEW_RELIC_LOG_ENABLED="false"
-  NEW_RELIC_APP_NAME="Tile Server (Dev)"
+  NEW_RELIC_APP_NAME="Tile Server (Dev)",
+  CUSTOM_METRICS="true"
 }
