@@ -37,7 +37,6 @@ const buildTreeCountQuery = ({ overlay, missing, varietal }) => {
     WHERE t.overlay_id = '${overlay}'
       AND t.is_present = ${!missing}
       ${varietal.length ? `AND v.name IN ('${varietal.join("','")}')` : ""}
-    ORDER BY t.id
   ) AS trees`;
 };
 
@@ -58,7 +57,7 @@ const buildTreeDataQuery = ({ overlay, color, varietal }) => {
     WHERE td.overlay_id = '${overlay}'
       ${color.length ? `AND td.color IN ('${color.join("','")}')` : ""}
       ${varietal.length ? `AND v.name IN ('${varietal.join("','")}')` : ""}
-    ORDER BY td.value desc, t.id
+    ORDER BY td.value desc
   ) AS trees`;
 };
 
@@ -94,8 +93,9 @@ const buildDataSource = async (queryBuilder, filters) => {
     extent: extent,
     geometry_field: "geom",
     srid: 4326,
+    initial_size: process.env.CORE_DB_MIN || 10,
     max_size: process.env.CORE_DB_MAX || 50,
-    connect_timeout: process.env.CORE_DB_TIMEOUT || 60,
+    connect_timeout: process.env.CORE_DB_TIMEOUT || 10,
   });
 };
 
