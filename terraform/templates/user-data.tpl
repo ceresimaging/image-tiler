@@ -38,7 +38,7 @@ runcmd:
   - service docker start
   - docker pull gliderlabs/logspout
   - docker run -d --name logspout -e SYSLOG_TAG="{{.ContainerName}}-${environment}" --volume=/var/run/docker.sock:/var/run/docker.sock gliderlabs/logspout ${papertrail_endpoint}
-  - docker pull 292290781350.dkr.ecr.us-west-2.amazonaws.com/tile-server:production
+  - docker pull 292290781350.dkr.ecr.us-west-2.amazonaws.com/tile-server:${environment}
   - systemctl enable tile-server
   - systemctl start tile-server
 
