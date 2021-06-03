@@ -1,0 +1,122 @@
+pipeline {
+	agent any
+
+	parameters {
+
+		choice(name: "ENVIRONMENT",
+			   choices: ["dev", "demo", "production"],
+			   description: "Tile-Server Environment")
+
+		string(name: "GIT_BRANCH",
+			   defaultValue: "master",
+			   trim: true,
+			   description: "Git Branch to build/deploy (default master)")
+
+		choice(name: "TERRAFORM_ACTION",
+			   choices: ["plan", "apply"],
+			   description: "Run Terraform Plan or Apply")
+
+	}
+
+	environment {
+		TF_WORKSPACE = "${params.ENVIRONMENT}"
+	}
+
+	options {
+		ansiColor('xterm')
+	}
+
+	stages {
+
+		stage("Checkout") {
+			steps {
+				git branch: params.GIT_BRANCH,
+					credentialsId: 'github-ssh-key',
+					url: 'ssh://git@github.com/CeresImaging/image-tiler'
+			}
+		}
+
+		stage("Pipeline Init") {
+			steps {
+				sh "docker pull hashicorp/terraform:0.14.9"
+
+				withCredentials([sshUserPrivateKey(credentialsId: 'github-ssh-key', keyFileVariable: 'ssh_private_key')]) {
+					sh "mkdir -p ${WORKSPACE}/ssh"
+					sh "ssh-keyscan github.com > ${WORKSPACE}/ssh/known_hosts"
+					sh "cat \$ssh_private_key > ${WORKSPACE}/ssh/id_rsa"
+					sh "chmod 0600 ${WORKSPACE}/ssh/id_rsa"
+				}
+			}
+		}
+
+		stage("Build & Publish") {
+			steps {
+				script {
+					def newImage = docker.build("tile-server:${params.ENVIRONMENT}")
+
+					docker.withRegistry("https://292290781350.dkr.ecr.us-west-2.amazonaws.com", "ecr:us-west-2:deployer-aws-credentials") {
+						newImage.push()
+					}
+				}
+			}
+		}
+
+		stage("Terraform Init") {
+			steps {
+				withCredentials([aws(credentialsId: 'deployer-aws-credentials')]) {
+					sh "docker run --rm -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -v \"${WORKSPACE}/ssh:/root/.ssh\" -v \"\$(pwd)/terraform:/terraform\" -w /terraform hashicorp/terraform:0.14.9 init"
+				}
+			}
+		}
+
+		stage("Terraform Change Workspace") {
+			steps {
+				withCredentials([aws(credentialsId: 'deployer-aws-credentials')]) {
+					sh "docker run --rm -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -v \"${WORKSPACE}/ssh:/root/.ssh\" -v \"\$(pwd)/terraform:/terraform\" -w /terraform hashicorp/terraform:0.14.9 workspace select \$TF_WORKSPACE"
+				}
+			}
+		}
+
+		stage("Terraform Plan") {
+			steps {
+				withCredentials([aws(credentialsId: 'deployer-aws-credentials')]) {
+					sh "docker run --rm -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -v \"${WORKSPACE}/ssh:/root/.ssh\" -v \"\$(pwd)/terraform:/terraform\" -w /terraform hashicorp/terraform:0.14.9 plan -var-file=environments/${ENVIRONMENT}.tfvars"
+				}
+			}
+		}
+
+		stage("Terraform Apply") {
+			when {
+				expression { params.TERRAFORM_ACTION == "apply" }
+			}
+			steps {
+				withCredentials([aws(credentialsId: 'deployer-aws-credentials')]) {
+					sh "docker run --rm -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -v \"${WORKSPACE}/ssh:/root/.ssh\" -v \"\$(pwd)/terraform:/terraform\" -w /terraform hashicorp/terraform:0.14.9 apply -auto-approve -var-file=environments/${ENVIRONMENT}.tfvars"
+				}
+			}
+		}
+
+		stage("Refresh EC2 Instances") {
+			when {
+				expression { params.TERRAFORM_ACTION == "apply" }
+			}
+			steps {
+				withCredentials([aws(credentialsId: 'deployer-aws-credentials')]) {
+					sh "docker run --rm -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -v \"${WORKSPACE}/ssh:/root/.ssh\" -v \"\$(pwd)/terraform:/terraform\" -w /terraform hashicorp/terraform:0.14.9 output -raw asg_name > /tmp/asg_name"
+					sh 'aws autoscaling start-instance-refresh --auto-scaling-group-name $(cat /tmp/asg_name)'
+				}
+			}
+		}
+
+	}
+
+	post {
+		always {
+			sh "docker rmi -f tile-server:${params.ENVIRONMENT}"
+			sh "docker image prune -f"
+			sh "docker run --rm -v \"\$(pwd)/terraform:/terraform\" -w /terraform --entrypoint /bin/rm hashicorp/terraform:0.14.9 -rf .terraform"
+			sh "rm -rf ${WORKSPACE}/ssh"
+		}
+	}
+
+}
