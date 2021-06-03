@@ -15,7 +15,7 @@ import tree from "./routes/tree";
 const app = express();
 
 // Add timing log
-if (process.env.CUSTOM_METRICS !== "false") {
+if (process.env.CUSTOM_METRICS === "true") {
   app.use((req, res, next) => {
     res.locals.timing = {};
     res.locals.metrics = {};
@@ -47,7 +47,7 @@ if (process.env.NODE_ENV !== "test") {
     return req.error;
   });
 
-  if (process.env.LOG_REQUESTS === "TRUE") {
+  if (process.env.LOG_REQUESTS === "true") {
     app.use(morgan(":date[iso] :remote-addr :referrer :url", { immediate: true }));
   }
 

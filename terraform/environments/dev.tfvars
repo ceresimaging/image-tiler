@@ -30,4 +30,5 @@ app_config = {
   NEW_RELIC_LOG_ENABLED="false"
   NEW_RELIC_APP_NAME="Tile Server (Dev)",
   CUSTOM_METRICS="true"
+  LOG_REQUESTS="true"
 }
