@@ -24,8 +24,8 @@ layer.datasource = new mapnik.Datasource({
   geometry_field: "geom",
   key_field: "id",
   srid: 4326,
-  initial_size: process.env.CORE_DB_MIN || 10,
-  max_size: process.env.CORE_DB_MAX || 50,
+  initial_size: process.env.CORE_DB_MIN || 1,
+  max_size: process.env.CORE_DB_MAX || 10,
   connect_timeout: process.env.CORE_DB_TIMEOUT || 10,
 });
 layer.styles = ["gssurgo-line", "gssurgo-label"];

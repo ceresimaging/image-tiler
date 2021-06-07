@@ -110,7 +110,7 @@ export function logTiming(label, res, next) {
 
 // Log timing Sync
 export function logTimingSync(label, res) {
-  if (process.env.CUSTOM_METRICS !== "true") return next;
+  if (process.env.CUSTOM_METRICS !== "true") return;
 
   if (res.locals.timing[label]) {
     res.locals.timing[label] = Number(process.hrtime.bigint() - res.locals.timing[label]) / 1000000;
