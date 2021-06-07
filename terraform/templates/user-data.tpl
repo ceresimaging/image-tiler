@@ -3,7 +3,8 @@ write_files:
   - path: /etc/newrelic-infra.yml
     owner: root:root
     permissions: '0644'
-    content: "license_key: ${newrelic_license_key}"
+    content: ${newrelic_config}
+    encoding: b64
   - path: /root/.docker/config.json
     owner: root:root
     permissions: '0644'
