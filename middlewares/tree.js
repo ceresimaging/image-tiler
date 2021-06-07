@@ -1,7 +1,7 @@
 import mapnik from "mapnik";
 import fs from "fs";
 import pg from "pg";
-import { logTiming } from "./tools";
+import { logTiming, NotFoundError } from "./tools";
 
 // Load Mapnik datasource
 mapnik.registerDatasource(`${mapnik.settings.paths.input_plugins}/postgis.input`);
@@ -112,13 +112,13 @@ export const treeCountLayer = async (req, res, next) => {
     varietal,
   });
 
-  if (datasource) {
-    map.fromStringSync(dataStyle);
-    const trees = new mapnik.Layer("trees");
-    trees.datasource = datasource;
-    trees.styles = ["tree"];
-    map.add_layer(trees);
-  }
+  if (!datasource) return next(NotFoundError);
+
+  map.fromStringSync(dataStyle);
+  const trees = new mapnik.Layer("trees");
+  trees.datasource = datasource;
+  trees.styles = ["tree"];
+  map.add_layer(trees);
 
   next();
 };
@@ -136,13 +136,13 @@ export const treeDataLayer = async (req, res, next) => {
     varietal,
   });
 
-  if (datasource) {
-    map.fromStringSync(dataStyle);
-    const trees = new mapnik.Layer("trees");
-    trees.datasource = datasource;
-    trees.styles = ["tree"];
-    map.add_layer(trees);
-  }
+  if (!datasource) return next(NotFoundError);
+
+  map.fromStringSync(dataStyle);
+  const trees = new mapnik.Layer("trees");
+  trees.datasource = datasource;
+  trees.styles = ["tree"];
+  map.add_layer(trees);
 
   next();
 };
@@ -235,6 +235,7 @@ export const calculateTreeBuffer = (req, res, next) => {
   pool
     .query(query)
     .then((result) => {
+      if (!result.rows[0].distance) return next(NotFoundError);
       res.locals.treeBuffer = result.rows[0].distance * 0.5;
       next();
     })

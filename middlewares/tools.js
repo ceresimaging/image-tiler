@@ -98,18 +98,18 @@ export const setDefaultAge = (age) => {
 };
 
 // Log timing
-export function logTiming(label, res, next) {
+export const logTiming = (label, res, next) => {
   if (process.env.CUSTOM_METRICS !== "true") return next;
 
   const start = process.hrtime.bigint();
-  return () => {
+  return (error) => {
     res.locals.timing[label] = Number(process.hrtime.bigint() - start) / 1000000;
-    next();
+    next(error);
   };
-}
+};
 
 // Log timing Sync
-export function logTimingSync(label, res) {
+export const logTimingSync = (label, res) => {
   if (process.env.CUSTOM_METRICS !== "true") return;
 
   if (res.locals.timing[label]) {
@@ -117,10 +117,15 @@ export function logTimingSync(label, res) {
   } else {
     res.locals.timing[label] = process.hrtime.bigint();
   }
-}
+};
 
 // Log metric Sync
-export function logMetric(label, res, value) {
-  if (process.env.CUSTOM_METRICS !== "true") return next;
+export const logMetric = (label, res, value) => {
+  if (process.env.CUSTOM_METRICS !== "true") return;
   res.locals.metrics[label] = value;
-}
+};
+
+// 404
+const NotFoundError = new Error("Resource Not Found");
+NotFoundError.code = 404;
+export { NotFoundError };
