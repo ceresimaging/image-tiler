@@ -20,6 +20,8 @@ export const noCache = (req, res, next) => {
 
 // Autocrop image
 export const autocropImage = (req, res, next) => {
+  next = logTiming("autocropImage", res, next);
+
   sharp(res.locals.data)
     .trim()
     .toBuffer()
@@ -94,3 +96,31 @@ export const setDefaultAge = (age) => {
     next();
   };
 };
+
+// Log timing
+export function logTiming(label, res, next) {
+  if (process.env.CUSTOM_METRICS !== "true") return next;
+
+  const start = process.hrtime.bigint();
+  return () => {
+    res.locals.timing[label] = Number(process.hrtime.bigint() - start) / 1000000;
+    next();
+  };
+}
+
+// Log timing Sync
+export function logTimingSync(label, res) {
+  if (process.env.CUSTOM_METRICS !== "true") return next;
+
+  if (res.locals.timing[label]) {
+    res.locals.timing[label] = Number(process.hrtime.bigint() - res.locals.timing[label]) / 1000000;
+  } else {
+    res.locals.timing[label] = process.hrtime.bigint();
+  }
+}
+
+// Log metric Sync
+export function logMetric(label, res, value) {
+  if (process.env.CUSTOM_METRICS !== "true") return next;
+  res.locals.metrics[label] = value;
+}
