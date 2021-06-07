@@ -11,6 +11,8 @@ import marker from "./routes/marker";
 import custom from "./routes/custom";
 import tree from "./routes/tree";
 
+import { noCache, respond } from "./middlewares/tools";
+
 // Create Express App
 const app = express();
 
@@ -78,9 +80,15 @@ app.get("/", (req, res) => {
 });
 
 // Server status check
-app.get("/status", (req, res) => {
-  res.status(200).send(process.env.npm_package_version);
-});
+app.get(
+  "/status",
+  noCache,
+  (req, res, next) => {
+    res.locals.data = process.env.npm_package_version;
+    next();
+  },
+  respond
+);
 
 // Default handler
 app.use((error, req, res, next) => {
