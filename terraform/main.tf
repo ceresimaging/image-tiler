@@ -53,7 +53,7 @@ data "aws_ssm_parameter" "amilinux2" {
 }
 
 resource "aws_autoscaling_group" "tile_server" {
-  name_prefix = "image-tiler-"
+  name_prefix = "tile-server-${local.environment}-"
 
   launch_template {
     id      = aws_launch_template.tile_server.id
@@ -127,9 +127,12 @@ resource "aws_launch_template" "tile_server" {
 
   // hey dogg I heard u like templates in ur templates
   user_data = base64encode(templatefile("${path.module}/templates/user-data.tpl", {
-    newrelic_license_key = local.secrets.NEW_RELIC_LICENSE_KEY
-    environment          = local.environment
-    papertrail_endpoint  = local.secrets.PAPERTRAIL_ENDPOINT
+    environment         = local.environment
+    papertrail_endpoint = local.secrets.PAPERTRAIL_ENDPOINT
+    newrelic_config = base64encode(templatefile("${path.module}/templates/newrelic-infra.yml.tpl", {
+      tile_server_environment = local.environment
+      newrelic_license_key    = local.secrets.NEW_RELIC_LICENSE_KEY
+    }))
     tile_server_unit = base64encode(templatefile("${path.module}/templates/tile-server.service.tpl", {
       tile_server_image = "${var.image_repo}:${var.image_tag}"
     }))
