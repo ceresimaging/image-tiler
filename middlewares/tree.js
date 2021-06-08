@@ -22,7 +22,7 @@ const pool = new Pool({
 const buildTreeCountQuery = ({ overlay, missing, varietal }) => {
   return `(
     SELECT
-      id::text,
+      id,
       geom,
       varietal_name varietal,
       crop_name,
@@ -30,9 +30,8 @@ const buildTreeCountQuery = ({ overlay, missing, varietal }) => {
       pollinator,
       missing,
       color
-    FROM pli_data
-    WHERE overlay_id = '${overlay}'
-      AND missing = ${missing}
+    FROM "${overlay}"
+    WHERE missing = ${missing}
       ${varietal.length ? `AND varietal_name IN ('${varietal.join("','")}')` : ""}
     ORDER BY id
   ) AS trees`;
@@ -41,15 +40,15 @@ const buildTreeCountQuery = ({ overlay, missing, varietal }) => {
 const buildTreeDataQuery = ({ overlay, color, varietal }) => {
   return `(
     SELECT
-      tree_id::text id,
+      tree_id,
       geom,
       varietal_name varietal,
       crop_name,
       crop_group,
       value,
       color
-    FROM pli_data
-    WHERE overlay_id = '${overlay}'
+    FROM "${overlay}"
+    WHERE true
       ${color.length ? `AND color IN ('${color.join("','")}')` : ""}
       ${varietal.length ? `AND varietal_name IN ('${varietal.join("','")}')` : ""}
     ORDER BY value desc, id
