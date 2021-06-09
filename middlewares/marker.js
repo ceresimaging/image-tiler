@@ -25,6 +25,7 @@ const buildVisitQuery = (visit, user = null, onlyInternal = false) => {
       ON m.visit_id = v.id
     WHERE m.deleted is null
       AND m.is_open = true
+      AND m.type != 'draft'
       AND (
         m.visit_id = ${visit}
         OR (
@@ -82,8 +83,9 @@ const buildDataSource = (query) => {
     extent_from_subquery: true,
     geometry_field: "geom",
     srid: 4326,
-    max_size: 10,
-    connect_timeout: 30,
+    initial_size: process.env.CORE_DB_MIN || 5,
+    max_size: process.env.CORE_DB_MAX || 20,
+    connect_timeout: process.env.CORE_DB_TIMEOUT || 5,
   });
 };
 

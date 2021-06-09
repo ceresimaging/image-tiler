@@ -20,6 +20,8 @@ export const noCache = (req, res, next) => {
 
 // Autocrop image
 export const autocropImage = (req, res, next) => {
+  next = logTiming("autocropImage", res, next);
+
   sharp(res.locals.data)
     .trim()
     .toBuffer()
@@ -94,3 +96,36 @@ export const setDefaultAge = (age) => {
     next();
   };
 };
+
+// Log timing
+export const logTiming = (label, res, next) => {
+  if (process.env.CUSTOM_METRICS !== "true") return next;
+
+  const start = process.hrtime.bigint();
+  return (error) => {
+    res.locals.timing[label] = Number(process.hrtime.bigint() - start) / 1000000;
+    next(error);
+  };
+};
+
+// Log timing Sync
+export const logTimingSync = (label, res) => {
+  if (process.env.CUSTOM_METRICS !== "true") return;
+
+  if (res.locals.timing[label]) {
+    res.locals.timing[label] = Number(process.hrtime.bigint() - res.locals.timing[label]) / 1000000;
+  } else {
+    res.locals.timing[label] = process.hrtime.bigint();
+  }
+};
+
+// Log metric Sync
+export const logMetric = (label, res, value) => {
+  if (process.env.CUSTOM_METRICS !== "true") return;
+  res.locals.metrics[label] = value;
+};
+
+// 404
+const NotFoundError = new Error("Resource Not Found");
+NotFoundError.code = 404;
+export { NotFoundError };

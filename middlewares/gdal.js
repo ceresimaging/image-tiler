@@ -1,8 +1,11 @@
 import fs from "fs";
 import { exec } from "child_process";
+import { logTiming } from "./tools";
 
 // Generate TIF with GDAL
 export const generateTif = (req, res, next) => {
+  next = logTiming("generateTif", res, next);
+
   const { overlay } = req.params;
   const { treeBuffer } = res.locals;
 

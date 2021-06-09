@@ -1,6 +1,7 @@
 import mapnik from "mapnik";
 import fs from "fs";
 import pg from "pg";
+import { logTiming, NotFoundError } from "./tools";
 
 // Load Mapnik datasource
 mapnik.registerDatasource(`${mapnik.settings.paths.input_plugins}/postgis.input`);
@@ -87,12 +88,15 @@ const buildDataSource = async (queryBuilder, filters) => {
     extent: extent,
     geometry_field: "geom",
     srid: 4326,
+    initial_size: process.env.CORE_DB_MIN || 10,
     max_size: process.env.CORE_DB_MAX || 50,
-    connect_timeout: process.env.CORE_DB_TIMEOUT || 60,
+    connect_timeout: process.env.CORE_DB_TIMEOUT || 10,
   });
 };
 
 export const treeCountLayer = async (req, res, next) => {
+  next = logTiming("treeCountLayer", res, next);
+
   const { overlay } = req.params;
   const { missing, varietal } = req.query;
   const { map } = res.locals;
@@ -103,18 +107,20 @@ export const treeCountLayer = async (req, res, next) => {
     varietal,
   });
 
-  if (datasource) {
-    map.fromStringSync(dataStyle);
-    const trees = new mapnik.Layer("trees");
-    trees.datasource = datasource;
-    trees.styles = ["tree"];
-    map.add_layer(trees);
-  }
+  if (!datasource) return next(NotFoundError);
+
+  map.fromStringSync(dataStyle);
+  const trees = new mapnik.Layer("trees");
+  trees.datasource = datasource;
+  trees.styles = ["tree"];
+  map.add_layer(trees);
 
   next();
 };
 
 export const treeDataLayer = async (req, res, next) => {
+  next = logTiming("treeDataLayer", res, next);
+
   const { overlay } = req.params;
   const { color, varietal } = req.query;
   const { map } = res.locals;
@@ -125,13 +131,13 @@ export const treeDataLayer = async (req, res, next) => {
     varietal,
   });
 
-  if (datasource) {
-    map.fromStringSync(dataStyle);
-    const trees = new mapnik.Layer("trees");
-    trees.datasource = datasource;
-    trees.styles = ["tree"];
-    map.add_layer(trees);
-  }
+  if (!datasource) return next(NotFoundError);
+
+  map.fromStringSync(dataStyle);
+  const trees = new mapnik.Layer("trees");
+  trees.datasource = datasource;
+  trees.styles = ["tree"];
+  map.add_layer(trees);
 
   next();
 };
@@ -198,6 +204,8 @@ export const treeDataPGLayer = (req, res, next) => {
 };
 
 export const calculateTreeBuffer = (req, res, next) => {
+  next = logTiming("calculateTreeBuffer", res, next);
+
   const { overlay } = req.params;
 
   const query = `
@@ -222,6 +230,7 @@ export const calculateTreeBuffer = (req, res, next) => {
   pool
     .query(query)
     .then((result) => {
+      if (!result.rows[0].distance) return next(NotFoundError);
       res.locals.treeBuffer = result.rows[0].distance * 0.5;
       next();
     })

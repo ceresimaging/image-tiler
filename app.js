@@ -11,8 +11,31 @@ import marker from "./routes/marker";
 import custom from "./routes/custom";
 import tree from "./routes/tree";
 
+import { noCache, respond } from "./middlewares/tools";
+
 // Create Express App
 const app = express();
+
+// Add timing log
+if (process.env.CUSTOM_METRICS === "true") {
+  app.use((req, res, next) => {
+    res.locals.timing = {};
+    res.locals.metrics = {};
+    req.on("end", function () {
+      console.debug("TIMING DEBUG:", res.locals.timing);
+      console.debug("METRICS DEBUG:", res.locals.metrics);
+      if (process.env.NEW_RELIC_ENABLED === "true") {
+        Object.keys(res.locals.timing).forEach((key) => {
+          app.newrelic.recordMetric(`Timing/${key}`, res.locals.timing[key]);
+        });
+        Object.keys(res.locals.metrics).forEach((key) => {
+          app.newrelic.recordMetric(key, res.locals.metrics[key]);
+        });
+      }
+    });
+    next();
+  });
+}
 
 // Add CORS
 app.use(cors({ origin: "*" }));
@@ -26,7 +49,7 @@ if (process.env.NODE_ENV !== "test") {
     return req.error;
   });
 
-  if (process.env.LOG_REQUESTS === "TRUE") {
+  if (process.env.LOG_REQUESTS === "true") {
     app.use(morgan(":date[iso] :remote-addr :referrer :url", { immediate: true }));
   }
 
@@ -57,9 +80,15 @@ app.get("/", (req, res) => {
 });
 
 // Server status check
-app.get("/status", (req, res) => {
-  res.status(200).send(process.env.npm_package_version);
-});
+app.get(
+  "/status",
+  noCache,
+  (req, res, next) => {
+    res.locals.data = process.env.npm_package_version;
+    next();
+  },
+  respond
+);
 
 // Default handler
 app.use((error, req, res, next) => {

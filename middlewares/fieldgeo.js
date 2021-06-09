@@ -45,9 +45,9 @@ const buildDataSource = (farm, field, geom) => {
     extent_from_subquery: true,
     geometry_field: geom,
     srid: 4326,
-    max_size: 10,
-    connect_timeout: 30,
-    simplify_geometries: false,
+    initial_size: process.env.CORE_DB_MIN || 10,
+    max_size: process.env.CORE_DB_MAX || 50,
+    connect_timeout: process.env.CORE_DB_TIMEOUT || 10,
   });
 };
 

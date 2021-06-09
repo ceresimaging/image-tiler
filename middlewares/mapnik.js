@@ -1,6 +1,7 @@
 import mapnik from "mapnik";
 import fs from "fs";
 import { exec } from "child_process";
+import { logTiming } from "./tools";
 
 // Resize Map based on resolution
 export const autoScale = (req, res, next) => {
@@ -13,6 +14,8 @@ export const autoScale = (req, res, next) => {
 
 // Generate PNG
 export const rasterResponse = (req, res, next) => {
+  next = logTiming("rasterResponse", res, next);
+
   const { map } = res.locals;
 
   map.render(new mapnik.Image(map.width, map.height), (renderError, tile) => {
@@ -30,27 +33,10 @@ export const rasterResponse = (req, res, next) => {
   });
 };
 
-// Generate TIF
-export const rasterTifResponse = (req, res, next) => {
-  const { map } = res.locals;
-
-  map.render(new mapnik.Image(map.width, map.height), (renderError, tile) => {
-    if (renderError) return next(renderError);
-
-    tile.encode("tiff", (dataError, data) => {
-      if (dataError) return next(dataError);
-
-      res.locals.data = data;
-
-      res.set("Content-Type", "image/tiff");
-
-      next();
-    });
-  });
-};
-
 // Generate PNG with external renderer
 export const rasterResponseExt = (req, res, next) => {
+  next = logTiming("rasterResponseExt", res, next);
+
   const { map } = res.locals;
 
   const name = `/tmp/${Date.now()}${Math.random()}`;
@@ -80,6 +66,8 @@ export const rasterResponseExt = (req, res, next) => {
 
 // Generate Vector Tile
 export const vectorResponse = (req, res, next) => {
+  next = logTiming("vectorResponse", res, next);
+
   const { map } = res.locals;
   const { x, y, z } = req.params;
 
@@ -111,6 +99,8 @@ export const createMap = (req, res, next) => {
 
 // Define map extent based on current layers and buffer
 export const setExtent = (req, res, next) => {
+  next = logTiming("setExtent", res, next);
+
   const { buffer, minBuffer } = req.query;
   const { map } = res.locals;
 
