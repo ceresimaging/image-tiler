@@ -25,6 +25,7 @@ const buildVisitQuery = (visit, user = null, onlyInternal = false) => {
       ON m.visit_id = v.id
     WHERE m.deleted is null
       AND m.is_open = true
+      AND m.type != 'draft'
       AND (
         m.visit_id = ${visit}
         OR (
