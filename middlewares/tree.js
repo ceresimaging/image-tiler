@@ -34,7 +34,6 @@ const buildTreeCountQuery = ({ overlay, missing, varietal }) => {
     FROM "${overlay}"
     WHERE missing = ${missing}
       ${varietal.length ? `AND varietal_name IN ('${varietal.join("','")}')` : ""}
-    ORDER BY id
   ) AS trees`;
 };
 
@@ -52,7 +51,6 @@ const buildTreeDataQuery = ({ overlay, color, varietal }) => {
     WHERE true
       ${color.length ? `AND color IN ('${color.join("','")}')` : ""}
       ${varietal.length ? `AND varietal_name IN ('${varietal.join("','")}')` : ""}
-    ORDER BY value desc, id
   ) AS trees`;
 };
 
@@ -79,18 +77,18 @@ const buildDataSource = async (queryBuilder, filters) => {
 
   return new mapnik.Datasource({
     type: "postgis",
-    host: process.env.CORE_DB_HOST,
-    port: process.env.CORE_DB_PORT,
-    user: process.env.CORE_DB_USER,
-    password: process.env.CORE_DB_PASS,
-    dbname: process.env.CORE_DB_NAME,
+    host: process.env.PLI_DB_HOST,
+    port: process.env.PLI_DB_PORT,
+    user: process.env.PLI_DB_USER,
+    password: process.env.PLI_DB_PASS,
+    dbname: process.env.PLI_DB_NAME,
     table: queryBuilder(filters),
     extent: extent,
     geometry_field: "geom",
     srid: 4326,
-    initial_size: process.env.CORE_DB_MIN || 10,
-    max_size: process.env.CORE_DB_MAX || 50,
-    connect_timeout: process.env.CORE_DB_TIMEOUT || 10,
+    initial_size: process.env.PLI_DB_MIN || 10,
+    max_size: process.env.PLI_DB_MAX || 50,
+    connect_timeout: process.env.PLI_DB_TIMEOUT || 10,
   });
 };
 
@@ -101,11 +99,17 @@ export const treeCountLayer = async (req, res, next) => {
   const { missing, varietal } = req.query;
   const { map } = res.locals;
 
-  const datasource = await buildDataSource(buildTreeCountQuery, {
-    overlay,
-    missing,
-    varietal,
-  });
+  let datasource;
+
+  try {
+    datasource = await buildDataSource(buildTreeCountQuery, {
+      overlay,
+      missing,
+      varietal,
+    });
+  } catch (error) {
+    return next(error);
+  }
 
   if (!datasource) return next(NotFoundError);
 
@@ -125,11 +129,17 @@ export const treeDataLayer = async (req, res, next) => {
   const { color, varietal } = req.query;
   const { map } = res.locals;
 
-  const datasource = await buildDataSource(buildTreeDataQuery, {
-    overlay,
-    color,
-    varietal,
-  });
+  let datasource;
+
+  try {
+    datasource = await buildDataSource(buildTreeDataQuery, {
+      overlay,
+      color,
+      varietal,
+    });
+  } catch (error) {
+    return next(error);
+  }
 
   if (!datasource) return next(NotFoundError);
 
@@ -142,67 +152,6 @@ export const treeDataLayer = async (req, res, next) => {
   next();
 };
 
-export const treeCountPGLayer = (req, res, next) => {
-  const { overlay, x, y, z } = req.params;
-  const { missing, varietal } = req.query;
-
-  const query = `
-    SELECT ST_AsMVT(tile, 'trees', 4096, 'geom') AS mvt
-    FROM (
-      SELECT ST_AsMVTGeom(ST_Transform(t.geometry::geometry, 3857), ST_TileEnvelope(${z}, ${x}, ${y})) AS geom,
-        v.name varietal,
-        cd.name crop_name,
-        cd.group crop_group,
-        v.color color
-      FROM trees t
-      JOIN customers_cropvarietal v ON v.id = t.varietal_id
-      JOIN customers_cropdetail cd ON cd.id = v.crop_detail_id
-      WHERE t.overlay_id = '${overlay}'
-        AND t.is_present = ${!missing}
-        ${varietal.length ? `AND v.name IN ('${varietal.join("','")}')` : ""}
-    ) AS tile
-  `;
-
-  pool
-    .query(query)
-    .then((result) => {
-      res.locals.data = result.rows[0].mvt;
-      next();
-    })
-    .catch(next);
-};
-
-export const treeDataPGLayer = (req, res, next) => {
-  const { overlay, x, y, z } = req.params;
-  const { color, varietal } = req.query;
-
-  const query = `
-    SELECT ST_AsMVT(tile, 'trees', 4096, 'geom') AS mvt
-    FROM (
-      SELECT ST_AsMVTGeom(ST_Transform(t.geometry::geometry, 3857), ST_TileEnvelope(${z}, ${x}, ${y})) AS geom,
-        v.name varietal,
-        cd.name crop_name,
-        cd.group crop_group,
-        td.color
-      FROM trees_data td
-      JOIN trees t ON t.id = td.tree_id
-      JOIN customers_cropvarietal v ON v.id = t.varietal_id
-      JOIN customers_cropdetail cd ON cd.id = v.crop_detail_id
-      WHERE td.overlay_id = '${overlay}'
-        ${color.length ? `AND td.color IN ('${color.join("','")}')` : ""}
-        ${varietal.length ? `AND v.name IN ('${varietal.join("','")}')` : ""}
-    ) AS tile
-  `;
-
-  pool
-    .query(query)
-    .then((result) => {
-      res.locals.data = result.rows[0].mvt;
-      next();
-    })
-    .catch(next);
-};
-
 export const calculateTreeBuffer = (req, res, next) => {
   next = logTiming("calculateTreeBuffer", res, next);
 
@@ -211,18 +160,15 @@ export const calculateTreeBuffer = (req, res, next) => {
   const query = `
     SELECT avg(distance) AS distance
     FROM (
-      SELECT min(ST_Distance(t1.geometry, t2.geometry)) AS distance
+      SELECT min(ST_Distance(t1.geom, t2.geom)) AS distance
       FROM (
-        SELECT t.id, t.overlay_id, t.geometry
-        FROM trees t
-        JOIN trees_data td ON td.tree_id = t.id
-        WHERE td.overlay_id = '${overlay}'
+        SELECT t.id, t.geom
+        FROM "${overlay}" t
         ORDER BY t.id
         LIMIT 10
-      ) t1, trees t2
+      ) t1, "${overlay}" t2
       WHERE t1.id <> t2.id 
-        AND t1.overlay_id = t2.overlay_id
-        AND ST_DWithin(t1.geometry, t2.geometry, 0.0001)
+        AND ST_DWithin(t1.geom, t2.geom, 10)
       GROUP BY t1.id
     ) subquery
   `;
@@ -234,5 +180,10 @@ export const calculateTreeBuffer = (req, res, next) => {
       res.locals.treeBuffer = result.rows[0].distance * 0.5;
       next();
     })
-    .catch(next);
+    .catch((error) => {
+      // Error 42P01 means table does not exist
+      // Probably because it was not transplanted or the overlay provided is wrong
+      if (error.code === "42P01") return next(NotFoundError);
+      next(error);
+    });
 };

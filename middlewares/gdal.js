@@ -9,19 +9,17 @@ export const generateTif = (req, res, next) => {
   const { overlay } = req.params;
   const { treeBuffer } = res.locals;
 
-  const conn = `dbname='${process.env.CORE_DB_NAME}' host='${process.env.CORE_DB_HOST}' port='${process.env.CORE_DB_PORT}' user='${process.env.CORE_DB_USER}' password='${process.env.CORE_DB_PASS}'`;
+  const conn = `dbname='${process.env.PLI_DB_NAME}' host='${process.env.PLI_DB_HOST}' port='${process.env.PLI_DB_PORT}' user='${process.env.PLI_DB_USER}' password='${process.env.PLI_DB_PASS}'`;
 
   const resX = 0.0000056;
   const resY = -0.0000045;
 
   const query = `
-    SELECT ST_Buffer(t.geometry, ${treeBuffer}), 
-      ('x'||substr(td.color,2,2))::bit(8)::int r, 
-      ('x'||substr(td.color,4,2))::bit(8)::int g, 
-      ('x'||substr(td.color,6,2))::bit(8)::int b 
-    FROM trees_data td 
-    JOIN trees t ON t.id = td.tree_id 
-    WHERE td.overlay_id = '${overlay}'
+    SELECT ST_Buffer(geom, ${treeBuffer}), 
+      ('x'||substr(color,2,2))::bit(8)::int r, 
+      ('x'||substr(color,4,2))::bit(8)::int g, 
+      ('x'||substr(color,6,2))::bit(8)::int b 
+    FROM \\"${overlay}\\"
   `;
 
   const name = `/tmp/${Date.now()}${Math.random()}`;
@@ -30,9 +28,13 @@ export const generateTif = (req, res, next) => {
 
   exec(cmd, (error) => {
     if (error) return next(error);
-    res.locals.data = fs.readFileSync(name);
-    next();
-    fs.unlinkSync(name);
+    try {
+      res.locals.data = fs.readFileSync(name);
+      next();
+      fs.unlinkSync(name);
+    } catch (error) {
+      next(error);
+    }
   });
 };
 
