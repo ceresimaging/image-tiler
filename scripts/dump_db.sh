@@ -82,6 +82,21 @@ psql $url \
       FROM markers
       WHERE visit_id IN (SELECT DISTINCT id FROM tmp_visits)
     );
+    INSERT INTO tmp_markers
+      (id, created_at, geometry, source, staff_only, is_open, description, type, created_by_id, visit_id)
+    VALUES
+      (
+        '236c3733-08f5-428c-ba49-7a611c83b75b',
+        '2019-08-15 20:15:29.339571+00',
+        ST_GeomFromEWKT('SRID=4326;POLYGON((-122.309646 38.519419,-122.308733 38.521266,-122.307608 38.519506,-122.309646 38.519419))'),
+        'avian',
+        false,
+        true,
+        'Draft Marker',
+        'draft',
+        16,
+        128587
+      );
     CREATE TABLE tmp_flights AS (
       SELECT *
       FROM flights
