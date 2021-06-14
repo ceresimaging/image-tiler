@@ -31,7 +31,7 @@ app_config = {
   NEW_RELIC_APP_NAME="Tile Server (Production)"
   CUSTOM_METRICS="false"
   LOG_REQUESTS="false"
-  PLI_DB_MIN=20
-  PLI_DB_MAX=100
+  PLI_DB_MIN=10
+  PLI_DB_MAX=25
   PLI_DB_TIMEOUT=4
 }

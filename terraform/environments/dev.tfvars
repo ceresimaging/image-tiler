@@ -34,8 +34,8 @@ app_config = {
   NEW_RELIC_LOG_ENABLED="false"
   NEW_RELIC_APP_NAME="Tile Server (Dev)"
   CUSTOM_METRICS="true"
-  LOG_REQUESTS="true"
+  LOG_REQUESTS="false"
   PLI_DB_MIN=10
-  PLI_DB_MAX=50
+  PLI_DB_MAX=25
   PLI_DB_TIMEOUT=4
 }
