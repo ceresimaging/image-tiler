@@ -36,6 +36,6 @@ app_config = {
   CUSTOM_METRICS="true"
   LOG_REQUESTS="true"
   PLI_DB_MIN=10
-  PLI_DB_MAX=150
+  PLI_DB_MAX=50
   PLI_DB_TIMEOUT=4
 }
