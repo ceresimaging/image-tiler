@@ -1,11 +1,14 @@
 #!/bin/bash
 
+# Overlays to transplant before running this script: 
+# 4d5cca2a-5b18-4346-90af-8daa2bcbfc1e
+# 041cfc7f-fd9e-4dc5-bf91-0d3775dcce1b
+
 url="postgres://$CORE_DB_USER:$CORE_DB_PASS@$CORE_DB_HOST:$CORE_DB_PORT/$CORE_DB_NAME"
 
 tables=(
-  customers_geo customers_farm customers_oldfarm customers_cropvarietal customers_cropdetail
+  customers_geo customers_farm customers_oldfarm
   published_imagery_displayfield published_imagery_overlay published_imagery_overlaytype
-  trees trees_data
   visits flights markers
   auth_user
 )
@@ -16,47 +19,28 @@ sequences=(
   '"visits_Visit_ID_seq"'
 )
 
-list="${sequences[@]/#/-t } ${tables[@]/#/-t }"
+pli_overlays=(
+  '"4d5cca2a-5b18-4346-90af-8daa2bcbfc1e"' 
+  '"041cfc7f-fd9e-4dc5-bf91-0d3775dcce1b"' 
+  '"98e1c50d-1d6e-40ac-b955-2c8ab5df07cb"'
+)
+
+pli_overlays_list=$(echo ${pli_overlays[@]} | sed "s/\ /\,/g" | sed "s/\"/'/g")
+
+list="${sequences[@]/#/-t } ${tables[@]/#/-t } ${pli_overlays[@]/#/-t }"
 
 extra_lines="^\(GRANT\|REVOKE\|SET\|--\|^$\)"
 
 echo "Dumping database structure..."
 pg_dump $url -O -s --section=pre-data $list | grep -v $extra_lines > test/fixtures/dump.sql
+
 echo "Creating temporal tables with sample data..."
-
-# Fields to transplant before running this script: 55994, 56481
-
 psql $url \
   -c "
-    CREATE TABLE tmp_trees AS (
-      SELECT *
-      FROM trees
-      WHERE overlay_id IN (
-        '4d5cca2a-5b18-4346-90af-8daa2bcbfc1e',
-        '041cfc7f-fd9e-4dc5-bf91-0d3775dcce1b'
-      )
-    );
-    CREATE TABLE tmp_trees_data AS (
-      SELECT *
-      FROM trees_data
-      WHERE overlay_id = '98e1c50d-1d6e-40ac-b955-2c8ab5df07cb'
-        AND tree_id IN (SELECT id FROM tmp_trees)
-    );
-    CREATE TABLE tmp_customers_cropvarietal AS (
-      SELECT *
-      FROM customers_cropvarietal
-      WHERE id IN (SELECT DISTINCT varietal_id FROM tmp_trees)
-    );
-    CREATE TABLE tmp_customers_cropdetail AS (
-      SELECT *
-      FROM customers_cropdetail
-      WHERE id IN (SELECT DISTINCT crop_detail_id FROM tmp_customers_cropvarietal)
-    );
     CREATE TABLE tmp_published_imagery_overlay AS (
       SELECT *
       FROM published_imagery_overlay
-      WHERE id IN (SELECT DISTINCT overlay_id FROM tmp_trees_data)
-        OR id IN (SELECT DISTINCT overlay_id FROM tmp_trees)
+      WHERE id IN ($pli_overlays_list)
     );
     CREATE TABLE tmp_published_imagery_overlaytype AS (
       SELECT *
@@ -125,7 +109,7 @@ psql $url \
     );
   "
 
-list=${tables[@]/#/-t tmp_}
+list="${tables[@]/#/-t tmp_} ${pli_overlays[@]/#/-t}"
 
 echo "Dumping database data..."
 pg_dump $url -O -a $list | sed 's/public.tmp_/public./' | grep -v $extra_lines >> test/fixtures/dump.sql
