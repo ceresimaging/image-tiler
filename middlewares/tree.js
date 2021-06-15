@@ -86,8 +86,8 @@ const buildDataSource = async (queryBuilder, filters) => {
     extent: extent,
     geometry_field: "geom",
     srid: 4326,
-    initial_size: process.env.PLI_DB_MIN || 10,
-    max_size: process.env.PLI_DB_MAX || 50,
+    initial_size: process.env.PLI_DB_MIN || 1,
+    max_size: process.env.PLI_DB_MAX || 10,
     connect_timeout: process.env.PLI_DB_TIMEOUT || 4,
     persist_connection: false,
   });
