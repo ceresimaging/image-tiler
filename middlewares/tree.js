@@ -20,7 +20,7 @@ const pool = new Pool({
   max: process.env.CORE_DB_MAX || 50,
 });
 
-const buildTreeCountQuery = ({ overlay, missing, varietal }) => {
+const buildTreeCountQuery = ({ overlay, missing, varietal, marker }) => {
   return `(
     SELECT
       id,
@@ -34,10 +34,11 @@ const buildTreeCountQuery = ({ overlay, missing, varietal }) => {
     FROM "${overlay}"
     WHERE missing = ${missing}
       ${varietal.length ? `AND varietal_name IN ('${varietal.join("','")}')` : ""}
+      ${marker ? `AND ST_DWithin(geom, '${marker}'::geography, 0)` : ""}
   ) AS trees`;
 };
 
-const buildTreeDataQuery = ({ overlay, color, varietal }) => {
+const buildTreeDataQuery = ({ overlay, color, varietal, marker }) => {
   return `(
     SELECT
       tree_id,
@@ -51,6 +52,7 @@ const buildTreeDataQuery = ({ overlay, color, varietal }) => {
     WHERE true
       ${color.length ? `AND color IN ('${color.join("','")}')` : ""}
       ${varietal.length ? `AND varietal_name IN ('${varietal.join("','")}')` : ""}
+      ${marker ? `AND ST_DWithin(geom, '${marker}'::geography, 0)` : ""}
   ) AS trees`;
 };
 
@@ -70,10 +72,24 @@ const calculateExtent = async (overlay) => {
   return (await pool.query(query)).rows[0].extent;
 };
 
+const getMarkerGeometry = async (marker) => {
+  const query = `
+    SELECT geometry
+    FROM markers
+    WHERE id = '${marker}'
+  `;
+
+  return (await pool.query(query)).rows[0].geometry;
+};
+
 const buildDataSource = async (queryBuilder, filters) => {
   const extent = await calculateExtent(filters.overlay);
 
   if (!extent) return;
+
+  if (filters.marker) {
+    filters.marker = await getMarkerGeometry(filters.marker);
+  }
 
   return new mapnik.Datasource({
     type: "postgis",
@@ -97,7 +113,7 @@ export const treeCountLayer = async (req, res, next) => {
   next = logTiming("treeCountLayer", res, next);
 
   const { overlay } = req.params;
-  const { missing, varietal } = req.query;
+  const { missing, varietal, marker } = req.query;
   const { map } = res.locals;
 
   let datasource;
@@ -107,6 +123,7 @@ export const treeCountLayer = async (req, res, next) => {
       overlay,
       missing,
       varietal,
+      marker,
     });
   } catch (error) {
     return next(error);
@@ -127,7 +144,7 @@ export const treeDataLayer = async (req, res, next) => {
   next = logTiming("treeDataLayer", res, next);
 
   const { overlay } = req.params;
-  const { color, varietal } = req.query;
+  const { color, varietal, marker } = req.query;
   const { map } = res.locals;
 
   let datasource;
@@ -137,6 +154,7 @@ export const treeDataLayer = async (req, res, next) => {
       overlay,
       color,
       varietal,
+      marker,
     });
   } catch (error) {
     return next(error);
