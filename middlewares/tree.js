@@ -9,15 +9,25 @@ mapnik.registerDatasource(`${mapnik.settings.paths.input_plugins}/postgis.input`
 // Read stylesheet file
 const dataStyle = fs.readFileSync("styles/tree.xml", "utf8");
 
-// PG connection pool
+// PG connection pools
 const { Pool } = pg;
+
 const pool = new Pool({
   user: process.env.CORE_DB_USER,
   host: process.env.CORE_DB_HOST,
   database: process.env.CORE_DB_NAME,
   password: process.env.CORE_DB_PASS,
   port: process.env.CORE_DB_PORT,
-  max: process.env.CORE_DB_MAX || 50,
+  max: process.env.CORE_DB_MAX || 10,
+});
+
+const pliPool = new Pool({
+  user: process.env.PLI_DB_USER,
+  host: process.env.PLI_DB_HOST,
+  database: process.env.PLI_DB_NAME,
+  password: process.env.PLI_DB_PASS,
+  port: process.env.PLI_DB_PORT,
+  max: process.env.PLI_DB_MAX || 10,
 });
 
 const buildTreeCountQuery = ({ overlay, missing, varietal }) => {
@@ -174,7 +184,7 @@ export const calculateTreeBuffer = (req, res, next) => {
     ) subquery
   `;
 
-  pool
+  pliPool
     .query(query)
     .then((result) => {
       if (!result.rows[0].distance) return next(NotFoundError);
