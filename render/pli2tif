@@ -1,10 +1,10 @@
 #!/bin/bash
 
-ogr2ogr $1.gpkg -sql "$5" PG:"$6"
+ogr2ogr $1.shp -sql "$5" PG:"$6"
 
-gdal_rasterize -a r -of gtiff -a_nodata 0 -tr $3 $4 $1.gpkg $1.r.tif
-gdal_rasterize -a g -of gtiff -a_nodata 0 -tr $3 $4 $1.gpkg $1.g.tif
-gdal_rasterize -a b -of gtiff -a_nodata 0 -tr $3 $4 $1.gpkg $1.b.tif
+gdal_rasterize -a r -of gtiff -a_nodata 0 -tr $3 $4 $1.shp $1.r.tif
+gdal_rasterize -a g -of gtiff -a_nodata 0 -tr $3 $4 $1.shp $1.g.tif
+gdal_rasterize -a b -of gtiff -a_nodata 0 -tr $3 $4 $1.shp $1.b.tif
 
 gdalbuildvrt -separate $1.vrt $1.r.tif $1.g.tif $1.b.tif
 
