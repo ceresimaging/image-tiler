@@ -247,3 +247,12 @@ export const validateMissing = (req, res, next) => {
 
   throw new ValidationError(`Missing: ${req.query.missing}`, "Boolean");
 };
+
+// Validate Marker Query Param
+export const validateMarkerQuery = (req, res, next) => {
+  if (!req.query.marker || validator.isUUID(req.query.marker)) {
+    return next();
+  }
+
+  throw new ValidationError(`Marker ID: ${req.query.marker}`, "UUID");
+};
