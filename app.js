@@ -53,7 +53,7 @@ if (process.env.NODE_ENV !== "test") {
     app.use(morgan(":date[iso] :remote-addr :referrer :url", { immediate: true }));
   }
 
-  app.use(morgan(":date[iso] :remote-addr :referrer :url :status :response-time :error"));
+  app.use(morgan(":date[iso] :remote-addr :referrer :url :status :res[content-length] :response-time :error"));
 }
 
 // Debugging for tests
