@@ -61,6 +61,15 @@ export const validateFarm = (req, res, next) => {
   throw new ValidationError(`Farm ID: ${req.params.farm}`, "UUID");
 };
 
+// Validate Customer parameter
+export const validateCustomer = (req, res, next) => {
+  if (validator.isInt(req.params.customer)) {
+    return next();
+  }
+
+  throw new ValidationError(`Customer ID: ${req.params.customer}`, "Int");
+};
+
 // Validate Marker parameter
 export const validateMarker = (req, res, next) => {
   if (validator.isUUID(req.params.marker)) {

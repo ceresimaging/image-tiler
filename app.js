@@ -10,6 +10,7 @@ import fieldgeo from "./routes/fieldgeo";
 import marker from "./routes/marker";
 import custom from "./routes/custom";
 import tree from "./routes/tree";
+import sensor from "./routes/sensor";
 
 import { noCache, respond } from "./middlewares/tools";
 
@@ -53,7 +54,7 @@ if (process.env.NODE_ENV !== "test") {
     app.use(morgan(":date[iso] :remote-addr :referrer :url", { immediate: true }));
   }
 
-  app.use(morgan(":date[iso] :remote-addr :referrer :url :status :response-time :error"));
+  app.use(morgan(":date[iso] :remote-addr :referrer :url :status :res[content-length] :response-time :error"));
 }
 
 // Debugging for tests
@@ -73,6 +74,7 @@ app.use("/fieldgeo", fieldgeo);
 app.use("/marker", marker);
 app.use("/custom", custom);
 app.use("/tree", tree);
+app.use("/sensor", sensor);
 
 // Redirect root to status
 app.get("/", (req, res) => {
