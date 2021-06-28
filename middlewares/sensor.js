@@ -10,9 +10,13 @@ const buildQuery = ({ customer }) => {
       d.geometry geom,
       d.customer_id,
       d.field_id,
+      s.type,
+      s.subtype,
+      s.unit,
       r.read_time::text,
       r.value
-    FROM sensor_devices d 
+    FROM sensor_devices d
+    JOIN device_designs s ON s.id = d.design_id
     LEFT JOIN (
       SELECT device_id, read_time, value
       FROM sensor_readings
