@@ -12,7 +12,7 @@ const buildQuery = ({ customer }) => {
       d.field_id,
       s.type,
       s.subtype,
-      s.unit,
+      s.unit_type,
       r.read_time::text,
       r.value
     FROM sensor_devices d
