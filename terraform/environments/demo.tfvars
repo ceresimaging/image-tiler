@@ -38,4 +38,8 @@ app_config = {
   PLI_DB_MIN=10
   PLI_DB_MAX=25
   PLI_DB_TIMEOUT=4
+  SENSOR_DB_HOST = "works-demo.cyla8ox7pgyv.us-west-2.rds.amazonaws.com"
+  SENSOR_DB_USER = "osiris_production"
+  SENSOR_DB_NAME = "sensors"
+  SENSOR_DB_PORT = 5432
 }
