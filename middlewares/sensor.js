@@ -7,13 +7,13 @@ const buildQuery = ({ customer }) => {
   return `(
     SELECT
       d.id,
-      d.geometry geom,
+      d.location AS geom,
       d.customer_id,
       d.field_id,
       d.vendor_device_id AS name,
       s.type,
       s.subtype,
-      s.unit_type,
+      s.unit AS unit_type,
       r.read_time::text,
       r.value
     FROM sensor_devices d
