@@ -10,6 +10,7 @@ const buildQuery = ({ customer }) => {
       d.geometry geom,
       d.customer_id,
       d.field_id,
+      d.vendor_device_id AS name,
       s.type,
       s.subtype,
       s.unit_type,
