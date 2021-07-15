@@ -61,6 +61,15 @@ export const validateFarm = (req, res, next) => {
   throw new ValidationError(`Farm ID: ${req.params.farm}`, "UUID");
 };
 
+// Validate Customer parameter
+export const validateCustomer = (req, res, next) => {
+  if (validator.isInt(req.params.customer)) {
+    return next();
+  }
+
+  throw new ValidationError(`Customer ID: ${req.params.customer}`, "Int");
+};
+
 // Validate Marker parameter
 export const validateMarker = (req, res, next) => {
   if (validator.isUUID(req.params.marker)) {
@@ -246,4 +255,14 @@ export const validateMarkerQuery = (req, res, next) => {
   }
 
   throw new ValidationError(`Marker ID: ${req.query.marker}`, "UUID");
+};
+
+// Validate Readings parameter
+export const validateReadings = (req, res, next) => {
+  if (!req.query.readings || validator.isInt(req.query.readings)) {
+    req.query.readings = parseInt(req.query.readings || 5);
+    return next();
+  }
+
+  throw new ValidationError(`Readings Count: ${req.params.readings}`, "Int");
 };
