@@ -14,17 +14,17 @@ const buildQuery = ({ customer, readings }) => {
       s.type,
       s.subtype,
       s.unit AS unit_type,
-      ARRAY(
-        SELECT json_build_object('read_time', read_time::text, 'value', value)
+      to_json(array(
+        SELECT json_build_object('read_time', read_time, 'value', value)
         FROM sensor_readings
         WHERE device_id = d.id 
           AND deleted IS NULL
         ORDER BY read_time DESC
         LIMIT ${readings}
-      )::text AS readings
+      ))::text AS readings
     FROM sensor_devices d
     JOIN device_designs s ON s.id = d.design_id
-    WHERE d.customer_id = '${customer}'
+    WHERE d.customer_id = ${customer}
       AND d.deleted IS NULL
   ) AS sensors`;
 };
