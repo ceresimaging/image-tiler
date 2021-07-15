@@ -3,7 +3,7 @@ import mapnik from "mapnik";
 // Load Mapnik datasource
 mapnik.registerDatasource(`${mapnik.settings.paths.input_plugins}/postgis.input`);
 
-const buildQuery = ({ customer }) => {
+const buildQuery = ({ customer, readings = 5 }) => {
   return `(
     SELECT
       d.id,
@@ -14,17 +14,16 @@ const buildQuery = ({ customer }) => {
       s.type,
       s.subtype,
       s.unit AS unit_type,
-      r.read_time::text,
-      r.value
+      ARRAY(
+        SELECT json_build_object('read_time', read_time::text, 'value', value)
+        FROM sensor_readings
+        WHERE device_id = d.id 
+          AND deleted IS NULL
+        ORDER BY read_time DESC
+        LIMIT ${readings}
+      )::text AS readings
     FROM sensor_devices d
     JOIN device_designs s ON s.id = d.design_id
-    LEFT JOIN (
-      SELECT device_id, read_time, value
-      FROM sensor_readings
-      WHERE deleted IS NULL
-      ORDER BY read_time DESC
-      LIMIT 1
-    ) r ON r.device_id = d.id
     WHERE d.customer_id = '${customer}'
       AND d.deleted IS NULL
   ) AS sensors`;
