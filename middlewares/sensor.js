@@ -3,7 +3,7 @@ import mapnik from "mapnik";
 // Load Mapnik datasource
 mapnik.registerDatasource(`${mapnik.settings.paths.input_plugins}/postgis.input`);
 
-const buildQuery = ({ customer, readings = 5 }) => {
+const buildQuery = ({ customer, readings }) => {
   return `(
     SELECT
       d.id,
@@ -50,10 +50,11 @@ const buildDataSource = async (queryBuilder, filters) => {
 
 export const sensorLayer = async (req, res, next) => {
   const { customer } = req.params;
+  const { readings } = req.query;
   const { map } = res.locals;
 
   const layer = new mapnik.Layer("sensors");
-  layer.datasource = await buildDataSource(buildQuery, { customer });
+  layer.datasource = await buildDataSource(buildQuery, { customer, readings });
   map.add_layer(layer);
 
   next();

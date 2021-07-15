@@ -1,7 +1,7 @@
 import express from "express";
 
 import { createMap, vectorResponse } from "../middlewares/mapnik";
-import { validateTile, validateSize, validateCustomer } from "../middlewares/validators";
+import { validateTile, validateSize, validateCustomer, validateReadings } from "../middlewares/validators";
 import { sensorLayer } from "../middlewares/sensor";
 import { respond } from "../middlewares/tools";
 
@@ -12,6 +12,7 @@ router.get(
   validateTile,
   validateSize,
   validateCustomer,
+  validateReadings,
   createMap,
   sensorLayer,
   vectorResponse,

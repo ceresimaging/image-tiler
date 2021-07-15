@@ -256,3 +256,13 @@ export const validateMarkerQuery = (req, res, next) => {
 
   throw new ValidationError(`Marker ID: ${req.query.marker}`, "UUID");
 };
+
+// Validate Readings parameter
+export const validateReadings = (req, res, next) => {
+  if (!req.query.readings || validator.isInt(req.query.readings)) {
+    req.query.readings = parseInt(req.query.readings || 5);
+    return next();
+  }
+
+  throw new ValidationError(`Readings Count: ${req.params.readings}`, "Int");
+};
