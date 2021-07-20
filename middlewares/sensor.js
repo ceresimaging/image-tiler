@@ -11,9 +11,11 @@ const buildQuery = ({ customer, readings }) => {
       d.customer_id,
       d.field_id,
       d.vendor_device_id AS name,
+      d.group_id,
+      g.vendor_group_id AS group,
       s.type,
       s.subtype,
-      s.unit AS unit_type,
+      s.unit,
       to_json(array(
         SELECT json_build_object('read_time', read_time, 'value', value)
         FROM sensor_readings
@@ -24,6 +26,7 @@ const buildQuery = ({ customer, readings }) => {
       ))::text AS readings
     FROM sensor_devices d
     JOIN device_designs s ON s.id = d.design_id
+    JOIN device_groups g ON g.id = d.group_id
     WHERE d.customer_id = ${customer}
       AND d.deleted IS NULL
   ) AS sensors`;
