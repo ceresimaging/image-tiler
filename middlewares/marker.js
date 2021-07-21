@@ -36,6 +36,10 @@ const buildVisitQuery = (visit, user = null, onlyInternal = false) => {
             WHERE v1.id = ${visit}
           )
           AND (
+            (m.start_date IS NOT NULL AND m.end_date IS NULL) OR
+            (m.end_date IS NOT NULL AND m.start_date IS NULL)
+          )
+          AND (
             m.start_date IS NULL
             OR m.start_date <= (
               SELECT date
