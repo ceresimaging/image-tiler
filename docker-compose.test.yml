@@ -25,12 +25,12 @@ services:
       - CUSTOM_METRICS=false
 
   postgres-tiler:
-    image: postgis/postgis:12-3.1-alpine
+    image: circleci/postgres:12.3-postgis
     restart: always
     environment:
       - POSTGRES_USER=tiler
       - POSTGRES_PASSWORD=tiler
-      - POSTGRES_DBNAME=tiler
+      - POSTGRES_DB=tiler
 
   redis-tiler:
     image: redis:6-alpine
