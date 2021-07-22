@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Overlays to transplant before running this script: 
-# 4d5cca2a-5b18-4346-90af-8daa2bcbfc1e
-# 041cfc7f-fd9e-4dc5-bf91-0d3775dcce1b
+# 4d5cca2a-5b18-4346-90af-8daa2bcbfc1e (Field: 55994)
+# 041cfc7f-fd9e-4dc5-bf91-0d3775dcce1b (Field: 56481)
 
 url="postgres://$CORE_DB_USER:$CORE_DB_PASS@$CORE_DB_HOST:$CORE_DB_PORT/$CORE_DB_NAME"
 
@@ -50,7 +50,7 @@ psql $url \
     CREATE TABLE tmp_visits AS (
       SELECT *
       FROM visits
-      WHERE id IN (122950, 191225, 210560, 210555, 122948, 128587, 237721)
+      WHERE id IN (122950, 191225, 210560, 210555, 122948, 128587, 237721, 268329)
         OR id IN (SELECT DISTINCT visit_id FROM tmp_published_imagery_overlay
       )
     );

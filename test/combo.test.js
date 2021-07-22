@@ -44,8 +44,8 @@ describe("combo routes", () => {
   });
 
   test("should return a single image with filtered markers", async () => {
-    const imagery = "76bcbd2f-9e5a-44b4-a4a3-48ffc2f9b9c5";
-    const visit = 210560;
+    const imagery = "571f2b3b-09cb-4a07-903f-97dda998cb06";
+    const visit = 268329;
 
     const res = await request.get(`/${base}/${imagery}/${visit}.png`);
 
