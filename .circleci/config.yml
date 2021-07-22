@@ -4,7 +4,7 @@ jobs:
   build:
     docker:
       - image: maurimiranda/node-mapnik-gdal:latest
-      - image: circleci/postgres:latest-postgis
+      - image: circleci/postgres:12.3-postgis
         environment:
           POSTGRES_DB: tiler
           POSTGRES_USER: tiler
